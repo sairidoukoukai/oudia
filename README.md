@@ -8,3 +8,14 @@ A library for parsing and exporting OuDia file format.
 
 * [OuDia](http://take-okm.a.la9.jp/oudia/)
 * [OuDiaSecond](http://oudiasecond.seesaa.net/)
+
+## 使い方 / Usage
+
+```python
+import oudia
+
+with open("meronking_line.oud", "r") as f:
+    dia = oudia.load(f)
+    print(dia.file_type)
+    print(dia.rosen)
+```
