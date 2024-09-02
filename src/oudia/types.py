@@ -35,6 +35,74 @@ class FileType:
         """
         return f"{self.software}.{self.version}" if self.version else self.software
 
+class Node:
+    """
+    Represents a node in an OuDia file.
+
+    Attributes:
+        type (str): The type of the node.
+        attributes (dict[str, str]): The attributes of the node.
+        children (list[Node]): The children of the node.
+    """
+    
+    type: str
+    attributes: dict[str, str]
+    children: list['Node']
+
+    def __init__(self, type: str, attributes: dict[str, str] | None = None, children: list['Node'] | None = None):
+        """
+        Initializes a new instance of the Node class.
+
+        Args:
+            type (str): The type of the node.
+            attributes (dict[str, str] | None, optional): The attributes of the node. Defaults to None.
+        """
+        self.type = type
+        self.attributes = attributes or {}
+        self.children = children or []
+    
+    def add_child(self, node: 'Node'):
+        """
+        Adds a child to the node.
+
+        Args:
+            node (Node): The node to add.
+        """
+        self.children.append(node)
+
+    def __str__(self):
+        """
+        Returns a serialized string representation of the node.        
+
+        Returns:
+            str: The string representation of the node.
+        """
+        attributes = "\n".join([f"{key}={value}" for key, value in self.attributes.items()])
+        children = "\n".join([str(child) for child in self.children])
+        
+        return f"{self.type}.\n{attributes}\n{children}."
+    
+    def __repr__(self) -> str:
+        """
+        Returns a canonical string representation of the node.
+
+        Returns:
+            str: The string representation of the node.
+        """
+        return f"Node(type={self.type}, attributes={self.attributes}, children={self.children})"
+    
+    def __eq__(self, value: object) -> bool:
+        """
+        Returns a boolean indicating whether the node is equal to the given value.
+        
+        Args:
+            value (object): The value to compare with.
+
+        Returns:
+            bool: True if the node is equal to the given value, False otherwise.
+        """
+        return repr(self) == repr(value)
+
 @dataclass
 class OuDia:
     """
@@ -45,3 +113,4 @@ class OuDia:
     """
 
     file_type: FileType
+    children: list[Node]

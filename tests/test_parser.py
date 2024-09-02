@@ -13,4 +13,8 @@ def test_invalid(caplog):
     assert "Unsupported software: \"NotOuDia\"" in caplog.text
 
 def test_parser():
-    assert oudia.loads("FileType=OuDia.1.02") == oudia.OuDia(file_type=oudia.FileType("OuDia", "1.02"))
+    assert oudia.loads("FileType=OuDia.1.02") == oudia.OuDia(file_type=oudia.FileType("OuDia", "1.02"), children=[])
+    assert oudia.loads("FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.") == oudia.OuDia(
+        file_type=oudia.FileType("OuDia", "1.02"),
+        children=[oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })]
+    )
