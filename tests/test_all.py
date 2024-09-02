@@ -18,3 +18,8 @@ def test_parser():
         file_type=oudia.FileType("OuDia", "1.02"),
         children=[oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })]
     )
+
+def test_exporter():
+    assert oudia.dumps(oudia.OuDia(file_type=oudia.FileType("OuDia", "1.02"), children=[
+        oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })    
+    ])) == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n."

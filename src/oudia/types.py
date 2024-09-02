@@ -35,6 +35,18 @@ class FileType:
         """
         return f"{self.software}.{self.version}" if self.version else self.software
 
+# @dataclass
+# class Rosen:
+#     """
+#     Represents the "Rosen" (Route) section of an OuDia file.
+    
+#     Attributes:
+#         rosenmei (str): The "Rosenmei" (Route Name) of the route.
+#     """
+    
+#     rosenmei: str
+
+
 class Node:
     """
     Represents a node in an OuDia file.
