@@ -18,8 +18,21 @@ def test_parser():
         file_type=oudia.FileType("OuDia", "1.02"),
         children=[oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })]
     )
+    assert oudia.loads("FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nAfterMath=Hello") == oudia.OuDia(
+        file_type=oudia.FileType("OuDia", "1.02"),
+        children=[oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })],
+        aftermath="AfterMath=Hello"
+    )
 
 def test_exporter():
     assert oudia.dumps(oudia.OuDia(file_type=oudia.FileType("OuDia", "1.02"), children=[
         oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })    
     ])) == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n."
+
+    assert oudia.dumps(oudia.OuDia(
+        file_type=oudia.FileType("OuDia", "1.02"),
+        children=[
+            oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })    
+        ],
+        aftermath="AfterMath=Hello"
+    )) == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nAfterMath=Hello"

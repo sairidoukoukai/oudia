@@ -122,7 +122,10 @@ class OuDia:
 
     Attributes:
         file_type (FileType): The file type of the OuDia file.
+        chilren (list[Node]): The children of the OuDia file.
+        aftermath (str | None, optional): The afterward text of the OuDia file. Defaults to None.
     """
 
     file_type: FileType
     children: list[Node]
+    aftermath: str | None = None

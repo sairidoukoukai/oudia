@@ -13,6 +13,10 @@ def dumps(oudia: OuDia) -> str:
     for node in oudia.children:
         result += str(node)
     
+    if oudia.aftermath:
+        result += "\n"
+        result += oudia.aftermath
+    
     return result
 
 def dump(oudia: OuDia, fp: TextIO) -> None:

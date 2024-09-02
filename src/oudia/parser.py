@@ -56,7 +56,14 @@ def loads(text: str) -> OuDia:
     if file_type.software not in ["OuDia", "OuDiaSecond"]:
         logger.warning("Unsupported software: \"%s\", some features may not work correctly.", file_type.software)
 
-    return OuDia(file_type, list(parse(text.splitlines()[1:])))
+    aftermath = text.split("\n.\n")[-1] if '\n.\n' in text else None
+    aftermath_line_count = aftermath.count("\n") if aftermath else 0
+
+    return OuDia(
+        file_type,
+        list(parse(text.splitlines()[1:-aftermath_line_count - 1])),
+        aftermath=aftermath
+    )
 
 def load(fp: TextIO) -> OuDia:
     """
