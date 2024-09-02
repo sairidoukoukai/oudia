@@ -101,7 +101,7 @@ class Node:
         Returns:
             str: The string representation of the node.
         """
-        return f"Node(type={self.type}, attributes={self.attributes}, children={self.children})"
+        return f"Node(type={repr(self.type)}, attributes={repr(self.attributes)}, children={repr(self.children)})"
     
     def __eq__(self, value: object) -> bool:
         """
