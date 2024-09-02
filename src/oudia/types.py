@@ -114,6 +114,18 @@ class Node:
             bool: True if the node is equal to the given value, False otherwise.
         """
         return repr(self) == repr(value)
+    def pprint(self, indent: int = 0):
+        """
+        Prints the node in a pretty format.
+
+        Args:
+            indent (int, optional): The indentation level. Defaults to 0.
+        """
+        print(" " * indent + self.type)
+        for key, value in self.attributes.items():
+            print(" " * (indent + 2) + f"{key}={value}")
+        for child in self.children:
+            child.pprint(indent + 2)
 
 @dataclass
 class OuDia:
@@ -129,3 +141,16 @@ class OuDia:
     file_type: FileType
     children: list[Node]
     aftermath: str | None = None
+    
+    def pprint(self, indent: int = 0, with_lines: bool = False):
+        """
+        Prints the OuDia file in a pretty format.
+
+        Args:
+            indent (int, optional): The indentation level. Defaults to 0.
+        """
+        print(" " * indent + str(self.file_type) if not with_lines else "|" * (indent + 1) + str(self.file_type))
+        for child in self.children:
+            child.pprint(indent + 2)
+        if self.aftermath:
+            print(" " * indent + self.aftermath)
