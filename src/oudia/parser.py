@@ -1,8 +1,10 @@
 from typing import Iterator, TextIO
-from .types import OuDia, FileType, Node
+from .types import OuDia, FileType, Node, Rosen, TypedNode
 
 import logging
 logger = logging.getLogger(__name__)
+
+
 def parse(lines: list[str]) -> Iterator[Node]:
     stack: list[Node] = []
     current_node: Node | None = None
@@ -59,9 +61,28 @@ def loads(text: str) -> OuDia:
     aftermath = text.split("\n.\n")[-1] if '\n.\n' in text else None
     aftermath_line_count = aftermath.count("\n") if aftermath else 0
 
+    nodes = list(parse(text.splitlines()[1:-aftermath_line_count - 1]))
+    
+    # replace node with typednode by type recursively
+    def replace_node(node) -> Node | TypedNode:
+        if not isinstance(node, Node):
+            return node
+
+        new_node = Node(node.type, node.attributes)
+        new_node.children = [replace_node(child) for child in node.children]
+        
+        match node.type:
+            case "Rosen":
+                new_node = Rosen.from_node(node)
+            case _:
+                pass
+                
+        return new_node
+    nodes: list[TypedNode | Node] = [replace_node(node) for node in nodes]
+
     return OuDia(
         file_type,
-        list(parse(text.splitlines()[1:-aftermath_line_count - 1])),
+        nodes,
         aftermath=aftermath
     )
 

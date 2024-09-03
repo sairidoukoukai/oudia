@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
 
 @dataclass
 class FileType:
@@ -35,18 +36,7 @@ class FileType:
         """
         return f"{self.software}.{self.version}" if self.version else self.software
 
-# @dataclass
-# class Rosen:
-#     """
-#     Represents the "Rosen" (Route) section of an OuDia file.
-    
-#     Attributes:
-#         rosenmei (str): The "Rosenmei" (Route Name) of the route.
-#     """
-    
-#     rosenmei: str
-
-
+@dataclass
 class Node:
     """
     Represents a node in an OuDia file.
@@ -58,21 +48,9 @@ class Node:
     """
     
     type: str
-    attributes: dict[str, str]
-    children: list['Node']
+    attributes: dict[str, str] = field(default_factory=dict)
+    children: list['Node | TypedNode'] = field(default_factory=list)
 
-    def __init__(self, type: str, attributes: dict[str, str] | None = None, children: list['Node'] | None = None):
-        """
-        Initializes a new instance of the Node class.
-
-        Args:
-            type (str): The type of the node.
-            attributes (dict[str, str] | None, optional): The attributes of the node. Defaults to None.
-        """
-        self.type = type
-        self.attributes = attributes or {}
-        self.children = children or []
-    
     def add_child(self, node: 'Node'):
         """
         Adds a child to the node.
@@ -102,18 +80,17 @@ class Node:
             str: The string representation of the node.
         """
         return f"Node(type={repr(self.type)}, attributes={repr(self.attributes)}, children={repr(self.children)})"
-    
-    def __eq__(self, value: object) -> bool:
-        """
-        Returns a boolean indicating whether the node is equal to the given value.
-        
-        Args:
-            value (object): The value to compare with.
 
-        Returns:
-            bool: True if the node is equal to the given value, False otherwise.
-        """
-        return repr(self) == repr(value)
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, Node):
+            # return super().__eq__(value)
+            return self.type == value.type and self.attributes == value.attributes and self.children == value.children
+
+        if isinstance(value, TypedNode):
+            return value.to_node() == self
+
+        return False
+
     def pprint(self, indent: int = 0):
         """
         Prints the node in a pretty format.
@@ -127,6 +104,7 @@ class Node:
         for child in self.children:
             child.pprint(indent + 2)
 
+
 @dataclass
 class OuDia:
     """
@@ -139,7 +117,7 @@ class OuDia:
     """
 
     file_type: FileType
-    children: list[Node]
+    children: list['Node | TypedNode']
     aftermath: str | None = None
     
     def pprint(self, indent: int = 0, with_lines: bool = False):
@@ -154,3 +132,59 @@ class OuDia:
             child.pprint(indent + 2)
         if self.aftermath:
             print(" " * indent + self.aftermath)
+        
+
+class TypedNode(ABC):
+    """
+    An abstract class representing a typed node.
+    """
+
+    @abstractmethod
+    def pprint(self, indent: int = 0):
+        """
+        Prints the node in a pretty format.
+
+        Args:
+            indent (int, optional): The indentation level. Defaults to 0.
+        """
+        pass
+    
+    @abstractmethod
+    def to_node(self) -> Node:
+        """
+        Returns the node as a `Node` object.
+
+        Returns:
+            Node: The node as a `Node` object.
+        """
+        pass
+
+
+@dataclass
+class Rosen(TypedNode):
+    """
+    Represents the "Rosen" (Route) section of an OuDia file.
+    
+    Attributes:
+        rosenmei (str): The "Rosenmei" (Route Name) of the route.
+    """
+    
+    rosenmei: str
+    children: list['Node | TypedNode'] = field(default_factory=list)
+
+    @staticmethod
+    def from_node(node: Node) -> 'Rosen':
+        return Rosen(rosenmei=node.attributes["Rosenmei"], children=node.children)
+    
+    def to_node(self) -> Node:
+        return Node(type="Rosen", attributes={"Rosenmei": self.rosenmei}, children=self.children)
+    
+    def pprint(self, indent: int = 0):
+        print(" " * indent + self.rosenmei)
+        
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, Node):
+            return self.to_node() == value
+        if isinstance(value, Rosen):
+            return self.rosenmei == value.rosenmei and self.children == value.children
+        return False
