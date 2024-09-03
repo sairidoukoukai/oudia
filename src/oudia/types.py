@@ -140,16 +140,6 @@ class TypedNode(ABC):
     """
 
     @abstractmethod
-    def pprint(self, indent: int = 0):
-        """
-        Prints the node in a pretty format.
-
-        Args:
-            indent (int, optional): The indentation level. Defaults to 0.
-        """
-        pass
-    
-    @abstractmethod
     def to_node(self) -> Node:
         """
         Returns the node as a `Node` object.
@@ -158,6 +148,15 @@ class TypedNode(ABC):
             Node: The node as a `Node` object.
         """
         pass
+
+    def pprint(self, indent: int = 0):
+        """
+        Prints the node in a pretty format.
+
+        Args:
+            indent (int, optional): The indentation level. Defaults to 0.
+        """
+        return self.to_node().pprint(indent)
 
 
 @dataclass
@@ -178,10 +177,7 @@ class Rosen(TypedNode):
     
     def to_node(self) -> Node:
         return Node(type="Rosen", attributes={"Rosenmei": self.rosenmei}, children=self.children)
-    
-    def pprint(self, indent: int = 0):
-        print(" " * indent + self.rosenmei)
-        
+
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Node):
             return self.to_node() == value
