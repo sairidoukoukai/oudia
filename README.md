@@ -1,21 +1,10 @@
-# oudia
+# Oudia.Py
 
-OuDiaファイル形式の読み取り、書き出し用ライブラリ。
+このリポジトリは[`oudia`](./packages/oudia/README.md)などのOuDiaファイル形式の処理を中心としたプロジェクトを管理するものである。
 
-A library for parsing and exporting OuDia file format.
+This repository is for managing a series of projects including [`oudia`](./packages/oudia/README.md) etc. to process the OuDia file format.
 
 ## サポートされているファイル形式 / Supported file types
 
 * [OuDia](http://take-okm.a.la9.jp/oudia/)
 * [OuDiaSecond](http://oudiasecond.seesaa.net/)
-
-## 使い方 / Usage
-
-```python
-import oudia
-
-with open("meronking_line.oud", "r") as f:
-    dia = oudia.load(f)
-    print(dia.file_type)
-    print(dia.rosen)
-```

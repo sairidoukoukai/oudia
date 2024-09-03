@@ -31,6 +31,11 @@ def test_parser():
         children=[oudia.Node("Rosen", { "Rosenmei": "メロンキング線" })],
         aftermath="AfterMath=Hello"
     )
+    
+    with open("./tests/test2.oud", "r") as f:
+        dia = oudia.load(f)
+        print(dia)
+        print(dia.pprint())
 
 def test_exporter():
     assert oudia.dumps(oudia.OuDia(file_type=oudia.FileType("OuDia", "1.02"), children=[

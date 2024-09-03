@@ -9,4 +9,5 @@
 #   generate-hashes: false
 #   universal: false
 
--e file:.
+-e file:packages/oudia
+-e file:packages/oudia2gtfs

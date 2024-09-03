@@ -1,0 +1,25 @@
+[project]
+name = "oudia2gtfs"
+version = "0.0.0"
+description = "OuDia file to gtfs converter"
+authors = [
+    { name = "sairidoukoukai", email = "sairidoukoukai@gmail.com" },
+    { name = "yocjyet", email = "git@yocjyet.dev" },
+]
+dependencies = []
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = ["pytest>=8.3.2"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/oudia2gtfs"]
