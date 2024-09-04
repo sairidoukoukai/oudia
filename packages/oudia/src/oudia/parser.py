@@ -1,7 +1,7 @@
 from typing import Iterator, TextIO
 
 from oudia.nodes.node import Children
-from .nodes import Eki, Rosen, Node, TypedNode, OuDia, FileType
+from .nodes import Eki, Rosen, Node, TypedNode, OuDia, FileType, Ressyasyubetsu
 from typing import Annotated
 
 import logging
@@ -82,8 +82,6 @@ def loads(text: str) -> OuDia:
 
     nodes = list(parse(f"Root.\n{text.strip()}\n.".splitlines()))
 
-    print(f"{nodes=}")
-
     # replace node with typednode by type recursively
     def replace_node(node) -> Node | TypedNode:
         assert isinstance(node, Node)
@@ -102,6 +100,8 @@ def loads(text: str) -> OuDia:
                 new_node = Rosen.from_node(new_node)
             case "Eki":
                 new_node = Eki.from_node(new_node)
+            case "Ressyasyubetsu":
+                new_node = Ressyasyubetsu.from_node(new_node)
             case _:
                 pass
 

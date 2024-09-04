@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
-from ..helper import snake_case_to_CamelCase
-from .node import Attributes, Node, TypedNode
+from .node import Attributes, Children, Node, TypedNode
 
 
 @dataclass
@@ -25,7 +24,7 @@ class Rosen(TypedNode):
     enable_operation: bool | None = None
     """運用機能の有効無効（OuDiaSecond.1.03+）"""
 
-    operation_cross_kiten_jikoku: int | None = None
+    operation_cross_kiten_jikoku: bool | None = None
     """ダイヤグラム起点時刻を挟んで運用を接続する（OuDiaSecond.1.10+）"""
 
     kijun_dia_index: int | None = None
@@ -115,11 +114,5 @@ class Rosen(TypedNode):
                 ),
                 ("Comment", self.comment),
             ),
+            children=Children(self.children),
         )
-
-    def __eq__(self, value: object) -> bool:
-        if isinstance(value, Node):
-            return self.to_node() == value
-        if isinstance(value, Rosen):
-            return self.rosenmei == value.rosenmei and self.children == value.children
-        return False
