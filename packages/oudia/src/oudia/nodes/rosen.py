@@ -22,11 +22,14 @@ class Rosen(TypedNode):
     diagram_dgr_y_zahyou_kyori_default: int | None = None
     """ダイヤグラムDGRY座標距離デフォルト"""
 
+    enable_operation: bool | None = None
+    """運用機能の有効無効（OuDiaSecond.1.03+）"""
+
     operation_cross_kiten_jikoku: int | None = None
     """ダイヤグラム起点時刻を挟んで運用を接続する（OuDiaSecond.1.10+）"""
 
-    enable_operation: bool | None = None
-    """運用機能の有効無効（OuDiaSecond.1.03+）"""
+    kijun_dia_index: int | None = None
+    """基準ダイヤインデックス"""
 
     comment: str | None = None
     """コメント"""
@@ -51,6 +54,19 @@ class Rosen(TypedNode):
                 if (v := node.trailing_attributes.get("DiagramDgrYZahyouKyoriDefault"))
                 else None
             ),
+            enable_operation=(
+                bool(v)
+                if (v := node.trailing_attributes.get("EnableOperation"))
+                else None
+            ),
+            operation_cross_kiten_jikoku=(
+                int(v)
+                if (v := node.trailing_attributes.get("OperationCrossKitenJikoku"))
+                else None
+            ),
+            kijun_dia_index=(
+                int(v) if (v := node.trailing_attributes.get("KijunDiaIndex")) else None
+            ),
             comment=node.trailing_attributes.get("Comment"),
             _children=node.children,
         )
@@ -69,7 +85,7 @@ class Rosen(TypedNode):
                     "DiagramDgrYZahyouKyoriDefault",
                     (
                         str(self.diagram_dgr_y_zahyou_kyori_default)
-                        if self.diagram_dgr_y_zahyou_kyori_default
+                        if self.diagram_dgr_y_zahyou_kyori_default is not None
                         else None
                     ),
                 ),
@@ -77,13 +93,25 @@ class Rosen(TypedNode):
                     "OperationCrossKitenJikoku",
                     (
                         str(self.operation_cross_kiten_jikoku)
-                        if self.operation_cross_kiten_jikoku
+                        if self.operation_cross_kiten_jikoku is not None
                         else None
                     ),
                 ),
                 (
                     "EnableOperation",
-                    str(self.enable_operation) if self.enable_operation else None,
+                    (
+                        ("1" if self.enable_operation else "0")
+                        if self.enable_operation is not None
+                        else None
+                    ),
+                ),
+                (
+                    "KijunDiaIndex",
+                    (
+                        str(self.kijun_dia_index)
+                        if self.kijun_dia_index is not None
+                        else None
+                    ),
                 ),
                 ("Comment", self.comment),
             ),
