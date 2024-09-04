@@ -47,13 +47,13 @@ class Stop(Record):
     """経度（必須）"""
 
     zone_id: str | None
-    """運賃エリアID（任意）"""
+    """運賃エリアID（条件付き必須）"""
 
-    stop_url: str
-    """停留所・標柱URL（必須）"""
+    stop_url: str | None
+    """停留所・標柱URL（任意）"""
 
     location_type: LocationType
-    """停留所・標柱区分（必須）"""
+    """停留所・標柱区分（任意）"""
 
     parent_station: str | None
     """親停留所情報（任意）"""
