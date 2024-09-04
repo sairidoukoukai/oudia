@@ -52,8 +52,14 @@ def loads(text: str) -> OuDia:
     Raises:
         ValueError: If the text is invalid.
     """
+    # ignore bom
+    if text.startswith("\ufeff"):
+        text = text[1:]
+
     if not text.startswith("FileType="):
-        raise ValueError("Invalid file type")
+        raise ValueError(
+            f"Invalid file type, starting bytes are not 'FileType=': {text[:10]}"
+        )
 
     file_type = FileType.from_str(text.split("\n")[0].split("=", 1)[1])
     if file_type.software not in ["OuDia", "OuDiaSecond"]:
