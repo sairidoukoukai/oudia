@@ -177,7 +177,7 @@ Both the **Kudari** and **Nobori** nodes contain multiple **Ressya Nodes**, each
 
 ### Ressya Node
 
-The **Ressya Node** represents an individual train and contains attributes for its schedule and classification.
+The **Ressya Node** represents an individual train (列車) and contains attributes for its schedule and classification.
 
 #### Attributes
 
