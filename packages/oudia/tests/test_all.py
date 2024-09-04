@@ -82,11 +82,11 @@ def test_exporter():
 
 
 def test_authenity():
-    with open("./tests/empty.oud2", "r") as f:
+    with open("./tests/empty.oud2", "r", encoding="utf-8-sig") as f:
         text = f.read()
         dia = oudia.loads(text)
         print(dia)
         print(dia.pprint())
-    with open("./tests/empty_dumped.oud2", "w") as f:
+    with open("./tests/empty_dumped.oud2", "w", encoding="utf-8-sig") as f:
         f.write(oudia.dumps(dia))
     assert oudia.dumps(dia) == text
