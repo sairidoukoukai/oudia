@@ -11,7 +11,7 @@ def dumps(oudia: OuDia) -> str:
         result += "\n"
 
     for node in oudia.children:
-        result += str(node)
+        result += str(node) + "\n"
 
     if oudia.aftermath:
         result += "\n"

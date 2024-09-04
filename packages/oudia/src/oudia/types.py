@@ -74,7 +74,7 @@ class Node:
         )
         children = "\n".join([str(child) for child in self.children])
 
-        return f"{self.type}.\n{attributes}\n{children}."
+        return f"{self.type}.\n{attributes}\n{children}{'\n' if children else ''}."
 
     def __repr__(self) -> str:
         """
@@ -181,3 +181,6 @@ class TypedNode(ABC):
             indent (int, optional): The indentation level. Defaults to 0.
         """
         return self.to_node().pprint(indent)
+
+    def __str__(self) -> str:
+        return self.to_node().__str__()
