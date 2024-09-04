@@ -93,6 +93,9 @@ The Rosen Node can contain the following children nodes:
 
 - `KitenJikoku` (Text, optional): The starting time of the route's operation, e.g., "400" for 4:00 AM.
 - `DiagramDgrYZahyouKyoriDefault` (Number, optional): Default Y-coordinate distance between stations in diagrams.
+- `EnableOperation` (Boolean, optional): Indicates whether operational functionality is enabled. [OuDiaSecond.1.03+](http://oudiasecond.seesaa.net/article/457223251.html)
+- `OperationCrossKitenJikoku` (Number, optional): Indicates whether connecting operations across the diagram start time is enabled. [OuDiaSecond.1.10+](http://oudiasecond.seesaa.net/article/481081211.html)
+- `KijunDiaIndex` (Number, optional): Reference diagram index.
 - `Comment` (Text, optional): Any comments regarding the route, such as service notes or special instructions.
 
 ### Eki Node
