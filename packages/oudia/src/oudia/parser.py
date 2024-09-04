@@ -1,6 +1,7 @@
 from typing import Iterator, TextIO
 
 from oudia.nodes.node import Attributes, Children
+from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 from .nodes import Eki, Rosen, Node, TypedNode, OuDia, FileType, Ressyasyubetsu
 from typing import Annotated
 
@@ -107,6 +108,10 @@ def loads(text: str) -> OuDia:
                 new_node = Eki.from_node(new_node)
             case "Ressyasyubetsu":
                 new_node = Ressyasyubetsu.from_node(new_node)
+            case "EkiTrack2":
+                new_node = EkiTrack2.from_node(new_node)
+            case "EkiTrack2Cont":
+                new_node = EkiTrack2Cont.from_node(new_node)
             case _:
                 pass
 

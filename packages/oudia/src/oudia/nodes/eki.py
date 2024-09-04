@@ -92,7 +92,7 @@ class Eki(TypedNode):
                 ),
                 ("UpMain", str(self.up_main) if self.up_main is not None else None),
             ),
-            children=Children(),
+            children=Children(self.children),
             trailing_attributes=Attributes(
                 (
                     "JikokuhyouTrackOmit",
