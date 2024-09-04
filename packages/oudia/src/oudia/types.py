@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 
+
 @dataclass
 class FileType:
     """
@@ -36,6 +37,7 @@ class FileType:
         """
         return f"{self.software}.{self.version}" if self.version else self.software
 
+
 @dataclass
 class Node:
     """
@@ -46,12 +48,12 @@ class Node:
         attributes (dict[str, str]): The attributes of the node.
         children (list[Node]): The children of the node.
     """
-    
+
     type: str
     attributes: dict[str, str] = field(default_factory=dict)
-    children: list['Node | TypedNode'] = field(default_factory=list)
+    children: list["Node | TypedNode"] = field(default_factory=list)
 
-    def add_child(self, node: 'Node'):
+    def add_child(self, node: "Node"):
         """
         Adds a child to the node.
 
@@ -62,16 +64,18 @@ class Node:
 
     def __str__(self):
         """
-        Returns a serialized string representation of the node.        
+        Returns a serialized string representation of the node.
 
         Returns:
             str: The string representation of the node.
         """
-        attributes = "\n".join([f"{key}={value}" for key, value in self.attributes.items()])
+        attributes = "\n".join(
+            [f"{key}={value}" for key, value in self.attributes.items()]
+        )
         children = "\n".join([str(child) for child in self.children])
-        
+
         return f"{self.type}.\n{attributes}\n{children}."
-    
+
     def __repr__(self) -> str:
         """
         Returns a canonical string representation of the node.
@@ -84,7 +88,11 @@ class Node:
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Node):
             # return super().__eq__(value)
-            return self.type == value.type and self.attributes == value.attributes and self.children == value.children
+            return (
+                self.type == value.type
+                and self.attributes == value.attributes
+                and self.children == value.children
+            )
 
         if isinstance(value, TypedNode):
             return value.to_node() == self
@@ -117,9 +125,9 @@ class OuDia:
     """
 
     file_type: FileType
-    children: list['Node | TypedNode']
+    children: list["Node | TypedNode"]
     aftermath: str | None = None
-    
+
     def pprint(self, indent: int = 0, with_lines: bool = False):
         """
         Prints the OuDia file in a pretty format.
@@ -127,17 +135,33 @@ class OuDia:
         Args:
             indent (int, optional): The indentation level. Defaults to 0.
         """
-        print(" " * indent + str(self.file_type) if not with_lines else "|" * (indent + 1) + str(self.file_type))
+        print(
+            " " * indent + str(self.file_type)
+            if not with_lines
+            else "|" * (indent + 1) + str(self.file_type)
+        )
         for child in self.children:
             child.pprint(indent + 2)
         if self.aftermath:
             print(" " * indent + self.aftermath)
-        
 
+
+@dataclass
 class TypedNode(ABC):
     """
     An abstract class representing a typed node.
     """
+
+    @property
+    @abstractmethod
+    def children(self) -> list["Node | TypedNode"]:
+        """
+        Returns the children of the node.
+
+        Returns:
+            list[Node | TypedNode]: The children of the node.
+        """
+        pass
 
     @abstractmethod
     def to_node(self) -> Node:
@@ -160,23 +184,64 @@ class TypedNode(ABC):
 
 
 @dataclass
-class Rosen(TypedNode):
-    """
-    Represents the "Rosen" (Route) section of an OuDia file.
-    
-    Attributes:
-        rosenmei (str): The "Rosenmei" (Route Name) of the route.
-    """
-    
-    rosenmei: str
-    children: list['Node | TypedNode'] = field(default_factory=list)
+class Eki(TypedNode):
+    """駅"""
+
+    ekimei: str
+    """駅名"""
+
+    ekijikokukeisiki: str
+    """駅時刻形式"""
+
+    ekikibo: str
+    """駅規模"""
+
+    _children: list["Node | TypedNode"] = field(default_factory=list)
+
+    @property
+    def children(self) -> list["Node | TypedNode"]:
+        return self._children
 
     @staticmethod
-    def from_node(node: Node) -> 'Rosen':
-        return Rosen(rosenmei=node.attributes["Rosenmei"], children=node.children)
-    
+    def from_node(node: Node) -> "Eki":
+        return Eki(
+            ekimei=node.attributes["Ekimei"],
+            ekijikokukeisiki=node.attributes["Ekijikokukeisiki"],
+            ekikibo=node.attributes["Ekikibo"],
+        )
+
     def to_node(self) -> Node:
-        return Node(type="Rosen", attributes={"Rosenmei": self.rosenmei}, children=self.children)
+        return Node(
+            type="Eki",
+            attributes={
+                "Ekimei": self.ekimei,
+                "Ekijikokukeisiki": self.ekijikokukeisiki,
+                "Ekikibo": self.ekikibo,
+            },
+        )
+
+
+@dataclass
+class Rosen(TypedNode):
+    """路線"""
+
+    rosenmei: str
+    _children: list["Node | TypedNode"] = field(
+        default_factory=list,
+    )
+
+    @property
+    def children(self) -> list["Node | TypedNode"]:
+        return self._children
+
+    @staticmethod
+    def from_node(node: Node) -> "Rosen":
+        return Rosen(rosenmei=node.attributes["Rosenmei"], _children=node.children)
+
+    def to_node(self) -> Node:
+        return Node(
+            type="Rosen", attributes={"Rosenmei": self.rosenmei}, children=self.children
+        )
 
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Node):
