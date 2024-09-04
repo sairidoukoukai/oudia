@@ -60,7 +60,7 @@ class Rosen(TypedNode):
                 else None
             ),
             operation_cross_kiten_jikoku=(
-                int(v)
+                bool(v)
                 if (v := node.trailing_attributes.get("OperationCrossKitenJikoku"))
                 else None
             ),
@@ -92,8 +92,8 @@ class Rosen(TypedNode):
                 (
                     "OperationCrossKitenJikoku",
                     (
-                        str(self.operation_cross_kiten_jikoku)
-                        if self.operation_cross_kiten_jikoku is not None
+                        ("1" if self.operation_cross_kiten_jikoku else "0")
+                        if self.operation_cross_kiten_jikoku  # intentional as noted in http://oudiasecond.seesaa.net/article/481081211.html
                         else None
                     ),
                 ),
