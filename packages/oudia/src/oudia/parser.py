@@ -69,8 +69,6 @@ def loads(text: str) -> OuDia:
 
     # replace node with typednode by type recursively
     def replace_node(node) -> Node | TypedNode:
-        print(f"replace_node({node})")
-
         if not isinstance(node, Node):
             return node
 
@@ -84,8 +82,6 @@ def loads(text: str) -> OuDia:
                 new_node = Eki.from_node(new_node)
             case _:
                 pass
-
-        print(f"{new_node = }")
 
         return new_node
 
