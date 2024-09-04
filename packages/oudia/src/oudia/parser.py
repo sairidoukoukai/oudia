@@ -1,5 +1,6 @@
 from typing import Iterator, TextIO
-from .types import Eki, OuDia, FileType, Node, Rosen, TypedNode
+from .types import OuDia, FileType, Node, TypedNode
+from .nodes import Eki, Rosen
 
 import logging
 

@@ -1,6 +1,7 @@
 from .parser import load, loads
 from .exporter import dump, dumps
-from .types import OuDia, FileType, Node, Rosen, TypedNode, Eki
+from .types import OuDia, FileType, Node, TypedNode
+from .nodes import Eki, Rosen
 
 __all__ = [
     "dump",
