@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from oudia.types import Node, TypedNode
+from .node import Node, TypedNode
 
 
 @dataclass

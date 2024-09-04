@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from oudia.helper import snake_case_to_CamelCase
-from oudia.types import Node, TypedNode
+from ..helper import snake_case_to_CamelCase
+from .node import Node, TypedNode
 
 
 @dataclass
