@@ -9,7 +9,9 @@
 #   generate-hashes: false
 #   universal: false
 
+-e file:packages/gtfs-jp
 -e file:packages/oudia
+    # via oudia2gtfs
 -e file:packages/oudia2gtfs
 iniconfig==2.0.0
     # via pytest

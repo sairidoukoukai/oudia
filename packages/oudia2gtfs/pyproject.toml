@@ -6,7 +6,7 @@ authors = [
     { name = "sairidoukoukai", email = "sairidoukoukai@gmail.com" },
     { name = "yocjyet", email = "git@yocjyet.dev" },
 ]
-dependencies = []
+dependencies = ["oudia>=0.0.0", "gtfs-jp>=0.0.0"]
 readme = "README.md"
 requires-python = ">= 3.8"
 

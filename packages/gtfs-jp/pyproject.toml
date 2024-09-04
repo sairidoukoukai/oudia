@@ -1,7 +1,7 @@
 [project]
-name = "oudia"
+name = "gtfs-jp"
 version = "0.0.0"
-description = "OuDia file parser / exporter"
+description = "GTFS-JP file parser / exporter"
 authors = [
     { name = "sairidoukoukai", email = "sairidoukoukai@gmail.com" },
     { name = "yocjyet", email = "git@yocjyet.dev" },
@@ -22,4 +22,4 @@ dev-dependencies = ["pytest>=8.3.2"]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/oudia"]
+packages = ["src/gtfs_jp"]
