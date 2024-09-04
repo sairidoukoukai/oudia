@@ -77,9 +77,9 @@ The **Rosen Node** represents a single route or line in the transportation syste
 
 #### Attributes
 
-- `Rosenmei` (Text, required): The name of the route (路線名), e.g., "東急東横線".
-- `KudariDiaAlias` (Text, optional): Alias for the "Kudari" (下り) direction (downward route).
-- `NoboriDiaAlias` (Text, optional): Alias for the "Nobori" (上り) direction (upward route).
+- `Rosenmei` (Text, required): The name of the route (路線名), e.g., "東急東横線". 
+- `KudariDiaAlias` (Text, optional): Alias for the "Kudari" (下り) direction (downward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
+- `NoboriDiaAlias` (Text, optional): Alias for the "Nobori" (上り) direction (upward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
 
 ### Children
 
