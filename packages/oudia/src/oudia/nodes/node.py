@@ -48,9 +48,9 @@ class Node:
     """
 
     type: str | None
-    attributes: Attributes = field(default_factory=lambda: Attributes())
-    children: Children = field(default_factory=Children)
-    trailing_attributes: Attributes = field(default_factory=Attributes)
+    attributes: Attributes
+    children: Children
+    trailing_attributes: Attributes
 
     def add_child(self, node: "Node"):
         """

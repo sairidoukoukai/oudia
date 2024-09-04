@@ -1,6 +1,6 @@
 import logging
 import oudia
-from oudia.nodes.node import Attributes
+from oudia.nodes.node import Attributes, Children
 import pytest
 
 
@@ -17,8 +17,10 @@ def test_invalid(caplog):
 
 def test_node_conversion() -> None:
     untyped_rosen_node = oudia.Node(
-        "Rosen",
-        Attributes(("Rosenmei", "メロンキング線")),
+        type="Rosen",
+        attributes=Attributes(("Rosenmei", "メロンキング線")),
+        children=Children(),
+        trailing_attributes=Attributes(),
     )
     typed_rosen_node = oudia.Rosen("メロンキング線")
 

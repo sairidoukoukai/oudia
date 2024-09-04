@@ -1,6 +1,6 @@
 from typing import Iterator, TextIO
 
-from oudia.nodes.node import Children
+from oudia.nodes.node import Attributes, Children
 from .nodes import Eki, Rosen, Node, TypedNode, OuDia, FileType, Ressyasyubetsu
 from typing import Annotated
 
@@ -21,7 +21,12 @@ def parse(lines: list[str]) -> Iterator[Node]:
         if line.endswith("."):
             if line != ".":
                 # Block.
-                new_node = Node(line[:-1])
+                new_node = Node(
+                    line[:-1],
+                    attributes=Attributes(),
+                    children=Children(),
+                    trailing_attributes=Attributes(),
+                )
                 if current_node:
                     stack.append(current_node)
                 current_node = new_node

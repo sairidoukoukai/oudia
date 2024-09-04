@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from .node import Attributes, Node, TypedNode
+from .node import Attributes, Children, Node, TypedNode
 
 
 @dataclass
@@ -38,4 +38,6 @@ class Eki(TypedNode):
                 ("Ekijikokukeisiki", self.ekijikokukeisiki),
                 ("Ekikibo", self.ekikibo),
             ),
+            children=Children(),
+            trailing_attributes=Attributes(),
         )
