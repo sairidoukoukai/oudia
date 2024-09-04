@@ -45,7 +45,7 @@ The file itself (`<file>`) is a node called the root node (`<root_node>`). Non-r
 
 Each node has attributes (`<attribute_list>`), children, and trailing attributes, in this order.
 
-Each node can have one or more attributes, which are either required or optional, depending on the node's type. A required attribute may have an empty value. Each attributes is defined using the format `Key=Value`, where the `Key` is written in CamelCase, and `Value` is the Text representation of the attribute’s value.
+Each node can have one or more attributes, which are either required or optional, depending on the node's type. A required attribute may have an empty value. Each attributes is defined using the format `Key=Value`, where the `Key` is written in CamelCase, and `Value` is the Text representation of the attribute’s value. Usually a key is unique for a node, however sometimes some specific key (such as `JikokuhyouFont` in `DispProp`) can be set multiple times with different value.
 
 A node can also contain zero or more child nodes, allowing for hierarchical structures. The types of child nodes a node can have are determined by its own type. Not all nodes support children, and the specific types of allowed child nodes vary based on the parent node's type.
 
