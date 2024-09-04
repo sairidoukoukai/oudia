@@ -144,11 +144,49 @@ The **Ressyasyubetsu Node** describes the types of trains that operate on the ro
 - `DiagramSenStyle` ([Enumeration](#data-types), [required](#field-tags)): The style of the line in diagrams. Possible values include:
   - `"SenStyle_Jissen"` (solid line)
   - `"SenStyle_Tensen"` (dashed line)
+- `DiagramSenIsBold` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the line should be displayed in bold.
 - `StopMarkDrawType` ([Enumeration](#data-types), [optional](#field-tags)): Defines how stop marks are displayed. Possible values include:
   - `"EStopMarkDrawType_DrawOnStop"` (draw stop mark at station stops)
   - `"EStopMarkDrawType_DrawOnPass"` (draw stop mark at pass)
   - `"EStopMarkDrawType_Nothing"` (no stop mark).
-- `DiagramSenIsBold` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the line should be displayed in bold.
+- `ParentSyubetsuIndex` ([Number](#data-types), [optional](#field-tags)): Refers to the index of the parent train type. If this value is set, it means this train type is a variation of the parent. For example, `"ParentSyubetsuIndex=0"` means this train type is a variant of the train type with index 0.
+
+#### Example
+
+```oudia
+Ressyasyubetsu.
+Syubetsumei=各駅停車
+Ryakusyou=各停
+JikokuhyouMojiColor=00000000
+JikokuhyouFontIndex=0
+JikokuhyouBackColor=00FFFFFF
+DiagramSenColor=00000000
+DiagramSenStyle=SenStyle_Jissen
+StopMarkDrawType=EStopMarkDrawType_DrawOnStop
+.
+Ressyasyubetsu.
+Syubetsumei=各駅停車(支線)
+Ryakusyou=支各停
+JikokuhyouMojiColor=00000000
+JikokuhyouFontIndex=0
+JikokuhyouBackColor=00FFFFFF
+DiagramSenColor=00000000
+DiagramSenStyle=SenStyle_Ittensasen
+StopMarkDrawType=EStopMarkDrawType_DrawOnStop
+ParentSyubetsuIndex=0
+.
+Ressyasyubetsu.
+Syubetsumei=急行
+Ryakusyou=急行
+JikokuhyouMojiColor=00FF0000
+JikokuhyouFontIndex=0
+JikokuhyouBackColor=00FFFFFF
+DiagramSenColor=00FF0000
+DiagramSenStyle=SenStyle_Jissen
+DiagramSenIsBold=1
+StopMarkDrawType=EStopMarkDrawType_DrawOnStop
+.
+```
 
 ### Dia Node
 
