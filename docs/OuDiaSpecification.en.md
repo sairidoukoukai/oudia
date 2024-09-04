@@ -57,7 +57,7 @@ The **root node** represents the entire file. It contains various attributes tha
 
 #### Attributes
 
-- `FileType` ([Text](#data-types), required): Specifies the version of the file format, for example, "OuDia.1.02". This may not necessarily be the same as the version of the program that generated the file.
+- `FileType` ([Text](#data-types), [required](#field-tags)): Specifies the version of the file format, for example, "OuDia.1.02". This may not necessarily be the same as the version of the program that generated the file.
 
 #### Children
 
@@ -69,7 +69,7 @@ The root node can contain the following children nodes:
 
 #### Trailing Attributes
 
-- `FileTypeAppComment` ([Text](#data-types), optional): Additional comments related to the file type or application, possibly detailing the version of the application or any specific information.
+- `FileTypeAppComment` ([Text](#data-types), [optional](#field-tags)): Additional comments related to the file type or application, possibly detailing the version of the application or any specific information.
 
 ### Rosen Node
 
@@ -77,9 +77,9 @@ The **Rosen Node** represents a single route or line in the transportation syste
 
 #### Attributes
 
-- `Rosenmei` ([Text](#data-types), required): The name of the route (路線名), e.g., "東急東横線".
-- `KudariDiaAlias` ([Text](#data-types), optional): Alias for the "Kudari" (下り) direction (downward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
-- `NoboriDiaAlias` ([Text](#data-types), optional): Alias for the "Nobori" (上り) direction (upward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
+- `Rosenmei` ([Text](#data-types), [required](#field-tags)): The name of the route (路線名), e.g., "東急東横線".
+- `KudariDiaAlias` ([Text](#data-types), [optional](#field-tags)): Alias for the "Kudari" (下り) direction (downward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
+- `NoboriDiaAlias` ([Text](#data-types), [optional](#field-tags)): Alias for the "Nobori" (上り) direction (upward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
 
 ### Children
 
@@ -91,12 +91,12 @@ The Rosen Node can contain the following children nodes:
 
 #### Trailing Attributes
 
-- `KitenJikoku` ([Text](#data-types), optional): The starting time of the route's operation, e.g., "400" for 4:00 AM.
-- `DiagramDgrYZahyouKyoriDefault` ([Number](#data-types), optional): Default Y-coordinate distance between stations in diagrams.
-- `EnableOperation` ([Boolean](#data-types), optional): Indicates whether operational functionality is enabled. [OuDiaSecond.1.03+](http://oudiasecond.seesaa.net/article/457223251.html)
-- `OperationCrossKitenJikoku` ([Number](#data-types), optional): Indicates whether connecting operations across the diagram start time is enabled. [OuDiaSecond.1.10+](http://oudiasecond.seesaa.net/article/481081211.html)
-- `KijunDiaIndex` ([Number](#data-types), optional): Reference diagram index.
-- `Comment` ([Text](#data-types), optional): Any comments regarding the route, such as service notes or special instructions.
+- `KitenJikoku` ([Text](#data-types), [optional](#field-tags)): The starting time of the route's operation, e.g., "400" for 4:00 AM.
+- `DiagramDgrYZahyouKyoriDefault` ([Number](#data-types), [optional](#field-tags)): Default Y-coordinate distance between stations in diagrams.
+- `EnableOperation` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether operational functionality is enabled. [OuDiaSecond.1.03+](http://oudiasecond.seesaa.net/article/457223251.html)
+- `OperationCrossKitenJikoku` ([Number](#data-types), [optional](#field-tags)): Indicates whether connecting operations across the diagram start time is enabled. [OuDiaSecond.1.10+](http://oudiasecond.seesaa.net/article/481081211.html)
+- `KijunDiaIndex` ([Number](#data-types), [optional](#field-tags)): Reference diagram index.
+- `Comment` ([Text](#data-types), [optional](#field-tags)): Any comments regarding the route, such as service notes or special instructions.
 
 ### Eki Node
 
@@ -104,13 +104,13 @@ The **Eki Node** represents a station (駅) on the route. It provides informatio
 
 #### Attributes
 
-- `Ekimei` ([Text](#data-types), required): The name of the station, e.g., "和光市".
-- `Ekijikokukeisiki` ([Enumeration](#data-types), required): The type of timetable associated with the station. Possible values include:
+- `Ekimei` ([Text](#data-types), [required](#field-tags)): The name of the station, e.g., "和光市".
+- `Ekijikokukeisiki` ([Enumeration](#data-types), [required](#field-tags)): The type of timetable associated with the station. Possible values include:
   - `"Jikokukeisiki_Hatsu"` (departure only)
   - `"Jikokukeisiki_Hatsuchaku"` (both arrival and departure)
   - `"Jikokukeisiki_KudariChaku"` (arrival for downward trains)
   - `"Jikokukeisiki_NoboriChaku"` (arrival for upward trains)
-- `Ekikibo` ([Enumeration](#data-types), required): The station's classification based on its importance. Possible values include:
+- `Ekikibo` ([Enumeration](#data-types), [required](#field-tags)): The station's classification based on its importance. Possible values include:
   - `"Ekikibo_Syuyou"` (major station)
   - `"Ekikibo_Ippan"` (general station)
 
@@ -118,37 +118,37 @@ The **Eki Node** represents a station (駅) on the route. It provides informatio
 
 The **Eki Node** can contain the following child nodes:
 
-- **EkiTrack2 Node**: (optional, repeatable) Describes the track layout of the station, including the track names, abbreviations, and configurations for upward and downward directions.
-- **OuterTerminal Node**: (optional, repeatable) Represents outer terminals that are connected to the station but belong to another line.
+- **EkiTrack2 Node**: (optional, [repeatable](#field-tags)) Describes the track layout of the station, including the track names, abbreviations, and configurations for upward and downward directions.
+- **OuterTerminal Node**: (optional, [repeatable](#field-tags)) Represents outer terminals that are connected to the station but belong to another line.
 
 #### Trailing Attributes
 
-- `Kyoukaisen` ([Number](#data-types), optional): Specifies if the station is part of a boundary line between two jurisdictions.
-- `DiagramRessyajouhouHyoujiKudari` ([Enumeration](#data-types), optional): Controls the display of timetable information for downward-bound trains. Possible values include:
+- `Kyoukaisen` ([Number](#data-types), [optional](#field-tags)): Specifies if the station is part of a boundary line between two jurisdictions.
+- `DiagramRessyajouhouHyoujiKudari` ([Enumeration](#data-types), [optional](#field-tags)): Controls the display of timetable information for downward-bound trains. Possible values include:
   - `"DiagramRessyajouhouHyouji_Anytime"` (always displayed)
   - `"DiagramRessyajouhouHyouji_Not"` (not displayed)
-- `DiagramRessyajouhouHyoujiNobori` ([Enumeration](#data-types), optional): Same as `DiagramRessyajouhouHyoujiKudari`, but for upward-bound trains.
+- `DiagramRessyajouhouHyoujiNobori` ([Enumeration](#data-types), [optional](#field-tags)): Same as `DiagramRessyajouhouHyoujiKudari`, but for upward-bound trains.
 
 ### Ressyasyubetsu Node
 
-The **Ressyasyubetsu Node** describes the types of trains that operate on the route. Each train type has attributes for its display color and style on both diagrams and timetables.
+The **Ressyasyubetsu Node** describes the types of trains that operate on the route (列車種別). Each train type has attributes for its display color and style on both diagrams and timetables.
 
 #### Attributes
 
-- `Syubetsumei` ([Text](#data-types), required): The name of the train type, e.g., "通勤特急" (commuter express).
-- `Ryakusyou` ([Text](#data-types), optional): The abbreviation used for the train type.
-- `JikokuhyouMojiColor` ([Text](#data-types), required): The color used for displaying the train type on timetables, represented as a hexadecimal color code (e.g., `"000000FF"` for blue).
-- `JikokuhyouFontIndex` ([Number](#data-types), required): The font index used for displaying the train type on timetables.
-- `JikokuhyouBackColor` ([Text](#data-types), optional): Specifies the background color of the timetable, using a hexadecimal code (e.g., `"00FFFFFF"`).
-- `DiagramSenColor` ([Text](#data-types), required): The color of the line in diagrams, defined as a hexadecimal code.
-- `DiagramSenStyle` ([Enumeration](#data-types), required): The style of the line in diagrams. Possible values include:
+- `Syubetsumei` ([Text](#data-types), [required](#field-tags)): The name of the train type, e.g., "通勤特急" (commuter express).
+- `Ryakusyou` ([Text](#data-types), [optional](#field-tags)): The abbreviation used for the train type.
+- `JikokuhyouMojiColor` ([Text](#data-types), [required](#field-tags)): The color used for displaying the train type on timetables, represented as a hexadecimal color code (e.g., `"000000FF"` for blue).
+- `JikokuhyouFontIndex` ([Number](#data-types), [required](#field-tags)): The font index used for displaying the train type on timetables.
+- `JikokuhyouBackColor` ([Text](#data-types), [optional](#field-tags)): Specifies the background color of the timetable, using a hexadecimal code (e.g., `"00FFFFFF"`).
+- `DiagramSenColor` ([Text](#data-types), [required](#field-tags)): The color of the line in diagrams, defined as a hexadecimal code.
+- `DiagramSenStyle` ([Enumeration](#data-types), [required](#field-tags)): The style of the line in diagrams. Possible values include:
   - `"SenStyle_Jissen"` (solid line)
   - `"SenStyle_Tensen"` (dashed line)
-- `StopMarkDrawType` ([Enumeration](#data-types), optional): Defines how stop marks are displayed. Possible values include:
+- `StopMarkDrawType` ([Enumeration](#data-types), [optional](#field-tags)): Defines how stop marks are displayed. Possible values include:
   - `"EStopMarkDrawType_DrawOnStop"` (draw stop mark at station stops)
   - `"EStopMarkDrawType_DrawOnPass"` (draw stop mark at pass)
   - `"EStopMarkDrawType_Nothing"` (no stop mark).
-- `DiagramSenIsBold` ([Boolean](#data-types), optional): Indicates whether the line should be displayed in bold.
+- `DiagramSenIsBold` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the line should be displayed in bold.
 
 ### Dia Node
 
@@ -156,10 +156,10 @@ The **Dia Node** represents a timetable (ダイヤ) for the route. It holds sche
 
 #### Attributes
 
-- `DiaName` ([Text](#data-types), required): The name of the timetable, e.g., `"平日"` (weekday).
-- `MainBackColorIndex` ([Number](#data-types), optional): Background color index for the main timetable, values between 0-3.
-- `SubBackColorIndex` ([Number](#data-types), optional): Background color index for sub-timetables, values between 0-3.
-- `BackPatternIndex` ([Number](#data-types), optional): Background pattern for the timetable. Possible values include:
+- `DiaName` ([Text](#data-types), [required](#field-tags)): The name of the timetable, e.g., `"平日"` (weekday).
+- `MainBackColorIndex` ([Number](#data-types), [optional](#field-tags)): Background color index for the main timetable, values between 0-3.
+- `SubBackColorIndex` ([Number](#data-types), [optional](#field-tags)): Background color index for sub-timetables, values between 0-3.
+- `BackPatternIndex` ([Number](#data-types), [optional](#field-tags)): Background pattern for the timetable. Possible values include:
   - `0` (solid color)
   - `1` (train type color)
   - `2` (vertical stripes)
@@ -181,17 +181,17 @@ The **Ressya Node** represents an individual train and contains attributes for i
 
 #### Attributes
 
-- `Houkou` ([Enumeration](#data-types), required): The direction of the train, values are:
+- `Houkou` ([Enumeration](#data-types), [required](#field-tags)): The direction of the train, values are:
   - `"Kudari"` (downward)
   - `"Nobori"` (upward)
-- `Syubetsu` ([Number](#data-types), required): The number corresponding to the train type defined in the **Ressyasyubetsu Node**.
-- `Ressyabangou` ([Text](#data-types), optional): The train number.
-- `Ressyamei` ([Text](#data-types), optional): The name of the train.
-- `Gousuu` ([Text](#data-types), optional): The number of train cars.
+- `Syubetsu` ([Number](#data-types), [required](#field-tags)): The number corresponding to the train type defined in the **Ressyasyubetsu Node**.
+- `Ressyabangou` ([Text](#data-types), [optional](#field-tags)): The train number.
+- `Ressyamei` ([Text](#data-types), [optional](#field-tags)): The name of the train.
+- `Gousuu` ([Text](#data-types), [optional](#field-tags)): The number of train cars.
 
 #### Trailing Attributes
 
-- `EkiJikoku` ([Text](#data-types), optional): The schedule of the train at various stations. This can follow several formats:
+- `EkiJikoku` ([Text](#data-types), [optional](#field-tags)): The schedule of the train at various stations. This can follow several formats:
   - `""` (no service)
   - `"1"` (stops at the station)
   - `"2"` (does not pass through the station)
@@ -204,25 +204,25 @@ The **DispProp Node** defines the display properties for various elements of the
 
 #### Attributes
 
-- `JikokuhyouFont` ([Text](#data-types), required, repeatable): Specifies the font used for the timetable text. Includes attributes such as:
+- `JikokuhyouFont` ([Text](#data-types), [required](#field-tags), [repeatable](#field-tags)): Specifies the font used for the timetable text. Includes attributes such as:
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
   - `Facename` ([Text](#data-types)): The name of the font, e.g., `"ＭＳ ゴシック"`.
-  - `Bold` ([Boolean](#data-types), optional): Indicates if the text is bold.
-  - `Italic` ([Boolean](#data-types), optional): Indicates if the text is italicized.
-- `JikokuhyouVFont` ([Text](#data-types), optional, repeatable): Specifies the vertical font used for the timetable text. Includes attributes such as:
+  - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
+  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
+- `JikokuhyouVFont` ([Text](#data-types), [optional](#field-tags), [repeatable](#field-tags)): Specifies the vertical font used for the timetable text. Includes attributes such as:
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
   - `Facename` ([Text](#data-types)): The name of the font, e.g., `"@ＭＳ ゴシック"`.
-  - `Bold` ([Boolean](#data-types), optional): Indicates if the text is bold.
-  - `Italic` ([Boolean](#data-types), optional): Indicates if the text is italicized.
+  - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
+  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
 - `DiaEkimeiFont`Includes attributes such as:
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
   - `Facename` ([Text](#data-types)): The name of the font, e.g., `"@ＭＳ ゴシック"`.
-  - `Bold` ([Boolean](#data-types), optional): Indicates if the text is bold.
-  - `Italic` ([Boolean](#data-types), optional): Indicates if the text is italicized.
-- `DiaMojiColor` ([Text](#data-types), optional): Specifies the color of the text on the timetable using a hexadecimal color code.
-- `DiaHaikeiColor` ([Text](#data-types), optional): Specifies the background color of the timetable using a hexadecimal color code.
-- `DiaRessyaColor` ([Text](#data-types), optional): Specifies the color of the train text in the diagram using a hexadecimal color code.
-- `DiaJikuColor` ([Text](#data-types), optional): Specifies the color of the diagram axis using a hexadecimal color code.
+  - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
+  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
+- `DiaMojiColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the text on the timetable using a hexadecimal color code.
+- `DiaHaikeiColor` ([Text](#data-types), [optional](#field-tags)): Specifies the background color of the timetable using a hexadecimal color code.
+- `DiaRessyaColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the train text in the diagram using a hexadecimal color code.
+- `DiaJikuColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the diagram axis using a hexadecimal color code.
 
 ### WindowPlacement Node
 
@@ -232,9 +232,15 @@ The **DispProp Node** defines the display properties for various elements of the
 
 #### Attributes
 
-- `RosenViewWidth` ([Number](#data-types), required): The width of the Route view.
+- `RosenViewWidth` ([Number](#data-types), [required](#field-tags)): The width of the Route view.
 
 ### Attribute Field Properties
+
+#### Field Tags
+
+- `required`: Indicates that the field must be present in the node. Missing required fields will likely cause the file to be invalid or fail parsing.
+- `optional`: Optional value that can be omitted if not applicable. If omitted, the parser will likely apply a default value or handle it gracefully.
+- `repeatable`: Indicates that the field or node can appear multiple times within the same parent node. These fields can store multiple values or instances of the same data type.
 
 #### Data Types
 
