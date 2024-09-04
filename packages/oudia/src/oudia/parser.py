@@ -1,6 +1,8 @@
 from typing import Iterator, TextIO
-from .types import OuDia, FileType
-from .nodes import Eki, Rosen, Node, TypedNode
+
+from oudia.nodes.node import Children
+from .nodes import Eki, Rosen, Node, TypedNode, OuDia, FileType
+from typing import Annotated
 
 import logging
 
@@ -11,6 +13,9 @@ def parse(lines: list[str]) -> Iterator[Node]:
     stack: list[Node] = []
     current_node: Node | None = None
 
+    is_trailing: Annotated[bool, "hello"] = False
+    """This decides if children list is already read or not"""
+
     for line in lines:
         line = line.strip()
         if line.endswith("."):
@@ -20,21 +25,27 @@ def parse(lines: list[str]) -> Iterator[Node]:
                 if current_node:
                     stack.append(current_node)
                 current_node = new_node
+                is_trailing = False
             elif current_node:
                 # .
                 if stack:
                     parent = stack.pop()
                     parent.add_child(current_node)
                     current_node = parent
+                    is_trailing = True
                 else:
                     yield current_node
                     current_node = None
+                    is_trailing = False
 
         elif "=" in line:
             # Key=Value
             key, value = line.split("=", 1)
             if current_node:
-                current_node.attributes[key] = value
+                if is_trailing:
+                    current_node.trailing_attributes.append((key, value))
+                else:
+                    current_node.attributes.append((key, value))
 
     if current_node:
         yield current_node
@@ -69,20 +80,24 @@ def loads(text: str) -> OuDia:
             file_type.software,
         )
 
-    aftermath = text.split("\n.\n")[-1] if "\n.\n" in text else None
-    aftermath_line_count = aftermath.count("\n") if aftermath else 0
+    nodes = list(parse(f"Root.\n{text.strip()}\n.".splitlines()))
 
-    nodes = list(parse(text.splitlines()[1 : -aftermath_line_count - 1]))
+    print(f"{nodes=}")
 
     # replace node with typednode by type recursively
     def replace_node(node) -> Node | TypedNode:
-        if not isinstance(node, Node):
-            return node
+        assert isinstance(node, Node)
+        # if not isinstance(node, Node):
+        #     return node
 
-        new_node = Node(node.type, node.attributes)
-        new_node.children = [replace_node(child) for child in node.children]
+        replaced_children = Children([replace_node(child) for child in node.children])
+        new_node = Node(
+            node.type, node.attributes, replaced_children, node.trailing_attributes
+        )
 
         match node.type:
+            case "Root":
+                new_node = OuDia.from_node(new_node)
             case "Rosen":
                 new_node = Rosen.from_node(new_node)
             case "Eki":
@@ -92,9 +107,12 @@ def loads(text: str) -> OuDia:
 
         return new_node
 
-    nodes: list[TypedNode | Node] = [replace_node(node) for node in nodes]
-
-    return OuDia(file_type, nodes, aftermath=aftermath)
+    print(f"{nodes[0]=}")
+    root = replace_node(nodes[0])
+    assert isinstance(root, OuDia)
+    print(f"{root=}")
+    print(f"{root.file_type_app_comment=}")
+    return root
 
 
 def load(fp: TextIO) -> OuDia:

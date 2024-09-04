@@ -1,5 +1,6 @@
 import logging
 import oudia
+from oudia.nodes.node import Attributes
 import pytest
 
 
@@ -14,8 +15,11 @@ def test_invalid(caplog):
     assert 'Unsupported software: "NotOuDia"' in caplog.text
 
 
-def test_node_conversion():
-    untyped_rosen_node = oudia.Node("Rosen", {"Rosenmei": "メロンキング線"})
+def test_node_conversion() -> None:
+    untyped_rosen_node = oudia.Node(
+        "Rosen",
+        Attributes(("Rosenmei", "メロンキング線")),
+    )
     typed_rosen_node = oudia.Rosen("メロンキング線")
 
     assert untyped_rosen_node == typed_rosen_node.to_node()
@@ -25,26 +29,31 @@ def test_node_conversion():
 
 def test_parser():
     assert oudia.loads("FileType=OuDia.1.02") == oudia.OuDia(
-        file_type=oudia.FileType("OuDia", "1.02"), children=[]
+        file_type=oudia.FileType("OuDia", "1.02"),
     )
     assert oudia.loads(
         "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n."
     ) == oudia.OuDia(
         file_type=oudia.FileType("OuDia", "1.02"),
-        children=[oudia.Node("Rosen", {"Rosenmei": "メロンキング線"})],
+        _children=[oudia.Rosen("メロンキング線")],
     )
     assert oudia.loads(
-        "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nAfterMath=Hello"
+        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0"
     ) == oudia.OuDia(
         file_type=oudia.FileType("OuDia", "1.02"),
-        children=[oudia.Node("Rosen", {"Rosenmei": "メロンキング線"})],
-        aftermath="AfterMath=Hello",
+        file_type_app_comment="OuDia.Py 0.0.0",
+        _children=[oudia.Rosen("メロンキング線")],
+        # oudia.Node("Rosen", {"Rosenmei": "メロンキング線"})],
     )
-    
-    with open("./tests/test2.oud", "r") as f:
-        dia = oudia.load(f)
-        print(dia)
-        print(dia.pprint())
+
+
+def test_pprint():
+    dia = oudia.loads(
+        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
+    )
+    print(f"{dia=}")
+    print(f"{dia.to_node()=}")
+    dia.pprint()
 
 
 def test_exporter():
@@ -52,20 +61,30 @@ def test_exporter():
         oudia.dumps(
             oudia.OuDia(
                 file_type=oudia.FileType("OuDia", "1.02"),
-                children=[oudia.Node("Rosen", {"Rosenmei": "メロンキング線"})],
+                _children=[oudia.Rosen("メロンキング線")],
             )
         )
-        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n."
+        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\n"
     )
 
     assert (
         oudia.dumps(
             oudia.OuDia(
                 file_type=oudia.FileType("OuDia", "1.02"),
-                children=[oudia.Node("Rosen", {"Rosenmei": "メロンキング線"})],
-                aftermath="AfterMath=Hello",
+                file_type_app_comment="OuDia.Py 0.0.0",
+                _children=[oudia.Rosen("メロンキング線")],
             )
         )
-        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nAfterMath=Hello"
+        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
     )
 
+
+def test_authenity():
+    with open("./tests/empty.oud2", "r") as f:
+        text = f.read()
+        dia = oudia.loads(text)
+        print(dia)
+        print(dia.pprint())
+    with open("./tests/empty_dumped.oud2", "w") as f:
+        f.write(oudia.dumps(dia))
+    assert oudia.dumps(dia) == text

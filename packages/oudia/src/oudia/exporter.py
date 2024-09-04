@@ -1,23 +1,10 @@
 from typing import TextIO
-from oudia.types import OuDia
+from .nodes import OuDia
 
 
 def dumps(oudia: OuDia) -> str:
-    result = ""
-
-    result += "FileType=" + str(oudia.file_type)
-
-    if oudia.children:
-        result += "\n"
-
-    for node in oudia.children:
-        result += str(node) + "\n"
-
-    if oudia.aftermath:
-        result += "\n"
-        result += oudia.aftermath
-
-    return result
+    # Add a newline at the end of the file
+    return str(oudia) + "\n"
 
 
 def dump(oudia: OuDia, fp: TextIO) -> None:

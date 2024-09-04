@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
-from .node import Node, TypedNode
+
+from .node import Attributes, Node, TypedNode
 
 
 @dataclass
@@ -24,17 +25,17 @@ class Eki(TypedNode):
     @staticmethod
     def from_node(node: Node) -> "Eki":
         return Eki(
-            ekimei=node.attributes["Ekimei"],
-            ekijikokukeisiki=node.attributes["Ekijikokukeisiki"],
-            ekikibo=node.attributes["Ekikibo"],
+            ekimei=node.attributes.get_required("Ekimei"),
+            ekijikokukeisiki=node.attributes.get_required(key="Ekijikokukeisiki"),
+            ekikibo=node.attributes.get_required("Ekikibo"),
         )
 
     def to_node(self) -> Node:
         return Node(
             type="Eki",
-            attributes={
-                "Ekimei": self.ekimei,
-                "Ekijikokukeisiki": self.ekijikokukeisiki,
-                "Ekikibo": self.ekikibo,
-            },
+            attributes=Attributes(
+                ("Ekimei", self.ekimei),
+                ("Ekijikokukeisiki", self.ekijikokukeisiki),
+                ("Ekikibo", self.ekikibo),
+            ),
         )

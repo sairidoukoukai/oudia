@@ -1,13 +1,13 @@
 from dataclasses import dataclass, field
 from ..helper import snake_case_to_CamelCase
-from .node import Node, TypedNode
+from .node import Attributes, Node, TypedNode
 
 
 @dataclass
 class Rosen(TypedNode):
     """路線"""
 
-    rosenmei: str
+    rosenmei: str | None = None
     """路線名"""
 
     kudari_dia_alias: str | None = None
@@ -21,6 +21,12 @@ class Rosen(TypedNode):
 
     diagram_dgr_y_zahyou_kyori_default: int | None = None
     """ダイヤグラムDGRY座標距離デフォルト"""
+
+    operation_cross_kiten_jikoku: int | None = None
+    """ダイヤグラム起点時刻を挟んで運用を接続する（OuDiaSecond.1.10+）"""
+
+    enable_operation: bool | None = None
+    """運用機能の有効無効（OuDiaSecond.1.03+）"""
 
     comment: str | None = None
     """コメント"""
@@ -36,28 +42,51 @@ class Rosen(TypedNode):
     @staticmethod
     def from_node(node: Node) -> "Rosen":
         return Rosen(
-            rosenmei=node.attributes["Rosenmei"],
+            rosenmei=node.attributes.get("Rosenmei"),
             kudari_dia_alias=node.attributes.get("KudariDiaAlias"),
             nobori_dia_alias=node.attributes.get("NoboriDiaAlias"),
-            kiten_jikoku=node.attributes.get("KitenJikoku"),
+            kiten_jikoku=node.trailing_attributes.get("KitenJikoku"),
             diagram_dgr_y_zahyou_kyori_default=(
                 int(v)
-                if (v := node.attributes.get("DiagramDgrYZahyouKyoriDefault"))
+                if (v := node.trailing_attributes.get("DiagramDgrYZahyouKyoriDefault"))
                 else None
             ),
-            comment=node.attributes.get("Comment"),
+            comment=node.trailing_attributes.get("Comment"),
             _children=node.children,
         )
 
     def to_node(self) -> Node:
         return Node(
             type="Rosen",
-            attributes={
-                snake_case_to_CamelCase(k): v
-                for k, v in self.__dict__.items()
-                if k != "_children" and v
-            },
-            children=self.children,
+            attributes=Attributes(
+                ("Rosenmei", self.rosenmei),
+                ("KudariDiaAlias", self.kudari_dia_alias),
+                ("NoboriDiaAlias", self.nobori_dia_alias),
+            ),
+            trailing_attributes=Attributes(
+                ("KitenJikoku", self.kiten_jikoku),
+                (
+                    "DiagramDgrYZahyouKyoriDefault",
+                    (
+                        str(self.diagram_dgr_y_zahyou_kyori_default)
+                        if self.diagram_dgr_y_zahyou_kyori_default
+                        else None
+                    ),
+                ),
+                (
+                    "OperationCrossKitenJikoku",
+                    (
+                        str(self.operation_cross_kiten_jikoku)
+                        if self.operation_cross_kiten_jikoku
+                        else None
+                    ),
+                ),
+                (
+                    "EnableOperation",
+                    str(self.enable_operation) if self.enable_operation else None,
+                ),
+                ("Comment", self.comment),
+            ),
         )
 
     def __eq__(self, value: object) -> bool:

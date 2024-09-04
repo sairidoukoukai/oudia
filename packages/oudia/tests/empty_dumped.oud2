@@ -1,0 +1,61 @@
+FileType=OuDiaSecond.1.14
+Rosen.
+Rosenmei=
+KudariDiaAlias=
+NoboriDiaAlias=
+KitenJikoku=000
+DiagramDgrYZahyouKyoriDefault=60
+Comment=
+.
+DispProp.
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI;Bold=1
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI;Itaric=1
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI;Bold=1;Itaric=1
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI
+JikokuhyouFont=PointTextHeight=9;Facename=Meiryo UI
+JikokuhyouVFont=PointTextHeight=9;Facename=@メイリオ
+DiaEkimeiFont=PointTextHeight=9;Facename=Meiryo UI
+DiaJikokuFont=PointTextHeight=9;Facename=Meiryo UI
+DiaRessyaFont=PointTextHeight=9;Facename=Meiryo UI
+OperationTableFont=PointTextHeight=9;Facename=Meiryo UI
+AllOperationTableJikokuFont=PointTextHeight=8;Facename=Meiryo UI
+CommentFont=PointTextHeight=9;Facename=Meiryo UI
+DiaMojiColor=00000000
+DiaBackColor=00FFFFFF
+DiaBackColor=00FFFFFF
+DiaBackColor=00FFFFFF
+DiaBackColor=00FFFFFF
+DiaBackColor=00FFFFFF
+DiaRessyaColor=00000000
+DiaJikuColor=00C0C0C0
+JikokuhyouBackColor=00FFFFFF
+JikokuhyouBackColor=00F0F0F0
+JikokuhyouBackColor=00FFFFFF
+JikokuhyouBackColor=00FFFFFF
+StdOpeTimeLowerColor=00E0E0FF
+StdOpeTimeHigherColor=00FFFFE0
+StdOpeTimeUndefColor=0080FFFF
+StdOpeTimeIllegalColor=00A0A0A0
+OperationStringColor=00000000
+OperationGridColor=00000000
+EkimeiLength=6
+JikokuhyouRessyaWidth=5
+AnySecondIncDec1=5
+AnySecondIncDec2=15
+DisplayRessyamei=1
+DisplayOuterTerminalEkimeiOriginSide=0
+DisplayOuterTerminalEkimeiTerminalSide=0
+DiagramDisplayOuterTerminal=0
+SecondRoundChaku=0
+SecondRoundHatsu=0
+Display2400=0
+OperationNumberRows=1
+DisplayInOutLinkCode=0
+.
+WindowPlacement.
+RosenViewWidth=263
+.
+FileTypeAppComment=OuDiaSecondV2 Ver. 2.06.14
