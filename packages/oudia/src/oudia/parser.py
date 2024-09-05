@@ -84,9 +84,7 @@ def loads(text: str) -> OuDia:
         text = text[1:]
 
     if not text.startswith("FileType="):
-        raise ValueError(
-            f"Invalid file type, starting bytes are not 'FileType=': {text[:10]}"
-        )
+        raise ValueError(f"Invalid file type, starting bytes are not 'FileType=': {text[:10]}")
 
     file_type = FileType.from_str(text.split("\n")[0].split("=", 1)[1])
     if file_type.software not in ["OuDia", "OuDiaSecond"]:
@@ -104,27 +102,24 @@ def loads(text: str) -> OuDia:
         #     return node
 
         replaced_children = Children([replace_node(child) for child in node.children])
-        new_node = Node(
-            node.type, node.attributes, replaced_children, node.trailing_attributes
-        )
+        new_node = Node(node.type, node.attributes, replaced_children, node.trailing_attributes)
 
-        match node.type:
-            case "Root":
-                new_node = OuDia.from_node(new_node)
-            case "Rosen":
-                new_node = Rosen.from_node(new_node)
-            case "Eki":
-                new_node = Eki.from_node(new_node)
-            case "Ressyasyubetsu":
-                new_node = Ressyasyubetsu.from_node(new_node)
-            case "EkiTrack2":
-                new_node = EkiTrack2.from_node(new_node)
-            case "EkiTrack2Cont":
-                new_node = EkiTrack2Cont.from_node(new_node)
-            case "DispProp":
-                new_node = DispProp.from_node(new_node)
-            case _:
-                pass
+        TYPE_TO_NODE: dict[str, type[TypedNode]] = {
+            "Root": OuDia,
+            "Rosen": Rosen,
+            "Eki": Eki,
+            "Ressyasyubetsu": Ressyasyubetsu,
+            "EkiTrack2": EkiTrack2,
+            "EkiTrack2Cont": EkiTrack2Cont,
+            "DispProp": DispProp,
+        }
+
+        CurrentType: type[TypedNode] | None = TYPE_TO_NODE.get(node.type) if node.type else None
+
+        if CurrentType:
+            new_node = CurrentType.from_node(new_node)
+        else:
+            logger.warning(f"Unsupported node type: {node.type}")
 
         return new_node
 
