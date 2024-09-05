@@ -1,13 +1,13 @@
 from dataclasses import dataclass, field
 
-from .node import Attributes, Children, Node, TypedNode
+from oudia.nodes.track import EkiTrack2
+
+from .node import EntryList, NodeList, Node, TypedNode
 
 
 @dataclass
 class Eki(TypedNode):
     """駅"""
-
-    # region Attributes
 
     ekimei: str
     """駅名"""
@@ -51,7 +51,8 @@ class Eki(TypedNode):
     next_eki_distance: int | None
     """次駅までの距離(秒)"""
 
-    # endregion
+    eki_tracks: NodeList[EkiTrack2]
+    """駅の番線"""
 
     jikokuhyou_track_omit: bool | None
     """時刻表トラックの省略"""
@@ -92,41 +93,37 @@ class Eki(TypedNode):
     @classmethod
     def from_node(cls, node: Node) -> "Eki":
         return cls(
-            ekimei=node.attributes.get_required("Ekimei"),
-            ekimei_jikoku_ryaku=node.attributes.get("EkimeiJikokuRyaku"),
-            ekimei_dia_ryaku=node.attributes.get("EkimeiDiaRyaku"),
-            ekijikokukeisiki=node.attributes.get_required(key="Ekijikokukeisiki"),
-            ekikibo=node.attributes.get_required("Ekikibo"),
-            down_main=node.attributes.get_int("DownMain"),
-            up_main=node.attributes.get_int("UpMain"),
-            brunch_core_eki_index=node.attributes.get_int("BrunchCoreEkiIndex"),
-            brunch_opposite=node.attributes.get_bool("BrunchOpposite"),
-            loop_origin_eki_index=node.attributes.get_int("LoopOriginEkiIndex"),
-            loop_opposite=node.attributes.get_bool("LoopOpposite"),
-            jikokuhyou_track_display_kudari=node.attributes.get_bool("JikokuhyouTrackDisplayKudari"),
-            jikokuhyou_track_display_nobori=node.attributes.get_bool("JikokuhyouTrackDisplayNobori"),
-            diagram_track_display=node.attributes.get_bool("DiagramTrackDisplay"),
-            next_eki_distance=node.attributes.get_int("NextEkiDistance"),
-            jikokuhyou_track_omit=node.trailing_attributes.get_bool("JikokuhyouTrackOmit"),
-            jikokuhyou_jikoku_display_kudari=node.trailing_attributes.get("JikokuhyouJikokuDisplayKudari"),
-            jikokuhyou_jikoku_display_nobori=node.trailing_attributes.get("JikokuhyouJikokuDisplayNobori"),
-            jikokuhyou_syubetsu_change_display_kudari=node.trailing_attributes.get(
-                "JikokuhyouSyubetsuChangeDisplayKudari"
-            ),
-            jikokuhyou_syubetsu_change_display_nobori=(
-                node.trailing_attributes.get("JikokuhyouSyubetsuChangeDisplayNobori")
-            ),
-            diagram_color_next_eki=node.trailing_attributes.get_int("DiagramColorNextEki"),
-            jikokuhyou_outer_display_kudari=node.trailing_attributes.get("JikokuhyouOuterDisplayKudari"),
-            jikokuhyou_outer_display_nobori=node.trailing_attributes.get("JikokuhyouOuterDisplayNobori"),
-            operation_table_display_jikoku=node.trailing_attributes.get_bool("OperationTableDisplayJikoku"),
-            _children=node.children,
+            ekimei=node.entries.get_required("Ekimei"),
+            ekimei_jikoku_ryaku=node.entries.get("EkimeiJikokuRyaku"),
+            ekimei_dia_ryaku=node.entries.get("EkimeiDiaRyaku"),
+            ekijikokukeisiki=node.entries.get_required(key="Ekijikokukeisiki"),
+            ekikibo=node.entries.get_required("Ekikibo"),
+            down_main=node.entries.get_int("DownMain"),
+            up_main=node.entries.get_int("UpMain"),
+            brunch_core_eki_index=node.entries.get_int("BrunchCoreEkiIndex"),
+            brunch_opposite=node.entries.get_bool("BrunchOpposite"),
+            loop_origin_eki_index=node.entries.get_int("LoopOriginEkiIndex"),
+            loop_opposite=node.entries.get_bool("LoopOpposite"),
+            jikokuhyou_track_display_kudari=node.entries.get_bool("JikokuhyouTrackDisplayKudari"),
+            jikokuhyou_track_display_nobori=node.entries.get_bool("JikokuhyouTrackDisplayNobori"),
+            diagram_track_display=node.entries.get_bool("DiagramTrackDisplay"),
+            next_eki_distance=node.entries.get_int("NextEkiDistance"),
+            eki_tracks=node.entries.get_list(0, EkiTrack2),
+            jikokuhyou_track_omit=node.entries.get_bool("JikokuhyouTrackOmit"),
+            jikokuhyou_jikoku_display_kudari=node.entries.get("JikokuhyouJikokuDisplayKudari"),
+            jikokuhyou_jikoku_display_nobori=node.entries.get("JikokuhyouJikokuDisplayNobori"),
+            jikokuhyou_syubetsu_change_display_kudari=node.entries.get("JikokuhyouSyubetsuChangeDisplayKudari"),
+            jikokuhyou_syubetsu_change_display_nobori=(node.entries.get("JikokuhyouSyubetsuChangeDisplayNobori")),
+            diagram_color_next_eki=node.entries.get_int("DiagramColorNextEki"),
+            jikokuhyou_outer_display_kudari=node.entries.get("JikokuhyouOuterDisplayKudari"),
+            jikokuhyou_outer_display_nobori=node.entries.get("JikokuhyouOuterDisplayNobori"),
+            operation_table_display_jikoku=node.entries.get_bool("OperationTableDisplayJikoku"),
         )
 
     def to_node(self) -> Node:
         return Node(
             type="Eki",
-            attributes=Attributes(
+            entries=EntryList(
                 ("Ekimei", self.ekimei),
                 ("EkimeiJikokuRyaku", self.ekimei_jikoku_ryaku),
                 ("EkimeiDiaRyaku", self.ekimei_dia_ryaku),
@@ -142,9 +139,7 @@ class Eki(TypedNode):
                 ("JikokuhyouTrackDisplayNobori", self.jikokuhyou_track_display_nobori),
                 ("DiagramTrackDisplay", self.diagram_track_display),
                 ("NextEkiDistance", self.next_eki_distance),
-            ),
-            children=Children(self.children),
-            trailing_attributes=Attributes(
+                (None, self.eki_tracks),
                 ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
                 ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
                 ("JikokuhyouJikokuDisplayNobori", self.jikokuhyou_jikoku_display_nobori),

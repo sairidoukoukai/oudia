@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from .node import Attributes, Children, Node, TypedNode
+from .node import EntryList, NodeList, Node, TypedNode
 
 
 @dataclass
@@ -108,58 +108,49 @@ class DispProp(TypedNode):
     # TODO: Continue here
     ekimei_length: int | None
 
-    _children: list["Node | TypedNode"] = field(default_factory=list)
-
-    @property
-    def children(self) -> list["Node | TypedNode"]:
-        return self._children
-
     @staticmethod
     def from_node(node: Node) -> "DispProp":
         return DispProp(
-            jikokuhyou_font=node.attributes.get_repeatable("JikokuhyouFont"),
-            jikokuhyou_v_font=node.attributes.get("JikokuhyouVFont"),
-            dia_ekimei_font=node.attributes.get("DiaEkimeiFont"),
-            dia_jikoku_font=node.attributes.get("DiaJikokuFont"),
-            dia_ressya_font=node.attributes.get("DiaRessyaFont"),
-            operation_table_font=node.attributes.get("OperationTableFont"),
-            all_operation_table_jikoku_font=node.attributes.get("AllOperationTableJikokuFont"),
-            comment_font=node.attributes.get("CommentFont"),
-            dia_moji_color=node.attributes.get("DiaMojiColor"),
-            dia_back_color=node.attributes.get_repeatable("DiaBackColor"),
-            dia_haikei_color=node.attributes.get_repeatable("DiaHaikeiColor"),
-            dia_ressya_color=node.attributes.get("DiaRessyaColor"),
-            dia_jiku_color=node.attributes.get("DiaJikuColor"),
-            jikokuhyou_back_color=node.attributes.get_repeatable("JikokuhyouBackColor"),
-            std_ope_time_lower_color=node.attributes.get("StdOpeTimeLowerColor"),
-            std_ope_time_higher_color=node.attributes.get("StdOpeTimeHigherColor"),
-            std_ope_time_undef_color=node.attributes.get("StdOpeTimeUndefColor"),
-            std_ope_time_illegal_color=node.attributes.get("StdOpeTimeIllegalColor"),
-            operation_string_color=node.attributes.get("OperationStringColor"),
-            operation_grid_color=node.attributes.get("OperationGridColor"),
+            jikokuhyou_font=node.entries.get_repeatable("JikokuhyouFont"),
+            jikokuhyou_v_font=node.entries.get("JikokuhyouVFont"),
+            dia_ekimei_font=node.entries.get("DiaEkimeiFont"),
+            dia_jikoku_font=node.entries.get("DiaJikokuFont"),
+            dia_ressya_font=node.entries.get("DiaRessyaFont"),
+            operation_table_font=node.entries.get("OperationTableFont"),
+            all_operation_table_jikoku_font=node.entries.get("AllOperationTableJikokuFont"),
+            comment_font=node.entries.get("CommentFont"),
+            dia_moji_color=node.entries.get("DiaMojiColor"),
+            dia_back_color=node.entries.get_repeatable("DiaBackColor"),
+            dia_haikei_color=node.entries.get_repeatable("DiaHaikeiColor"),
+            dia_ressya_color=node.entries.get("DiaRessyaColor"),
+            dia_jiku_color=node.entries.get("DiaJikuColor"),
+            jikokuhyou_back_color=node.entries.get_repeatable("JikokuhyouBackColor"),
+            std_ope_time_lower_color=node.entries.get("StdOpeTimeLowerColor"),
+            std_ope_time_higher_color=node.entries.get("StdOpeTimeHigherColor"),
+            std_ope_time_undef_color=node.entries.get("StdOpeTimeUndefColor"),
+            std_ope_time_illegal_color=node.entries.get("StdOpeTimeIllegalColor"),
+            operation_string_color=node.entries.get("OperationStringColor"),
+            operation_grid_color=node.entries.get("OperationGridColor"),
             # TODO: Continue here
-            ekimei_length=node.attributes.get_int("EkimeiLength"),
-            jikokuhyou_ressya_width=node.attributes.get_int("JikokuhyouRessyaWidth"),
-            any_second_inc_dec1=node.attributes.get_int("AnySecondIncDec1"),
-            any_second_inc_dec2=node.attributes.get_int("AnySecondIncDec2"),
-            display_ressyamei=node.attributes.get_bool("DisplayRessyamei"),
-            display_outer_terminal_ekimei_origin_side=node.attributes.get_bool("DisplayOuterTerminalEkimeiOriginSide"),
-            display_outer_terminal_ekimei_terminal_side=node.attributes.get_bool(
-                "DisplayOuterTerminalEkimeiTerminalSide"
-            ),
-            diagram_display_outer_terminal=node.attributes.get_int("DiagramDisplayOuterTerminal"),
-            second_round_chaku=node.attributes.get_int("SecondRoundChaku"),
-            second_round_hatsu=node.attributes.get_int("SecondRoundHatsu"),
-            display_2400=node.attributes.get_bool("Display2400"),
-            operation_number_rows=node.attributes.get_int("OperationNumberRows"),
-            display_in_out_link_code=node.attributes.get_bool("DisplayInOutLinkCode"),
-            _children=node.children,
+            ekimei_length=node.entries.get_int("EkimeiLength"),
+            jikokuhyou_ressya_width=node.entries.get_int("JikokuhyouRessyaWidth"),
+            any_second_inc_dec1=node.entries.get_int("AnySecondIncDec1"),
+            any_second_inc_dec2=node.entries.get_int("AnySecondIncDec2"),
+            display_ressyamei=node.entries.get_bool("DisplayRessyamei"),
+            display_outer_terminal_ekimei_origin_side=node.entries.get_bool("DisplayOuterTerminalEkimeiOriginSide"),
+            display_outer_terminal_ekimei_terminal_side=node.entries.get_bool("DisplayOuterTerminalEkimeiTerminalSide"),
+            diagram_display_outer_terminal=node.entries.get_int("DiagramDisplayOuterTerminal"),
+            second_round_chaku=node.entries.get_int("SecondRoundChaku"),
+            second_round_hatsu=node.entries.get_int("SecondRoundHatsu"),
+            display_2400=node.entries.get_bool("Display2400"),
+            operation_number_rows=node.entries.get_int("OperationNumberRows"),
+            display_in_out_link_code=node.entries.get_bool("DisplayInOutLinkCode"),
         )
 
     def to_node(self) -> Node:
         return Node(
             type="DispProp",
-            attributes=Attributes(
+            entries=EntryList(
                 *((f"JikokuhyouFont", v) for v in self.jikokuhyou_font),
                 ("JikokuhyouVFont", self.jikokuhyou_v_font),
                 ("DiaEkimeiFont", self.dia_ekimei_font),
@@ -194,6 +185,4 @@ class DispProp(TypedNode):
                 ("OperationNumberRows", self.operation_number_rows),
                 ("DisplayInOutLinkCode", self.display_in_out_link_code),
             ),
-            trailing_attributes=Attributes(),
-            children=Children(self.children),
         )

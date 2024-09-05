@@ -1,30 +1,88 @@
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
+from typing import Any, Type, TypeVar
+
+T = TypeVar("T", bound="Node | TypedNode")
 
 
-class Attributes(list[tuple[str, str]]):
+class NodeList[T](list[T]):
+    def __str__(self) -> str:
+        assert all(bool(child) for child in self)
+        return "\n".join([str(child) for child in self])
 
-    def __init__(self, *args: tuple[str, str | int | bool | None]) -> None:
-        def parse_value(value: str | int | bool | None) -> str:
-            if value is None:
-                return ""
-            if isinstance(value, bool):
-                return "1" if value else "0"
-            return str(value)
+    def __repr__(self) -> str:
+        return f"Children({super().__repr__()})"
 
-        super().__init__([(k, parse_value(v)) for k, v in args if v is not None])
+
+Property = tuple[str, str]
+# NodeList = list["Node | TypedNode"]
+Entry = Property | NodeList
+
+
+class EntryList(list[Property | NodeList]):
+
+    @staticmethod
+    def parse_value(value: str | int | bool | None) -> str:
+        if value is None:
+            return ""
+        if isinstance(value, bool):
+            return "1" if value else "0"
+        return str(value)
+
+    # def __init__(self, *args: tuple[str, str | int | bool | None]) -> None:
+
+    @staticmethod
+    def parse_item(value: tuple[str | None, str | int | bool | NodeList | None]) -> Entry:
+        k, v = value
+        if k is not None and isinstance(v, NodeList):
+            raise ValueError("NodeList cannnot have key")
+        if isinstance(v, NodeList):
+            return v
+        if k is None:
+            raise ValueError("Key must be specified for properties")
+        return (k, EntryList.parse_value(v))
 
     # def __new__(cls, x) -> "Attributes":
     #     return super(Attributes, cls).__new__(X)
+    def __init__(self, *args: tuple[str | None, str | int | bool | None | NodeList]) -> None:
+        super().__init__([self.parse_item((k, v)) for k, v in args if v is not None])
+
+        # entries: Property
+
+        # super().__init__([(k, self.parse_value(v)) if k else v for k, v in args if v is not None])
 
     def __str__(self) -> str:
-        return "\n".join([f"{key}={value}" for key, value in self])
+        result = ""
+
+        def format_entry(entry: Property | NodeList) -> str:
+            if isinstance(entry, tuple):
+                return f"{entry[0]}={entry[1]}"
+            if isinstance(entry, NodeList):
+                return str(entry)
+            raise ValueError(f"Unexpected entry type: {type(entry)}")
+
+        return "\n".join(format_entry(entry) for entry in self if entry)
 
     def __repr__(self) -> str:
         return f"Attributes({', '.join(str(pair) for pair in self)})"
 
+    @property
+    def properties(self) -> list[Property]:
+        return [p for p in self if isinstance(p, tuple)]
+
+    @property
+    def node_lists(self) -> list[NodeList]:
+        return [p for p in self if isinstance(p, NodeList)]
+
+    T = TypeVar("T", bound="TypedNode | Node")
+
+    def get_list(self, key: int, t: Type[T]) -> NodeList[T]:
+        if key >= len(self.node_lists):
+            return NodeList()
+        return self.node_lists[key]
+
     def get(self, key: str) -> str | None:
-        for k, v in self:
+        for k, v in self.properties:
             if k == key:
                 return v
         return None
@@ -48,15 +106,7 @@ class Attributes(list[tuple[str, str]]):
         return value
 
     def get_repeatable(self, key: str) -> list[str]:
-        return [v for k, v in self if k == key]
-
-
-class Children(list["Node | TypedNode"]):
-    def __str__(self) -> str:
-        return "\n".join([str(child) for child in self])
-
-    def __repr__(self) -> str:
-        return f"Children({super().__repr__()})"
+        return [v for k, v in self.properties if k == key]
 
 
 @dataclass
@@ -71,18 +121,7 @@ class Node:
     """
 
     type: str | None
-    attributes: Attributes
-    children: Children
-    trailing_attributes: Attributes
-
-    def add_child(self, node: "Node"):
-        """
-        Adds a child to the node.
-
-        Args:
-            node (Node): The node to add.
-        """
-        self.children.append(node)
+    entries: EntryList
 
     def __str__(self):
         """
@@ -96,9 +135,7 @@ class Node:
             str(x)
             for x in [
                 f"{self.type}." if self.type else None,
-                self.attributes,
-                self.children,
-                self.trailing_attributes,
+                self.entries,
                 "." if self.type else None,
             ]
             if x
@@ -118,7 +155,7 @@ class Node:
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Node):
             # return super().__eq__(value)
-            return self.type == value.type and self.attributes == value.attributes and self.children == value.children
+            return self.type == value.type and self.entries == value.entries
 
         if isinstance(value, TypedNode):
             return value.to_node() == self
@@ -134,12 +171,12 @@ class Node:
         """
         if self.type:
             print(" " * indent + self.type + ".")
-        for key, value in self.attributes:
-            print(" " * (indent + 2) + f"{key}={value}")
-        for child in self.children:
-            child.pprint(indent + 2)
-        for key, value in self.trailing_attributes:
-            print(" " * (indent + 2) + f"{key}={value}")
+        for entry in self.entries:
+            if isinstance(entry, tuple):
+                print(" " * (indent + 2) + f"{entry[0]}={entry[1]}")
+            if isinstance(entry, NodeList):
+                for child in entry:
+                    child.pprint(indent + 2)
         if self.type:
             print(" " * indent + ".")
 
@@ -149,17 +186,6 @@ class TypedNode(ABC):
     """
     An abstract class representing a typed node.
     """
-
-    @property
-    @abstractmethod
-    def children(self) -> list["Node | TypedNode"]:
-        """
-        Returns the children of the node.
-
-        Returns:
-            list[Node | TypedNode]: The children of the node.
-        """
-        pass
 
     @abstractmethod
     def to_node(self) -> Node:

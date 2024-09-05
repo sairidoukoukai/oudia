@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field
 
-from .node import Attributes, Children, Node, TypedNode
+from oudia.nodes.disp_prop import DispProp
+from oudia.nodes.rosen import Rosen
+
+from .node import EntryList, NodeList, Node, TypedNode
 
 
 @dataclass
@@ -46,10 +49,17 @@ class OuDia(TypedNode):
     file_type: FileType
     """ファイル形式"""
 
+    rosen: Rosen
+    """路線"""
+
+    disp_prop: DispProp
+    """表示プロパティ"""
+
+    window_placement: Node | None
+    """ウィンドの配置"""
+
     file_type_app_comment: str | None = None
     """ファイル形式のアプリコメント"""
-
-    _children: list["Node | TypedNode"] = field(default_factory=list)
 
     # def pprint(self, indent: int = 0, with_lines: bool = False):
     #     """
@@ -68,25 +78,25 @@ class OuDia(TypedNode):
     #     # if self.aftermath:
     #     #     print(" " * indent + self.aftermath)
 
-    @property
-    def children(self) -> list["Node | TypedNode"]:
-        return self._children
-
     @classmethod
     def from_node(cls, node: Node) -> "OuDia":
         assert node.type == "Root"
         return cls(
-            file_type=FileType.from_str(node.attributes.get_required("FileType")),
-            file_type_app_comment=node.trailing_attributes.get("FileTypeAppComment"),
-            _children=node.children,
+            file_type=FileType.from_str(node.entries.get_required("FileType")),
+            rosen=node.entries.get_list(0, Rosen)[0],
+            disp_prop=node.entries.get_list(1, DispProp)[0],
+            window_placement=v[0] if (v := node.entries.get_list(2, Node)) else None,
+            file_type_app_comment=node.entries.get("FileTypeAppComment"),
         )
 
     def to_node(self) -> Node:
         return Node(
             type=None,
-            attributes=Attributes(
+            entries=EntryList(
                 ("FileType", str(self.file_type)),
+                (None, NodeList([self.rosen])),
+                (None, NodeList([self.disp_prop])),
+                (None, NodeList([self.window_placement] if self.window_placement else [])),
+                ("FileTypeAppComment", self.file_type_app_comment),
             ),
-            trailing_attributes=Attributes(("FileTypeAppComment", self.file_type_app_comment)),
-            children=Children(self.children),
         )

@@ -1,6 +1,6 @@
 import logging
 import oudia
-from oudia.nodes.node import Attributes, Children
+from oudia.nodes.node import EntryList, NodeList
 import pytest
 
 
@@ -9,49 +9,106 @@ def test_invalid(caplog):
     with pytest.raises(ValueError) as e:
         oudia.loads("invalid")
 
-    # Unsupported software
-    oudia.loads("FileType=NotOuDia")
+
+def test_unsupported_software(caplog):
     caplog.set_level(logging.WARNING)
+    oudia.loads("FileType=NotOuDia\nRosen.\n.\nDispProp.\n.\n")
     assert 'Unsupported software: "NotOuDia"' in caplog.text
+
+    # # Unsupported software
+
+
+EMPTY_ROSEN = oudia.Rosen(
+    "メロンキング線",
+    None,
+    None,
+    None,
+    NodeList(),
+    NodeList(),
+    NodeList(),
+    None,
+    None,
+    None,
+    None,
+    None,
+)
 
 
 def test_node_conversion() -> None:
     untyped_rosen_node = oudia.Node(
         type="Rosen",
-        attributes=Attributes(("Rosenmei", "メロンキング線")),
-        children=Children(),
-        trailing_attributes=Attributes(),
+        entries=EntryList(
+            ("Rosenmei", "メロンキング線"),
+            (None, NodeList()),
+            (None, NodeList()),
+            (None, NodeList()),
+        ),
     )
-    typed_rosen_node = oudia.Rosen("メロンキング線")
+    typed_rosen_node = EMPTY_ROSEN
 
     assert untyped_rosen_node == typed_rosen_node.to_node()
     assert typed_rosen_node.from_node(untyped_rosen_node) == typed_rosen_node
     assert untyped_rosen_node == typed_rosen_node
 
 
-def test_parser():
-    assert oudia.loads("FileType=OuDia.1.02") == oudia.OuDia(
-        file_type=oudia.FileType("OuDia", "1.02"),
-    )
-    assert oudia.loads("FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.") == oudia.OuDia(
-        file_type=oudia.FileType("OuDia", "1.02"),
-        _children=[oudia.Rosen("メロンキング線")],
-    )
-    assert oudia.loads(
-        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0"
-    ) == oudia.OuDia(
-        file_type=oudia.FileType("OuDia", "1.02"),
-        file_type_app_comment="OuDia.Py 0.0.0",
-        _children=[oudia.Rosen("メロンキング線")],
-        # oudia.Node("Rosen", {"Rosenmei": "メロンキング線"})],
-    )
+EMPTY_DISP_PROP = oudia.DispProp(
+    [],
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    [],
+    [],
+    None,
+    None,
+    [],
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+)
 
 
 def test_pprint():
-    dia = oudia.loads(f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n")
+    dia = oudia.loads(
+        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nDispProp.\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
+    )
     print(f"{dia=}")
     print(f"{dia.to_node()=}")
     dia.pprint()
+
+
+def test_dumps_empty():
+    assert (
+        oudia.dumps(
+            oudia.OuDia(
+                file_type=oudia.FileType("OuDia", "1.02"),
+                rosen=EMPTY_ROSEN,
+                disp_prop=EMPTY_DISP_PROP,
+                window_placement=None,
+            )
+        )
+        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nDispProp.\n.\n"
+    )
 
 
 def test_exporter():
@@ -59,19 +116,11 @@ def test_exporter():
         oudia.dumps(
             oudia.OuDia(
                 file_type=oudia.FileType("OuDia", "1.02"),
-                _children=[oudia.Rosen("メロンキング線")],
-            )
-        )
-        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\n"
-    )
-
-    assert (
-        oudia.dumps(
-            oudia.OuDia(
-                file_type=oudia.FileType("OuDia", "1.02"),
+                rosen=EMPTY_ROSEN,
+                disp_prop=EMPTY_DISP_PROP,
+                window_placement=None,
                 file_type_app_comment="OuDia.Py 0.0.0",
-                _children=[oudia.Rosen("メロンキング線")],
             )
         )
-        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
+        == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nDispProp.\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
     )

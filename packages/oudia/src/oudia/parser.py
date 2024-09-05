@@ -1,6 +1,6 @@
 from typing import Iterator, TextIO
 
-from oudia.nodes.node import Attributes, Children
+from oudia.nodes.node import EntryList, NodeList
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 from .nodes import (
     Eki,
@@ -23,9 +23,6 @@ def parse(lines: list[str]) -> Iterator[Node]:
     stack: list[Node] = []
     current_node: Node | None = None
 
-    is_trailing: Annotated[bool, "hello"] = False
-    """This decides if children list is already read or not"""
-
     for line in lines:
         line = line.strip()
         if line.endswith("."):
@@ -33,9 +30,7 @@ def parse(lines: list[str]) -> Iterator[Node]:
                 # Block.
                 new_node = Node(
                     line[:-1],
-                    attributes=Attributes(),
-                    children=Children(),
-                    trailing_attributes=Attributes(),
+                    entries=EntryList(),
                 )
                 if current_node:
                     stack.append(current_node)
@@ -45,22 +40,28 @@ def parse(lines: list[str]) -> Iterator[Node]:
                 # .
                 if stack:
                     parent = stack.pop()
-                    parent.add_child(current_node)
+                    # add to last node list if
+
+                    if (
+                        parent.entries.node_lists
+                        and parent.entries.node_lists[-1]
+                        and parent.entries.node_lists[-1][-1]
+                        and parent.entries.node_lists[-1][-1].type == current_node.type
+                    ):
+                        parent.entries.node_lists[-1].append(current_node)
+                    else:
+                        parent.entries.append(NodeList([current_node]))
+
                     current_node = parent
-                    is_trailing = True
                 else:
                     yield current_node
                     current_node = None
-                    is_trailing = False
 
         elif "=" in line:
             # Key=Value
             key, value = line.split("=", 1)
             if current_node:
-                if is_trailing:
-                    current_node.trailing_attributes.append((key, value))
-                else:
-                    current_node.attributes.append((key, value))
+                current_node.entries.append((key, value))
 
     if current_node:
         yield current_node
@@ -101,8 +102,26 @@ def loads(text: str) -> OuDia:
         # if not isinstance(node, Node):
         #     return node
 
-        replaced_children = Children([replace_node(child) for child in node.children])
-        new_node = Node(node.type, node.attributes, replaced_children, node.trailing_attributes)
+        node.entries
+
+        def replace_node_list(node_list: NodeList) -> NodeList:
+            return NodeList([replace_node(child) for child in node_list])
+
+        def replace_nodes_in_entry_list(entry_list: EntryList) -> EntryList:
+            result = EntryList()
+            for entry in entry_list:
+                if isinstance(entry, NodeList):
+                    result.append(replace_node_list(entry))
+                else:
+                    result.append(entry)
+            return result
+
+        new_node = Node(
+            node.type,
+            entries=replace_nodes_in_entry_list(node.entries),
+        )
+
+        # replaced_children = NodeList([replace_node(child) for child in node.children])
 
         TYPE_TO_NODE: dict[str, type[TypedNode]] = {
             "Root": OuDia,
@@ -123,11 +142,11 @@ def loads(text: str) -> OuDia:
 
         return new_node
 
-    print(f"{nodes[0]=}")
+    # print(f"{nodes[0]=}")
     root = replace_node(nodes[0])
     assert isinstance(root, OuDia)
-    print(f"{root=}")
-    print(f"{root.file_type_app_comment=}")
+    # print(f"{root=}")
+    # print(f"{root.file_type_app_comment=}")
     return root
 
 

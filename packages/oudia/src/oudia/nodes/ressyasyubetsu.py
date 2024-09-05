@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from .node import Attributes, Children, Node, TypedNode
+from .node import EntryList, NodeList, Node, TypedNode
 
 
 @dataclass
@@ -37,32 +37,25 @@ class Ressyasyubetsu(TypedNode):
     parent_syubetsu_index: int | None
     """親種別インデックス"""
 
-    _children: list["Node | TypedNode"] = field(default_factory=list)
-
-    @property
-    def children(self) -> list["Node | TypedNode"]:
-        return self._children
-
     @classmethod
     def from_node(cls, node: Node) -> "Ressyasyubetsu":
         return cls(
-            syubetsumei=node.attributes.get_required("Syubetsumei"),
-            ryakusyo=node.attributes.get("Ryakusyo"),
-            jikokuhyou_moji_color=node.attributes.get_required("JikokuhyouMojiColor"),
-            jikokuhyou_font_index=node.attributes.get_required("JikokuhyouFontIndex"),
-            jikokuhyou_back_color=node.attributes.get_required("JikokuhyouBackColor"),
-            diagram_sen_color=node.attributes.get_required("DiagramSenColor"),
-            diagram_sen_style=node.attributes.get_required("DiagramSenStyle"),
-            diagram_sen_is_bold=node.attributes.get_bool("DiagramSenIsBold"),
-            stop_mark_draw_type=node.attributes.get_required("StopMarkDrawType"),
-            parent_syubetsu_index=node.trailing_attributes.get_int("ParentSyubetsuIndex"),
-            _children=node.children,
+            syubetsumei=node.entries.get_required("Syubetsumei"),
+            ryakusyo=node.entries.get("Ryakusyo"),
+            jikokuhyou_moji_color=node.entries.get_required("JikokuhyouMojiColor"),
+            jikokuhyou_font_index=node.entries.get_required("JikokuhyouFontIndex"),
+            jikokuhyou_back_color=node.entries.get_required("JikokuhyouBackColor"),
+            diagram_sen_color=node.entries.get_required("DiagramSenColor"),
+            diagram_sen_style=node.entries.get_required("DiagramSenStyle"),
+            diagram_sen_is_bold=node.entries.get_bool("DiagramSenIsBold"),
+            stop_mark_draw_type=node.entries.get_required("StopMarkDrawType"),
+            parent_syubetsu_index=node.entries.get_int("ParentSyubetsuIndex"),
         )
 
     def to_node(self) -> Node:
         return Node(
             type="Ressyasyubetsu",
-            attributes=Attributes(
+            entries=EntryList(
                 ("Syubetsumei", self.syubetsumei),
                 ("Ryakusyo", self.ryakusyo),
                 ("JikokuhyouMojiColor", self.jikokuhyou_moji_color),
@@ -74,6 +67,4 @@ class Ressyasyubetsu(TypedNode):
                 ("StopMarkDrawType", self.stop_mark_draw_type),
                 ("ParentSyubetsuIndex", self.parent_syubetsu_index),
             ),
-            children=Children(),
-            trailing_attributes=Attributes(),
         )

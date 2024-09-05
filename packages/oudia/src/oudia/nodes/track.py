@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-
-from .node import Attributes, Children, Node, TypedNode
+from typing import Sequence
+from .node import EntryList, NodeList, Node, TypedNode
 
 
 @dataclass
@@ -16,31 +16,22 @@ class EkiTrack2(TypedNode):
     track_nobori_ryakusyou: str | None
     """通り略称"""
 
-    _children: list["Node | TypedNode"] = field(default_factory=list)
-
-    @property
-    def children(self) -> list["Node | TypedNode"]:
-        return self._children
-
     @classmethod
     def from_node(cls, node: Node) -> "EkiTrack2":
         return cls(
-            track_name=node.attributes.get_required("TrackName"),
-            track_ryakusyo=node.attributes.get("TrackRyakusyou"),
-            track_nobori_ryakusyou=node.attributes.get("TrackNoboriRyakusyou"),
-            _children=node.children,
+            track_name=node.entries.get_required("TrackName"),
+            track_ryakusyo=node.entries.get("TrackRyakusyou"),
+            track_nobori_ryakusyou=node.entries.get("TrackNoboriRyakusyou"),
         )
 
     def to_node(self) -> Node:
         return Node(
             type="EkiTrack2",
-            attributes=Attributes(
+            entries=EntryList(
                 ("TrackName", self.track_name),
                 ("TrackRyakusyou", self.track_ryakusyo),
                 ("TrackNoboriRyakusyou", self.track_nobori_ryakusyou),
             ),
-            children=Children(),
-            trailing_attributes=Attributes(),
         )
 
 
@@ -48,22 +39,16 @@ class EkiTrack2(TypedNode):
 class EkiTrack2Cont(TypedNode):
     """駅トラック2コンテナ`"""
 
-    _children: list["Node | TypedNode"] = field(default_factory=list)
-
-    @property
-    def children(self) -> list["Node | TypedNode"]:
-        return self._children
+    tracks: Sequence[EkiTrack2]
 
     @classmethod
     def from_node(cls, node: Node) -> "EkiTrack2Cont":
         return EkiTrack2Cont(
-            _children=node.children,
+            tracks=[track for track in node.entries.node_lists[0] if isinstance(track, EkiTrack2)],
         )
 
     def to_node(self) -> Node:
         return Node(
             type="EkiTrack2Cont",
-            attributes=Attributes(),
-            children=Children(self.children),
-            trailing_attributes=Attributes(),
+            entries=EntryList((None, NodeList(self.tracks))),
         )
