@@ -242,12 +242,12 @@ The **DispProp Node** defines the display properties for various elements of the
 
 #### Attributes
 
-- `JikokuhyouFont` ([Text](#data-types), [required](#field-tags), [repeatable](#field-tags)): Specifies the font used for the timetable text. Includes attributes such as:
+- `JikokuhyouFont` ([Text](#data-types), [required](#field-tags), [repeatable](#field-tags)): Specifies the font used for the timetable text. It should be repeated 8 (`CentDedRessyasyubetsu::JIKOKUHYOUFONT_COUNT`) times. If fewer than 8 are provided, the unspecified font properties will not be set. Includes attributes such as:
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
   - `Facename` ([Text](#data-types)): The name of the font, e.g., `"ＭＳ ゴシック"`.
   - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
   - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
-- `JikokuhyouVFont` ([Text](#data-types), [optional](#field-tags), [repeatable](#field-tags)): Specifies the vertical font used for the timetable text. Includes attributes such as:
+- `JikokuhyouVFont` ([Text](#data-types), [optional](#field-tags)): Specifies the vertical font used for the timetable text. Includes attributes such as:
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
   - `Facename` ([Text](#data-types)): The name of the font, e.g., `"@ＭＳ ゴシック"`.
   - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
@@ -261,6 +261,12 @@ The **DispProp Node** defines the display properties for various elements of the
 - `DiaHaikeiColor` ([Text](#data-types), [optional](#field-tags)): Specifies the background color of the timetable using a hexadecimal color code.
 - `DiaRessyaColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the train text in the diagram using a hexadecimal color code.
 - `DiaJikuColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the diagram axis using a hexadecimal color code.
+
+#### References
+
+- OuDiaSecond Ver2.06.14
+  - `DiagramEdit/DiagramEdit/DedRosenFileData/CdDedDispProp.h`
+  - `DiagramEdit/DiagramEdit/DedRosenFileData/CconvCdDedDispProp.cpp`
 
 ### WindowPlacement Node
 
