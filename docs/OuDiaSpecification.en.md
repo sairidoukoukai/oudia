@@ -63,9 +63,9 @@ The **root node** represents the entire file. It contains various attributes tha
 
 The root node can contain the following children nodes:
 
-- [Rosen](#Rosen_Node): Represents a route or line.
-- [DispProp](#DispProp_Node): Contains display properties like font styles and colors used in diagrams.
-- [WindowPlacement](#WindowPlacement_Node): Contains window view positions.
+- [Rosen](#rosen-node): Represents a route or line.
+- [DispProp](#dispprop-node): Contains display properties like font styles and colors used in diagrams.
+- [WindowPlacement](#windowplacement-node): Contains window view positions.
 
 #### Trailing Attributes
 
@@ -85,9 +85,9 @@ The **Rosen Node** represents a single route or line in the transportation syste
 
 The Rosen Node can contain the following children nodes:
 
-- [Eki Node](#Eki_Node): Represents individual stations on the route. Multiple Eki nodes can be listed.
-- [Ressyasyubetsu Node](#Ressyasyubetsu_Node): Describes the types of trains that run on the route.
-- [Dia Node](#Dia_Node): Contains timetable data for different days or schedules (e.g., weekdays, weekends).
+- [Eki Node](#eki-node): Represents individual stations on the route. Multiple Eki nodes can be listed.
+- [Ressyasyubetsu Node](#ressyasyubetsu-node): Describes the types of trains that run on the route.
+- [Dia Node](#dia-node): Contains timetable data for different days or schedules (e.g., weekdays, weekends).
 
 #### Trailing Attributes
 
