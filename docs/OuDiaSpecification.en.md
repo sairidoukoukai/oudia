@@ -137,10 +137,10 @@ The **Ressyasyubetsu Node** describes the types of trains that operate on the ro
 
 - `Syubetsumei` ([Text](#data-types), [required](#field-tags)): The name of the train type, e.g., "通勤特急" (commuter express).
 - `Ryakusyou` ([Text](#data-types), [optional](#field-tags)): The abbreviation used for the train type.
-- `JikokuhyouMojiColor` ([Text](#data-types), [required](#field-tags)): The color used for displaying the train type on timetables, represented as a hexadecimal color code (e.g., `"000000FF"` for blue).
+- `JikokuhyouMojiColor` ([Color](#data-types), [required](#field-tags)): The color used for displaying the train type on timetables, represented as a hexadecimal color code (e.g., `"000000FF"` for blue).
 - `JikokuhyouFontIndex` ([Number](#data-types), [required](#field-tags)): The font index used for displaying the train type on timetables.
-- `JikokuhyouBackColor` ([Text](#data-types), [optional](#field-tags)): Specifies the background color of the timetable, using a hexadecimal code (e.g., `"00FFFFFF"`).
-- `DiagramSenColor` ([Text](#data-types), [required](#field-tags)): The color of the line in diagrams, defined as a hexadecimal code.
+- `JikokuhyouBackColor` ([Color](#data-types), [optional](#field-tags)): Specifies the background color of the timetable, using a hexadecimal code (e.g., `"00FFFFFF"`).
+- `DiagramSenColor` ([Color](#data-types), [required](#field-tags)): The color of the line in diagrams, defined as a hexadecimal code.
 - `DiagramSenStyle` ([Enumeration](#data-types), [required](#field-tags)): The style of the line in diagrams. Possible values include:
   - `"SenStyle_Jissen"` (solid line)
   - `"SenStyle_Tensen"` (dashed line)
@@ -245,10 +245,10 @@ The **DispProp Node** defines the display properties for various elements of the
 - `JikokuhyouFont` ([Font](#data-types), [repeatable](#field-tags)): Specifies the font used for the timetable text. It should be repeated 8 (`CentDedRessyasyubetsu::JIKOKUHYOUFONT_COUNT`) times. If fewer than 8 are provided, the unspecified font properties will not be set, e.g., `PointTextHeight=9;Facename=Meiryo UI;Bold=1;Itaric=1`.
 - `JikokuhyouVFont` ([Font](#data-types), [optional](#field-tags)): Specifies the vertical font used for the timetable text, e.g. `JikokuhyouVFont=PointTextHeight=9;Facename=@メイリオ`
 - `DiaEkimeiFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used for station names in the diagram.
-- `DiaMojiColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the text on the timetable using a hexadecimal color code.
-- `DiaHaikeiColor` ([Text](#data-types), [optional](#field-tags)): Specifies the background color of the timetable using a hexadecimal color code.
-- `DiaRessyaColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the train text in the diagram using a hexadecimal color code.
-- `DiaJikuColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the diagram axis using a hexadecimal color code.
+- `DiaMojiColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the text on the timetable using a hexadecimal color code.
+- `DiaHaikeiColor` ([Color](#data-types), [optional](#field-tags)): Specifies the background color of the timetable using a hexadecimal color code.
+- `DiaRessyaColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the train text in the diagram using a hexadecimal color code.
+- `DiaJikuColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the diagram axis using a hexadecimal color code.
 
 #### References
 
