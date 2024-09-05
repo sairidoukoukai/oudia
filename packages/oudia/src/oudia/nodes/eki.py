@@ -24,6 +24,12 @@ class Eki(TypedNode):
     ekikibo: str
     """駅規模"""
 
+    diagram_ressyajouhou_hyouji_kudari: str
+    """ダイヤ列車情報表示形式（下り）"""
+
+    diagram_ressyajouhou_hyouji_nobori: str
+    """ダイヤ列車情報表示形式（上り）"""
+
     down_main: int | None
     """下りメイン"""
 
@@ -48,14 +54,38 @@ class Eki(TypedNode):
     jikokuhyou_track_display_nobori: bool | None
     """時刻表で上り番線表示設定"""
 
-    next_eki_distance: int | None
-    """次駅までの距離(秒)"""
+    diagram_track_display: bool | None
+    """ダイヤ列車で番線表示設定"""
 
     eki_tracks: NodeList[EkiTrack2]
     """駅の番線"""
 
+    outer_terminal: NodeList[Node]
+    """時刻表外表示の端末名"""
+
+    next_eki_distance: int | None
+    """次駅までの距離(秒)"""
+
     jikokuhyou_track_omit: bool | None
     """時刻表トラックの省略"""
+
+    jikokuhyou_operation_origin: int | None
+    """起点側作業表示欄の数"""
+
+    jikokuhyou_operation_terminal: int | None
+    """終点側作業表示欄の数"""
+
+    jikokuhyou_operation_origin_down_before_up_after: bool | None
+    """起点側作業表示欄（下り）（前後）"""
+
+    jikokuhyou_operation_origin_down_after_up_before: bool | None
+    """起点側作業表示欄（上り）（前後）"""
+
+    jikokuhyou_operation_terminal_down_before_up_after: bool | None
+    """終点側作業表示欄（下り）（前後）"""
+
+    jikokuhyou_operation_terminal_down_after_up_before: bool | None
+    """終点側作業表示欄（上り）（前後）"""
 
     jikokuhyou_jikoku_display_kudari: str | None
     """時刻表時刻表示（下り）"""
@@ -81,6 +111,9 @@ class Eki(TypedNode):
     operation_table_display_jikoku: bool | None
     """運用表で時刻を表示するかどうか"""
 
+    crossing_check_rule_list: NodeList[Node] | None
+    """クローシング通過チェックルールリスト"""
+
     diagram_track_display: bool | None
     """運用表で番線を表示するかどうか"""
 
@@ -98,6 +131,25 @@ class Eki(TypedNode):
             ekimei_dia_ryaku=node.entries.get("EkimeiDiaRyaku"),
             ekijikokukeisiki=node.entries.get_required(key="Ekijikokukeisiki"),
             ekikibo=node.entries.get_required("Ekikibo"),
+            diagram_ressyajouhou_hyouji_kudari=node.entries.get_bool("DiagramRessyajouhouHyoujiKudari"),
+            diagram_ressyajouhou_hyouji_nobori=node.entries.get_bool("DiagramRessyajouhouHyoujiNobori"),
+            diagram_color_next_eki=node.entries.get_int("DiagramColorNextEki"),
+            diagram_track_display=node.entries.get_bool("DiagramTrackDisplay"),
+            outer_terminal=node.entries.get_list(0, Node),
+            jikokuhyou_operation_origin=node.entries.get_list(1, Node),
+            jikokuhyou_operation_terminal=node.entries.get_list(2, Node),
+            jikokuhyou_operation_origin_down_before_up_after=node.entries.get_bool(
+                "JikokuhyouOperationOriginDownBeforeUpAfter"
+            ),
+            jikokuhyou_operation_origin_down_after_up_before=node.entries.get_bool(
+                "JikokuhyouOperationOriginDownAfterUpBefore"
+            ),
+            jikokuhyou_operation_terminal_down_before_up_after=node.entries.get_bool(
+                "JikokuhyouOperationTerminalDownBeforeUpAfter"
+            ),
+            jikokuhyou_operation_terminal_down_after_up_before=node.entries.get_bool(
+                "JikokuhyouOperationTerminalDownAfterUpBefore"
+            ),
             down_main=node.entries.get_int("DownMain"),
             up_main=node.entries.get_int("UpMain"),
             brunch_core_eki_index=node.entries.get_int("BrunchCoreEkiIndex"),
@@ -106,19 +158,21 @@ class Eki(TypedNode):
             loop_opposite=node.entries.get_bool("LoopOpposite"),
             jikokuhyou_track_display_kudari=node.entries.get_bool("JikokuhyouTrackDisplayKudari"),
             jikokuhyou_track_display_nobori=node.entries.get_bool("JikokuhyouTrackDisplayNobori"),
-            diagram_track_display=node.entries.get_bool("DiagramTrackDisplay"),
             next_eki_distance=node.entries.get_int("NextEkiDistance"),
-            eki_tracks=node.entries.get_list(0, EkiTrack2),
+            eki_tracks=node.entries.get_list(3, EkiTrack2),
             jikokuhyou_track_omit=node.entries.get_bool("JikokuhyouTrackOmit"),
             jikokuhyou_jikoku_display_kudari=node.entries.get("JikokuhyouJikokuDisplayKudari"),
             jikokuhyou_jikoku_display_nobori=node.entries.get("JikokuhyouJikokuDisplayNobori"),
             jikokuhyou_syubetsu_change_display_kudari=node.entries.get("JikokuhyouSyubetsuChangeDisplayKudari"),
             jikokuhyou_syubetsu_change_display_nobori=(node.entries.get("JikokuhyouSyubetsuChangeDisplayNobori")),
-            diagram_color_next_eki=node.entries.get_int("DiagramColorNextEki"),
             jikokuhyou_outer_display_kudari=node.entries.get("JikokuhyouOuterDisplayKudari"),
             jikokuhyou_outer_display_nobori=node.entries.get("JikokuhyouOuterDisplayNobori"),
+            crossing_check_rule_list=node.entries.get_list(4, Node),
             operation_table_display_jikoku=node.entries.get_bool("OperationTableDisplayJikoku"),
         )
+
+    # Arguments missing for parameters "diagram_ressyajouhou_hyouji_kudari", "diagram_ressyajouhou_hyouji_nobori", "outer_terminal", "jikokuhyou_operation_origin", "jikokuhyou_operation_terminal", "jikokuhyou_operation_origin_down_before_up_after", "jikokuhyou_operation_origin_down_after_up_before", "jikokuhyou_operation_terminal_down_before_up_after", "jikokuhyou_operation_terminal_down_after_up_before"PylancereportCallIssue
+    # Codeium: Explain Problem
 
     def to_node(self) -> Node:
         return Node(
@@ -129,6 +183,8 @@ class Eki(TypedNode):
                 ("EkimeiDiaRyaku", self.ekimei_dia_ryaku),
                 ("Ekijikokukeisiki", self.ekijikokukeisiki),
                 ("Ekikibo", self.ekikibo),
+                ("DiagramRessyajouhouHyoujiKudari", self.diagram_ressyajouhou_hyouji_kudari),
+                ("DiagramRessyajouhouHyoujiNobori", self.diagram_ressyajouhou_hyouji_nobori),
                 ("DownMain", self.down_main),
                 ("UpMain", self.up_main),
                 ("BrunchCoreEkiIndex", self.brunch_core_eki_index),
@@ -143,11 +199,14 @@ class Eki(TypedNode):
                 ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
                 ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
                 ("JikokuhyouJikokuDisplayNobori", self.jikokuhyou_jikoku_display_nobori),
+                ("DiagramTrackDisplay", self.diagram_track_display),
+                (None, self.eki_tracks),
                 ("JikokuhyouSyubetsuChangeDisplayKudari", self.jikokuhyou_syubetsu_change_display_kudari),
                 ("JikokuhyouSyubetsuChangeDisplayNobori", self.jikokuhyou_syubetsu_change_display_nobori),
                 ("DiagramColorNextEki", self.diagram_color_next_eki),
                 ("JikokuhyouOuterDisplayKudari", self.jikokuhyou_outer_display_kudari),
                 ("JikokuhyouOuterDisplayNobori", self.jikokuhyou_outer_display_nobori),
                 ("OperationTableDisplayJikoku", self.operation_table_display_jikoku),
+                (None, self.crossing_check_rule_list),
             ),
         )
