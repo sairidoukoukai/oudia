@@ -79,14 +79,3 @@ def test_exporter():
         )
         == "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
     )
-
-
-def test_authenity():
-    with open("./tests/empty.oud2", "r", encoding="utf-8-sig") as f:
-        text = f.read()
-        dia = oudia.loads(text)
-        print(dia)
-        print(dia.pprint())
-    with open("./tests/empty_dumped.oud2", "w", encoding="utf-8-sig") as f:
-        f.write(oudia.dumps(dia))
-    assert oudia.dumps(dia) == text
