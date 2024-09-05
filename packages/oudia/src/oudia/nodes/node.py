@@ -39,6 +39,9 @@ class Attributes(list[tuple[str, str]]):
             raise ValueError(f"Required attribute '{key}' not found.")
         return value
 
+    def get_repeatable(self, key: str) -> list[str]:
+        return [v for k, v in self if k == key]
+
 
 class Children(list["Node | TypedNode"]):
     def __str__(self) -> str:
