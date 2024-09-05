@@ -290,11 +290,12 @@ The **DispProp Node** defines the display properties for various elements of the
 
 The following data types are for reference only and are not explicitly required. In practice, all values are treated as strings, with differentiation occurring during the parsing process.
 
-- `Text`: A string of characters, often representing a name, description, or identifier.
-- `Number`: A numerical value, usually an integer, that can represent quantities, indices, or values like time.
-- `Enumeration`: A predefined set of values from which only one can be chosen. These are typically used for fixed categories, like train types or station roles.
-- `Boolean`: A binary value, represented by `0` (false) or `1` (true), used for toggle-type fields such as enabling or disabling certain behaviors or features. Omission usuallly means `0` (false).
+The parenthesized types correspond to those used in the original OuDiaSecond C++ implementation and the current OuDia.Py Python implementation.
 
+- `Text` (`tstring`, `str`): A string of characters, often representing a name, description, or identifier.
+- `Number` (`int`, `int`): A numerical value, usually an integer, that can represent quantities, indices, or values like time.
+- `Enumeration`: A predefined set of values from which only one can be chosen. These are typically used for fixed categories, like train types or station roles.
+- `Boolean` (`bool`, `bool`): A binary value, represented by `0` (false) or `1` (true), used for toggle-type fields such as enabling or disabling certain behaviors or features. If omitted, it usually defaults to `0` (false).
 ## References
 
 ### Bibliography
