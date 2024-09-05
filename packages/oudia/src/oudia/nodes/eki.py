@@ -60,7 +60,7 @@ class Eki(TypedNode):
             ekikibo=node.attributes.get_required("Ekikibo"),
             down_main=node.attributes.get_int("DownMain"),
             up_main=node.attributes.get_int("UpMain"),
-            jikokuhyou_track_omit=node.attributes.get_bool("JikokuhyouTrackOmit"),
+            jikokuhyou_track_omit=node.trailing_attributes.get_bool("JikokuhyouTrackOmit"),
             jikokuhyou_jikoku_display_kudari=node.trailing_attributes.get("JikokuhyouJikokuDisplayKudari"),
             jikokuhyou_jikoku_display_nobori=node.trailing_attributes.get("JikokuhyouJikokuDisplayNobori"),
             jikokuhyou_syubetsu_change_display_kudari=node.trailing_attributes.get(
