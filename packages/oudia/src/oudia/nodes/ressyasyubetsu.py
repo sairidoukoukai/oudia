@@ -10,7 +10,7 @@ class Ressyasyubetsu(TypedNode):
     syubetsumei: str
     """種別名"""
 
-    ryakusyo: str | None
+    ryakusyou: str | None
     """略称"""
 
     jikokuhyou_moji_color: str
@@ -41,7 +41,7 @@ class Ressyasyubetsu(TypedNode):
     def from_node(cls, node: Node) -> "Ressyasyubetsu":
         return cls(
             syubetsumei=node.entries.get_required("Syubetsumei"),
-            ryakusyo=node.entries.get("Ryakusyo"),
+            ryakusyou=node.entries.get("Ryakusyou"),
             jikokuhyou_moji_color=node.entries.get_required("JikokuhyouMojiColor"),
             jikokuhyou_font_index=node.entries.get_required("JikokuhyouFontIndex"),
             jikokuhyou_back_color=node.entries.get_required("JikokuhyouBackColor"),
@@ -57,7 +57,7 @@ class Ressyasyubetsu(TypedNode):
             type="Ressyasyubetsu",
             entries=EntryList(
                 ("Syubetsumei", self.syubetsumei),
-                ("Ryakusyo", self.ryakusyo),
+                ("Ryakusyou", self.ryakusyou),
                 ("JikokuhyouMojiColor", self.jikokuhyou_moji_color),
                 ("JikokuhyouFontIndex", self.jikokuhyou_font_index),
                 ("JikokuhyouBackColor", self.jikokuhyou_back_color),
