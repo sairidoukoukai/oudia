@@ -285,6 +285,7 @@ The parenthesized types correspond to those used in the original OuDiaSecond C++
 - `Number` (`int`, `int`): A numerical value, usually an integer, that can represent quantities, indices, or values like time.
 - `Enumeration`: A predefined set of values from which only one can be chosen. These are typically used for fixed categories, like train types or station roles.
 - `Boolean` (`bool`, `bool`): A binary value, represented by `0` (false) or `1` (true), used for toggle-type fields such as enabling or disabling certain behaviors or features. If omitted, it usually defaults to `0` (false).
+- `Color` (`CdFontColor`, `str`): A hexadecimal string representing an RGB color.
 - `Font` (`CdFontProp`, `str`): A list of font properties, separated by `;`. Includes sub-attributes such as:
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
   - `Facename` ([Text](#data-types)): The name of the font, e.g., `"ＭＳ ゴシック"`.
