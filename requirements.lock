@@ -10,6 +10,7 @@
 #   universal: false
 
 -e file:packages/gtfs-jp
+    # via oudia2gtfs
 -e file:packages/oudia
     # via oudia2gtfs
 -e file:packages/oudia2gtfs

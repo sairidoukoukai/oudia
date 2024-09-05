@@ -7,6 +7,7 @@ readme = "README.md"
 [tool.rye]
 managed = true
 virtual = true
+dev-dependencies = ["ipykernel>=6.29.5"]
 
 [tool.rye.workspace]
 members = ["packages/*"]
