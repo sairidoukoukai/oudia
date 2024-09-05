@@ -290,7 +290,7 @@ The parenthesized types correspond to those used in the original OuDiaSecond C++
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
   - `Facename` ([Text](#data-types)): The name of the font, e.g., `"ＭＳ ゴシック"`.
   - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
-  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
+  - `Itaric` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized. `Itaric` (sic) is a misspelling of "Italic".
 
 ## References
 
