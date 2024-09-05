@@ -21,6 +21,18 @@ class Attributes(list[tuple[str, str]]):
                 return v
         return None
 
+    def get_bool(self, key: str) -> bool | None:
+        value = self.get(key)
+        if value is None:
+            return None
+        return value == "1"
+
+    def get_int(self, key: str) -> int | None:
+        value = self.get(key)
+        if value is None:
+            return None
+        return int(value)
+
     def get_required(self, key: str) -> str:
         value = self.get(key)
         if value is None:
