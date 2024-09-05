@@ -121,22 +121,14 @@ The **root node** represents the entire file. It contains various attributes tha
 
 The **Rosen Node** represents a single route or line in the transportation system (路線). This node contains attributes describing the route and can have child nodes that describe the stations (Eki), train types (Ressyasyubetsu), and timetables (Dia).
 
-#### Attributes
+#### Entries
 
 - `Rosenmei` ([Text](#data-types), [required](#field-tags)): The name of the route (路線名), e.g., "東急東横線".
 - `KudariDiaAlias` ([Text](#data-types), [optional](#field-tags)): Alias for the "Kudari" (下り) direction (downward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
 - `NoboriDiaAlias` ([Text](#data-types), [optional](#field-tags)): Alias for the "Nobori" (上り) direction (upward route). [OuDiaSecond.1.04+](http://oudiasecond.seesaa.net/article/459366976.html)
-
-### Children
-
-The Rosen Node can contain the following children nodes:
-
-- [Eki Node](#eki-node): Represents individual stations on the route. Multiple Eki nodes can be listed.
-- [Ressyasyubetsu Node](#ressyasyubetsu-node): Describes the types of trains that run on the route.
-- [Dia Node](#dia-node): Contains timetable data for different days or schedules (e.g., weekdays, weekends).
-
-#### Trailing Attributes
-
+- ([NodeList](#data-types)\[[Eki Node](#eki-node)\]): Represents individual stations on the route. Multiple Eki nodes can be listed.
+- ([NodeList](#data-types)\[[Ressyasyubetsu Node](#ressyasyubetsu-node)\]): Describes the types of trains that run on the route.
+- ([NodeList](#data-types)\[[Dia Node](#dia-node)\]): Contains timetable data for different days or schedules (e.g., weekdays, weekends).
 - `KitenJikoku` ([Text](#data-types), [optional](#field-tags)): The starting time of the route's operation, e.g., "400" for 4:00 AM.
 - `DiagramDgrYZahyouKyoriDefault` ([Number](#data-types), [optional](#field-tags)): Default Y-coordinate distance between stations in diagrams.
 - `EnableOperation` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether operational functionality is enabled. [OuDiaSecond.1.03+](http://oudiasecond.seesaa.net/article/457223251.html)
@@ -148,7 +140,7 @@ The Rosen Node can contain the following children nodes:
 
 The **Eki Node** represents a station (駅) on the route. It provides information about the station’s name, its timetable style, and its operational role.
 
-#### Attributes
+#### Entries
 
 - `Ekimei` ([Text](#data-types), [required](#field-tags)): The name of the station, e.g., "四日市". Previously, empty station name was invalid, but will not throw errors now.
 - `EkimeiJikokuRyaku` ([Text](#data-types), [optional](#field-tags)): The abbreviation for the station name used in the timetable view, specifically for start and terminal stations. If empty, the full station name is used. [OuDiaSecond.1.07+](http://oudiasecond.seesaa.net/article/467843165.html)
@@ -183,15 +175,8 @@ The **Eki Node** represents a station (駅) on the route. It provides informatio
 - `JikokuhyouTrackDisplayKudari` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether track display is enabled for downward trains in the timetable.
 - `JikokuhyouTrackDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether track display is enabled for upward trains in the timetable.
 - `DiagramTrackDisplay` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether track display is enabled in the diagram.
-
-#### Children
-
-The **Eki Node** can contain the following child nodes:
-
-- **EkiTrack2 Node**: (optional, [repeatable](#field-tags)) Describes the track layout of the station, including the track names, abbreviations, and configurations for upward and downward directions.
-- **OuterTerminal Node**: (optional, [repeatable](#field-tags)) Represents outer terminals that are connected to the station but belong to another line.
-
-#### Trailing Attributes
+- ([NodeList](#data-types)\[[EkiTrack2 Node](#eki-track2-node)\]): (optional, [repeatable](#field-tags)) Represents the track layout of the station, including the track names, abbreviations, and configurations for upward and downward directions.
+- ([NodeList](#data-types)\[[OuterTerminal Node](#outer-terminal-node)\]): (optional, [repeatable](#field-tags)) Represents outer terminals that are connected to the station but belong to another line.
 - `OuterTerminalEkimei` ([Text](#data-types), [optional](#field-tags)): Represents outer terminals connected to the station.
 - `NextEkiDistance` ([Number](#data-types), [optional](#field-tags)): The distance to the next station in seconds.
 - `JikokuhyouTrackOmit` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to omit track display in the timetable.
@@ -229,12 +214,11 @@ The **Eki Node** can contain the following child nodes:
   - `DiagramEdit/DiagramEdit/entDed/CconvCentDedOud.cpp`
   - `DiagramEdit/DiagramEdit/entDed/CentDedEki.h`
 
-
 ### Ressyasyubetsu Node
 
 The **Ressyasyubetsu Node** describes the types of trains that operate on the route (列車種別). Each train type has attributes for its display color and style on both diagrams and timetables.
 
-#### Attributes
+#### Entries
 
 - `Syubetsumei` ([Text](#data-types), [required](#field-tags)): The name of the train type, e.g., "通勤特急" (commuter express).
 - `Ryakusyou` ([Text](#data-types), [optional](#field-tags)): The abbreviation used for the train type.
@@ -293,7 +277,7 @@ StopMarkDrawType=EStopMarkDrawType_DrawOnStop
 
 The **Dia Node** represents a timetable (ダイヤ) for the route. It holds scheduling information for different operating days, such as weekdays, weekends, or special holidays.
 
-#### Attributes
+#### Entries
 
 - `DiaName` ([Text](#data-types), [required](#field-tags)): The name of the timetable, e.g., `"平日"` (weekday).
 - `MainBackColorIndex` ([Number](#data-types), [optional](#field-tags)): Background color index for the main timetable, values between 0-3.
@@ -304,21 +288,14 @@ The **Dia Node** represents a timetable (ダイヤ) for the route. It holds sche
   - `2` (vertical stripes)
   - `3` (horizontal stripes)
   - `4` (checkered pattern)
-
-#### Children
-
-The **Dia Node** can contain two types of child nodes:
-
-- **Kudari Node**: Describes downward-bound trains.
-- **Nobori Node**: Describes upward-bound trains.
-
-Both the **Kudari** and **Nobori** nodes contain multiple **Ressya Nodes**, each of which holds detailed information about individual trains on the route.
+- ([NodeList](#data-types)\[[Kudari Node](#kudari-node)\]): Represents downward-bound trains on the route.
+- ([NodeList](#data-types)\[[Nobori Node](#nobori-node))\]): Represents upward-bound trains on the route.
 
 ### Ressya Node
 
 The **Ressya Node** represents an individual train (列車) and contains attributes for its schedule and classification.
 
-#### Attributes
+#### Entries
 
 - `Houkou` ([Enumeration](#data-types), [required](#field-tags)): The direction of the train, values are:
   - `"Kudari"` (downward)
@@ -327,9 +304,6 @@ The **Ressya Node** represents an individual train (列車) and contains attribu
 - `Ressyabangou` ([Text](#data-types), [optional](#field-tags)): The train number.
 - `Ressyamei` ([Text](#data-types), [optional](#field-tags)): The name of the train.
 - `Gousuu` ([Text](#data-types), [optional](#field-tags)): The number of train cars.
-
-#### Trailing Attributes
-
 - `EkiJikoku` ([Text](#data-types), [optional](#field-tags)): The schedule of the train at various stations. This can follow several formats:
   - `""` (no service)
   - `"1"` (stops at the station)
@@ -341,7 +315,7 @@ The **Ressya Node** represents an individual train (列車) and contains attribu
 
 The **DispProp Node** defines the display properties for various elements of the timetable, including fonts and colors.
 
-#### Attributes
+#### Entries
 
 - `JikokuhyouFont` ([Font](#data-types), [repeatable](#field-tags)): Specifies the font used for the timetable text. This attribute should be repeated 8 times(`CentDedRessyasyubetsu::JIKOKUHYOUFONT_COUNT`). If fewer than 8 values are provided, the remaining fonts will not be set. Example: `PointTextHeight=9;Facename=Meiryo UI;Bold=1;Itaric=1`.
 - `JikokuhyouVFont` ([Font](#data-types), [optional](#field-tags)): Specifies the vertical font used for the timetable text. Example: `JikokuhyouVFont=PointTextHeight=9;Facename=@メイリオ`.
