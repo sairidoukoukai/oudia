@@ -19,3 +19,10 @@ with open("meronking_line.oud", "r") as f:
     print(dia.file_type)
     print(dia.rosen)
 ```
+
+## 参考 / References
+
+* [OuDia](http://take-okm.a.la9.jp/oudia/)
+* [OuDiaSecond](http://oudiasecond.seesaa.net/)
+* [AOdia](https://kamelong.com/aodia/)
+* [CloudDia](http://onemu.starfree.jp/clouddia/)

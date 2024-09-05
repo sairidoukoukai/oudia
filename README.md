@@ -1,10 +1,11 @@
-# Oudia.Py
+# OuDia.Py
 
 このリポジトリは[`oudia`](./packages/oudia/README.md)などのOuDiaファイル形式の処理を中心としたプロジェクトを管理するものである。
 
 This repository is for managing a series of projects including [`oudia`](./packages/oudia/README.md) etc. to process the OuDia file format.
 
-## サポートされているファイル形式 / Supported file types
+## 構成 / Architect
 
-* [OuDia](http://take-okm.a.la9.jp/oudia/)
-* [OuDiaSecond](http://oudiasecond.seesaa.net/)
+- [`oudia`](./packages/oudia/README.md): OuDiaファイルの操作 / Parse and dump OuDia files
+- [`gtfs-jp`](./packages/gtfs-jp/README.md): GTFS-JPファイルの操作 / Parse and dump GTFS-JP files
+- [`oudia2gtfs`](./packages/oudia2gtfs/README.md): OuDiaとGTFS-JPファイルの変換 / Convert between OuDia and GTFS-JP
