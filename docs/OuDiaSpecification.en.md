@@ -156,7 +156,7 @@ The **Eki Node** can contain the following child nodes:
 - `JikokuhyouOperationTerminalDownBeforeUpAfter` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display coupling and decoupling operations at the terminal side for downward trains.
 - `JikokuhyouOperationTerminalDownAfterUpBefore` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display coupling and decoupling operations at the terminal side for upward trains.
 - `JikokuhyouJikokuDisplayKudari` ([Tuple](#data-types)\[[Boolean](#data-types), [Boolean](#data-types)\], [optional](#field-tags)): Specifies whether to display arrival and departure times for downward trains in the customized timetable view. The first value corresponds to arrival time, and the second corresponds to departure time.
-- `JikokuhyouJikokuDisplayNobori` ([Tuple](#data-types)\[[Boolean](#data-types), [Boolean](#data-types)\], [optional](#field-tags)): Specifies whether to display arrival and departure times for upward trains in the customized timetable view. The first value corresponds to arrival time, and the second corresponds to departure time.
+- `JikokuhyouJikokuDisplayNobori` ([Tuple](#data-types)\[[Boolean](#data-types), [Boolean](#data-types)\], [optional](#field-tags)): Specifies whether to display arrival and departure times for upward trains in the customized timetable view. The first value corresponds to arrival time (`JikokuhyouChakuJikokuDisplayKudari`), and the second corresponds to departure time (`JikokuhyouHatsuJikokuDisplayKudari`).
 - `JikokuhyouSyubetsuChangeDisplayKudari` ([Tuple](#data-types)\[[Integer](#data-types), [Integer](#data-types)\, [Integer](#data-types)\, [Integer](#data-types)\, [Integer](#data-types)\], [optional](#field-tags)): Specifies how to display train type changes for downward trains in the timetable. The values correspond to the following:
   - `JikokuhyouRessyabangouDisplayKudari`: Specifies how train numbers are displayed.
   - `JikokuhyouOperationNumberDisplayKudari`: Specifies how operation numbers are displayed.
@@ -169,8 +169,8 @@ The **Eki Node** can contain the following child nodes:
   - `JikokuhyouRessyaSyubetsuDisplayNobori`: Specifies how train categories are displayed.
   - `JikokuhyouRessyameiDisplayNobori`: Specifies how train names and numbers are displayed.
   - `JikokuhyouOperationNumberDisplayRowsNobori`: Specifies how many rows are used for operation numbers.
-- `JikokuhyouOuterDisplayKudari` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for downward trains.
-- `JikokuhyouOuterDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for upward trains.
+- `JikokuhyouOuterDisplayKudari` ([Tuple](#data-types)\[[Boolean](#data-types), [Boolean](#data-types)\], [optional](#field-tags)): Specifies whether to display outer-terminal information for downward trains. The first value corresponds to the first departure (`JikokuhyouOuterSihatsuDisplayKudari`), and the second corresponds to the last arrival (`JikokuhyouOuterShuchakuDisplayKudari`).
+- `JikokuhyouOuterDisplayNobori` ([Tuple](#data-types)\[[Boolean](#data-types), [Boolean](#data-types)\]): Specifies whether to display outer-terminal information for upward trains. The first value corresponds to the first departure (`JikokuhyouOuterSihatsuDisplayNobori`), and the second corresponds to the last arrival (`JikokuhyouOuterShuchakuDisplayNobori`).
 - `JikokuhyouOuterDisplayKudari` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for downward trains.
 - `JikokuhyouOuterDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for upward trains.
 - `DiagramColorNextEki` ([Number](#data-types), [optional](#field-tags)): Specifies the color for the next station in the diagram.
