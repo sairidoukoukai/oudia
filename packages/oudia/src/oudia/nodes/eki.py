@@ -52,29 +52,23 @@ class Eki(TypedNode):
             ekimei=node.attributes.get_required("Ekimei"),
             ekijikokukeisiki=node.attributes.get_required(key="Ekijikokukeisiki"),
             ekikibo=node.attributes.get_required("Ekikibo"),
-            down_main=int(v) if (v := node.attributes.get("DownMain")) else None,
-            up_main=int(v) if (v := node.attributes.get("UpMain")) else None,
-            jikokuhyou_track_omit=(
-                bool(v)
-                if (v := node.trailing_attributes.get("JikokuhyouTrackOmit"))
-                else None
-            ),
+            down_main=node.attributes.get_int("DownMain"),
+            up_main=node.attributes.get_int("UpMain"),
+            jikokuhyou_track_omit=node.attributes.get_bool("JikokuhyouTrackOmit"),
             jikokuhyou_jikoku_display_kudari=node.trailing_attributes.get(
                 "JikokuhyouJikokuDisplayKudari"
             ),
             jikokuhyou_jikoku_display_nobori=node.trailing_attributes.get(
                 "JikokuhyouJikokuDisplayNobori"
             ),
-            jikokuhyou_syubetsu_change_display_kudari=(
-                node.trailing_attributes.get("JikokuhyouSyubetsuChangeDisplayKudari")
+            jikokuhyou_syubetsu_change_display_kudari=node.trailing_attributes.get(
+                "JikokuhyouSyubetsuChangeDisplayKudari"
             ),
             jikokuhyou_syubetsu_change_display_nobori=(
                 node.trailing_attributes.get("JikokuhyouSyubetsuChangeDisplayNobori")
             ),
-            diagram_color_next_eki=(
-                int(v)
-                if (v := node.trailing_attributes.get("DiagramColorNextEki"))
-                else None
+            diagram_color_next_eki=node.trailing_attributes.get_int(
+                "DiagramColorNextEki"
             ),
             _children=node.children,
         )
