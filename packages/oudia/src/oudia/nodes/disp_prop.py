@@ -123,9 +123,7 @@ class DispProp(TypedNode):
             dia_jikoku_font=node.attributes.get("DiaJikokuFont"),
             dia_ressya_font=node.attributes.get("DiaRessyaFont"),
             operation_table_font=node.attributes.get("OperationTableFont"),
-            all_operation_table_jikoku_font=node.attributes.get(
-                "AllOperationTableJikokuFont"
-            ),
+            all_operation_table_jikoku_font=node.attributes.get("AllOperationTableJikokuFont"),
             comment_font=node.attributes.get("CommentFont"),
             dia_moji_color=node.attributes.get("DiaMojiColor"),
             dia_back_color=node.attributes.get_repeatable("DiaBackColor"),
@@ -145,15 +143,11 @@ class DispProp(TypedNode):
             any_second_inc_dec1=node.attributes.get_int("AnySecondIncDec1"),
             any_second_inc_dec2=node.attributes.get_int("AnySecondIncDec2"),
             display_ressyamei=node.attributes.get_bool("DisplayRessyamei"),
-            display_outer_terminal_ekimei_origin_side=node.attributes.get_bool(
-                "DisplayOuterTerminalEkimeiOriginSide"
-            ),
+            display_outer_terminal_ekimei_origin_side=node.attributes.get_bool("DisplayOuterTerminalEkimeiOriginSide"),
             display_outer_terminal_ekimei_terminal_side=node.attributes.get_bool(
                 "DisplayOuterTerminalEkimeiTerminalSide"
             ),
-            diagram_display_outer_terminal=node.attributes.get_int(
-                "DiagramDisplayOuterTerminal"
-            ),
+            diagram_display_outer_terminal=node.attributes.get_int("DiagramDisplayOuterTerminal"),
             second_round_chaku=node.attributes.get_int("SecondRoundChaku"),
             second_round_hatsu=node.attributes.get_int("SecondRoundHatsu"),
             display_2400=node.attributes.get_bool("Display2400"),
@@ -186,48 +180,19 @@ class DispProp(TypedNode):
                 ("StdOpeTimeIllegalColor", self.std_ope_time_illegal_color),
                 ("OperationStringColor", self.operation_string_color),
                 ("OperationGridColor", self.operation_grid_color),
-                (
-                    "EkimeiLength",
-                    str(self.ekimei_length) if self.ekimei_length is not None else None,
-                ),
-                ("JikokuhyouRessyaWidth", str(self.jikokuhyou_ressya_width)),
-                ("AnySecondIncDec1", str(self.any_second_inc_dec1)),
-                ("AnySecondIncDec2", str(self.any_second_inc_dec2)),
-                (
-                    "DisplayRessyamei",
-                    (
-                        ("1" if self.display_ressyamei else "0")
-                        if self.display_ressyamei is not None
-                        else None
-                    ),
-                ),
-                (
-                    "DisplayOuterTerminalEkimeiOriginSide",
-                    ("1" if self.display_outer_terminal_ekimei_origin_side else "0"),
-                ),
-                (
-                    "DisplayOuterTerminalEkimeiTerminalSide",
-                    ("1" if self.display_outer_terminal_ekimei_terminal_side else "0"),
-                ),
-                (
-                    "DiagramDisplayOuterTerminal",
-                    str(self.diagram_display_outer_terminal),
-                ),
-                ("SecondRoundChaku", str(self.second_round_chaku)),
-                ("SecondRoundHatsu", str(self.second_round_hatsu)),
-                (
-                    "Display2400",
-                    (
-                        ("1" if self.display_2400 else "0")
-                        if self.display_2400 is not None
-                        else None
-                    ),
-                ),
-                ("OperationNumberRows", str(self.operation_number_rows)),
-                (
-                    "DisplayInOutLinkCode",
-                    ("1" if self.display_in_out_link_code else "0"),
-                ),
+                ("EkimeiLength", self.ekimei_length),
+                ("JikokuhyouRessyaWidth", self.jikokuhyou_ressya_width),
+                ("AnySecondIncDec1", self.any_second_inc_dec1),
+                ("AnySecondIncDec2", self.any_second_inc_dec2),
+                ("DisplayRessyamei", self.display_ressyamei),
+                ("DisplayOuterTerminalEkimeiOriginSide", self.display_outer_terminal_ekimei_origin_side),
+                ("DisplayOuterTerminalEkimeiTerminalSide", self.display_outer_terminal_ekimei_terminal_side),
+                ("DiagramDisplayOuterTerminal", self.diagram_display_outer_terminal),
+                ("SecondRoundChaku", self.second_round_chaku),
+                ("SecondRoundHatsu", self.second_round_hatsu),
+                ("Display2400", self.display_2400),
+                ("OperationNumberRows", self.operation_number_rows),
+                ("DisplayInOutLinkCode", self.display_in_out_link_code),
             ),
             trailing_attributes=Attributes(),
             children=Children(self.children),

@@ -48,13 +48,9 @@ class Rosen(TypedNode):
             kudari_dia_alias=node.attributes.get("KudariDiaAlias"),
             nobori_dia_alias=node.attributes.get("NoboriDiaAlias"),
             kiten_jikoku=node.trailing_attributes.get("KitenJikoku"),
-            diagram_dgr_y_zahyou_kyori_default=node.trailing_attributes.get_int(
-                "DiagramDgrYZahyouKyoriDefault"
-            ),
+            diagram_dgr_y_zahyou_kyori_default=node.trailing_attributes.get_int("DiagramDgrYZahyouKyoriDefault"),
             enable_operation=node.trailing_attributes.get_bool("EnableOperation"),
-            operation_cross_kiten_jikoku=node.trailing_attributes.get_bool(
-                "OperationCrossKitenJikoku"
-            ),
+            operation_cross_kiten_jikoku=node.trailing_attributes.get_bool("OperationCrossKitenJikoku"),
             kijun_dia_index=node.trailing_attributes.get_int("KijunDiaIndex"),
             comment=node.trailing_attributes.get("Comment"),
             _children=node.children,
@@ -70,38 +66,10 @@ class Rosen(TypedNode):
             ),
             trailing_attributes=Attributes(
                 ("KitenJikoku", self.kiten_jikoku),
-                (
-                    "DiagramDgrYZahyouKyoriDefault",
-                    (
-                        str(self.diagram_dgr_y_zahyou_kyori_default)
-                        if self.diagram_dgr_y_zahyou_kyori_default is not None
-                        else None
-                    ),
-                ),
-                (
-                    "OperationCrossKitenJikoku",
-                    (
-                        ("1" if self.operation_cross_kiten_jikoku else "0")
-                        if self.operation_cross_kiten_jikoku  # intentional as noted in http://oudiasecond.seesaa.net/article/481081211.html
-                        else None
-                    ),
-                ),
-                (
-                    "EnableOperation",
-                    (
-                        ("1" if self.enable_operation else "0")
-                        if self.enable_operation is not None
-                        else None
-                    ),
-                ),
-                (
-                    "KijunDiaIndex",
-                    (
-                        str(self.kijun_dia_index)
-                        if self.kijun_dia_index is not None
-                        else None
-                    ),
-                ),
+                ("DiagramDgrYZahyouKyoriDefault", self.diagram_dgr_y_zahyou_kyori_default),
+                ("OperationCrossKitenJikoku", self.operation_cross_kiten_jikoku),
+                ("EnableOperation", self.enable_operation),
+                ("KijunDiaIndex", self.kijun_dia_index),
                 ("Comment", self.comment),
             ),
             children=Children(self.children),

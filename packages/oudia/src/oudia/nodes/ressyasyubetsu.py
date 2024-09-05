@@ -55,9 +55,7 @@ class Ressyasyubetsu(TypedNode):
             diagram_sen_style=node.attributes.get_required("DiagramSenStyle"),
             diagram_sen_is_bold=node.attributes.get_bool("DiagramSenIsBold"),
             stop_mark_draw_type=node.attributes.get_required("StopMarkDrawType"),
-            parent_syubetsu_index=node.trailing_attributes.get_int(
-                "ParentSyubetsuIndex"
-            ),
+            parent_syubetsu_index=node.trailing_attributes.get_int("ParentSyubetsuIndex"),
             _children=node.children,
         )
 
@@ -72,23 +70,9 @@ class Ressyasyubetsu(TypedNode):
                 ("JikokuhyouBackColor", self.jikokuhyou_back_color),
                 ("DiagramSenColor", self.diagram_sen_color),
                 ("DiagramSenStyle", self.diagram_sen_style),
-                (
-                    "DiagramSenIsBold",
-                    (
-                        ("1" if self.diagram_sen_is_bold else "0")
-                        if self.diagram_sen_is_bold is not None
-                        else None
-                    ),
-                ),
+                ("DiagramSenIsBold", self.diagram_sen_is_bold),
                 ("StopMarkDrawType", self.stop_mark_draw_type),
-                (
-                    "ParentSyubetsuIndex",
-                    (
-                        str(self.parent_syubetsu_index)
-                        if self.parent_syubetsu_index
-                        else None
-                    ),
-                ),
+                ("ParentSyubetsuIndex", self.parent_syubetsu_index),
             ),
             children=Children(),
             trailing_attributes=Attributes(),

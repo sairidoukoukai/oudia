@@ -40,6 +40,12 @@ class Eki(TypedNode):
     diagram_color_next_eki: int | None = None
     """次駅の色"""
 
+    jikokuhyou_outer_display_kudari: str | None = None
+    """時刻表外表示（下り）"""
+
+    jikokuhyou_outer_display_nobori: str | None = None
+    """時刻表外表示（上り）"""
+
     _children: list["Node | TypedNode"] = field(default_factory=list)
 
     @property
@@ -55,21 +61,17 @@ class Eki(TypedNode):
             down_main=node.attributes.get_int("DownMain"),
             up_main=node.attributes.get_int("UpMain"),
             jikokuhyou_track_omit=node.attributes.get_bool("JikokuhyouTrackOmit"),
-            jikokuhyou_jikoku_display_kudari=node.trailing_attributes.get(
-                "JikokuhyouJikokuDisplayKudari"
-            ),
-            jikokuhyou_jikoku_display_nobori=node.trailing_attributes.get(
-                "JikokuhyouJikokuDisplayNobori"
-            ),
+            jikokuhyou_jikoku_display_kudari=node.trailing_attributes.get("JikokuhyouJikokuDisplayKudari"),
+            jikokuhyou_jikoku_display_nobori=node.trailing_attributes.get("JikokuhyouJikokuDisplayNobori"),
             jikokuhyou_syubetsu_change_display_kudari=node.trailing_attributes.get(
                 "JikokuhyouSyubetsuChangeDisplayKudari"
             ),
             jikokuhyou_syubetsu_change_display_nobori=(
                 node.trailing_attributes.get("JikokuhyouSyubetsuChangeDisplayNobori")
             ),
-            diagram_color_next_eki=node.trailing_attributes.get_int(
-                "DiagramColorNextEki"
-            ),
+            diagram_color_next_eki=node.trailing_attributes.get_int("DiagramColorNextEki"),
+            jikokuhyou_outer_display_kudari=node.trailing_attributes.get("JikokuhyouOuterDisplayKudari"),
+            jikokuhyou_outer_display_nobori=node.trailing_attributes.get("JikokuhyouOuterDisplayNobori"),
             _children=node.children,
         )
 
@@ -80,45 +82,18 @@ class Eki(TypedNode):
                 ("Ekimei", self.ekimei),
                 ("Ekijikokukeisiki", self.ekijikokukeisiki),
                 ("Ekikibo", self.ekikibo),
-                (
-                    "DownMain",
-                    str(self.down_main) if self.down_main is not None else None,
-                ),
-                ("UpMain", str(self.up_main) if self.up_main is not None else None),
+                ("DownMain", self.down_main),
+                ("UpMain", self.up_main),
             ),
             children=Children(self.children),
             trailing_attributes=Attributes(
-                (
-                    "JikokuhyouTrackOmit",
-                    (
-                        ("1" if self.jikokuhyou_track_omit else "0")
-                        if self.jikokuhyou_track_omit is not None
-                        else None
-                    ),
-                ),
-                (
-                    "JikokuhyouJikokuDisplayKudari",
-                    self.jikokuhyou_jikoku_display_kudari,
-                ),
-                (
-                    "JikokuhyouJikokuDisplayNobori",
-                    self.jikokuhyou_jikoku_display_nobori,
-                ),
-                (
-                    "JikokuhyouSyubetsuChangeDisplayKudari",
-                    self.jikokuhyou_syubetsu_change_display_kudari,
-                ),
-                (
-                    "JikokuhyouSyubetsuChangeDisplayNobori",
-                    self.jikokuhyou_syubetsu_change_display_nobori,
-                ),
-                (
-                    "DiagramColorNextEki",
-                    (
-                        str(self.diagram_color_next_eki)
-                        if self.diagram_color_next_eki is not None
-                        else None
-                    ),
-                ),
+                ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
+                ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
+                ("JikokuhyouJikokuDisplayNobori", self.jikokuhyou_jikoku_display_nobori),
+                ("JikokuhyouSyubetsuChangeDisplayKudari", self.jikokuhyou_syubetsu_change_display_kudari),
+                ("JikokuhyouSyubetsuChangeDisplayNobori", self.jikokuhyou_syubetsu_change_display_nobori),
+                ("DiagramColorNextEki", self.diagram_color_next_eki),
+                ("JikokuhyouOuterDisplayKudari", self.jikokuhyou_outer_display_kudari),
+                ("JikokuhyouOuterDisplayNobori", self.jikokuhyou_outer_display_nobori),
             ),
         )

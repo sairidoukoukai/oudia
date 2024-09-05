@@ -87,8 +87,6 @@ class OuDia(TypedNode):
             attributes=Attributes(
                 ("FileType", str(self.file_type)),
             ),
-            trailing_attributes=Attributes(
-                ("FileTypeAppComment", self.file_type_app_comment)
-            ),
+            trailing_attributes=Attributes(("FileTypeAppComment", self.file_type_app_comment)),
             children=Children(self.children),
         )

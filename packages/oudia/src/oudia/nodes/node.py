@@ -3,8 +3,16 @@ from abc import ABC, abstractmethod
 
 
 class Attributes(list[tuple[str, str]]):
-    def __init__(self, *args: tuple[str, str | None]) -> None:
-        super().__init__([(k, v) for k, v in args if v is not None])
+
+    def __init__(self, *args: tuple[str, str | int | bool | None]) -> None:
+        def parse_value(value: str | int | bool | None) -> str:
+            if value is None:
+                return ""
+            if isinstance(value, bool):
+                return "1" if value else "0"
+            return str(value)
+
+        super().__init__([(k, parse_value(v)) for k, v in args if v is not None])
 
     # def __new__(cls, x) -> "Attributes":
     #     return super(Attributes, cls).__new__(X)
