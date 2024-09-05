@@ -43,9 +43,9 @@ class Ressyasyubetsu(TypedNode):
     def children(self) -> list["Node | TypedNode"]:
         return self._children
 
-    @staticmethod
-    def from_node(node: Node) -> "Ressyasyubetsu":
-        return Ressyasyubetsu(
+    @classmethod
+    def from_node(cls, node: Node) -> "Ressyasyubetsu":
+        return cls(
             syubetsumei=node.attributes.get_required("Syubetsumei"),
             ryakusyo=node.attributes.get("Ryakusyo"),
             jikokuhyou_moji_color=node.attributes.get_required("JikokuhyouMojiColor"),

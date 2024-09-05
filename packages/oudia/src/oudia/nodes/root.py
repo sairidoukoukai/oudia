@@ -72,10 +72,10 @@ class OuDia(TypedNode):
     def children(self) -> list["Node | TypedNode"]:
         return self._children
 
-    @staticmethod
-    def from_node(node: Node) -> "OuDia":
+    @classmethod
+    def from_node(cls, node: Node) -> "OuDia":
         assert node.type == "Root"
-        return OuDia(
+        return cls(
             file_type=FileType.from_str(node.attributes.get_required("FileType")),
             file_type_app_comment=node.trailing_attributes.get("FileTypeAppComment"),
             _children=node.children,

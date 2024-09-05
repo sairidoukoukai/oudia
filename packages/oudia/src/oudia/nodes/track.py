@@ -19,9 +19,9 @@ class EkiTrack2(TypedNode):
     def children(self) -> list["Node | TypedNode"]:
         return self._children
 
-    @staticmethod
-    def from_node(node: Node) -> "EkiTrack2":
-        return EkiTrack2(
+    @classmethod
+    def from_node(cls, node: Node) -> "EkiTrack2":
+        return cls(
             track_name=node.attributes.get_required("TrackName"),
             track_ryakusyo=node.attributes.get("TrackRyakusyou"),
             _children=node.children,
@@ -49,8 +49,8 @@ class EkiTrack2Cont(TypedNode):
     def children(self) -> list["Node | TypedNode"]:
         return self._children
 
-    @staticmethod
-    def from_node(node: Node) -> "EkiTrack2Cont":
+    @classmethod
+    def from_node(cls, node: Node) -> "EkiTrack2Cont":
         return EkiTrack2Cont(
             _children=node.children,
         )

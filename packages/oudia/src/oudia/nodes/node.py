@@ -118,11 +118,7 @@ class Node:
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Node):
             # return super().__eq__(value)
-            return (
-                self.type == value.type
-                and self.attributes == value.attributes
-                and self.children == value.children
-            )
+            return self.type == value.type and self.attributes == value.attributes and self.children == value.children
 
         if isinstance(value, TypedNode):
             return value.to_node() == self
@@ -172,6 +168,20 @@ class TypedNode(ABC):
 
         Returns:
             Node: The node as a `Node` object.
+        """
+        pass
+
+    @classmethod
+    @abstractmethod
+    def from_node(cls, node: Node) -> "TypedNode":
+        """
+        Creates a typed node from a `Node` object.
+
+        Args:
+            node (Node): The node to create the typed node from.
+
+        Returns:
+            TypedNode: The typed node.
         """
         pass
 

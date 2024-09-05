@@ -41,9 +41,9 @@ class Rosen(TypedNode):
     def children(self) -> list["Node | TypedNode"]:
         return self._children
 
-    @staticmethod
-    def from_node(node: Node) -> "Rosen":
-        return Rosen(
+    @classmethod
+    def from_node(cls, node: Node) -> "Rosen":
+        return cls(
             rosenmei=node.attributes.get("Rosenmei"),
             kudari_dia_alias=node.attributes.get("KudariDiaAlias"),
             nobori_dia_alias=node.attributes.get("NoboriDiaAlias"),

@@ -52,9 +52,9 @@ class Eki(TypedNode):
     def children(self) -> list["Node | TypedNode"]:
         return self._children
 
-    @staticmethod
-    def from_node(node: Node) -> "Eki":
-        return Eki(
+    @classmethod
+    def from_node(cls, node: Node) -> "Eki":
+        return cls(
             ekimei=node.attributes.get_required("Ekimei"),
             ekijikokukeisiki=node.attributes.get_required(key="Ekijikokukeisiki"),
             ekikibo=node.attributes.get_required("Ekikibo"),
