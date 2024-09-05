@@ -113,6 +113,8 @@ The **Eki Node** represents a station (駅) on the route. It provides informatio
 - `Ekikibo` ([Enumeration](#data-types), [required](#field-tags)): The station's classification based on its importance. Possible values include:
   - `"Ekikibo_Syuyou"` (major station)
   - `"Ekikibo_Ippan"` (general station)
+- `DownMain` ([Number](#data-types), [optional](#field-tags)): The main platform for downward trains.
+- `UpMain` ([Number](#data-types), [optional](#field-tags)): The main platform for upward trains.
 
 #### Children
 
@@ -123,11 +125,14 @@ The **Eki Node** can contain the following child nodes:
 
 #### Trailing Attributes
 
-- `Kyoukaisen` ([Number](#data-types), [optional](#field-tags)): Specifies if the station is part of a boundary line between two jurisdictions.
-- `DiagramRessyajouhouHyoujiKudari` ([Enumeration](#data-types), [optional](#field-tags)): Controls the display of timetable information for downward-bound trains. Possible values include:
-  - `"DiagramRessyajouhouHyouji_Anytime"` (always displayed)
-  - `"DiagramRessyajouhouHyouji_Not"` (not displayed)
-- `DiagramRessyajouhouHyoujiNobori` ([Enumeration](#data-types), [optional](#field-tags)): Same as `DiagramRessyajouhouHyoujiKudari`, but for upward-bound trains.
+- `JikokuhyouTrackOmit` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether to omit the timetable track information.
+- `JikokuhyouJikokuDisplayKudari` ([Text](#data-types), [optional](#field-tags)): Specifies the timetable display format for downward trains.
+- `JikokuhyouJikokuDisplayNobori` ([Text](#data-types), [optional](#field-tags)): Specifies the timetable display format for upward trains.
+- `JikokuhyouSyubetsuChangeDisplayKudari` ([Text](#data-types), [optional](#field-tags)): Specifies how to display timetable changes for train types on downward trains.
+- `JikokuhyouSyubetsuChangeDisplayNobori` ([Text](#data-types), [optional](#field-tags)): Specifies how to display timetable changes for train types on upward trains.
+- `DiagramColorNextEki` ([Number](#data-types), [optional](#field-tags)): Specifies the color for the next station in the diagram.
+- `JikokuhyouOuterDisplayKudari` ([Text](#data-types), [optional](#field-tags)): Specifies how outer displays are handled for downward trains.
+- `JikokuhyouOuterDisplayNobori` ([Text](#data-types), [optional](#field-tags)): Specifies how outer displays are handled for upward trains.
 
 ### Ressyasyubetsu Node
 
