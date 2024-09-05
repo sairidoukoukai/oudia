@@ -48,9 +48,13 @@ class Rosen(TypedNode):
             kudari_dia_alias=node.attributes.get("KudariDiaAlias"),
             nobori_dia_alias=node.attributes.get("NoboriDiaAlias"),
             kiten_jikoku=node.trailing_attributes.get("KitenJikoku"),
-            diagram_dgr_y_zahyou_kyori_default=node.trailing_attributes.get_int("DiagramDgrYZahyouKyoriDefault"),
+            diagram_dgr_y_zahyou_kyori_default=node.trailing_attributes.get_int(
+                "DiagramDgrYZahyouKyoriDefault"
+            ),
             enable_operation=node.trailing_attributes.get_bool("EnableOperation"),
-            operation_cross_kiten_jikoku=node.trailing_attributes.get_bool("OperationCrossKitenJikoku")
+            operation_cross_kiten_jikoku=node.trailing_attributes.get_bool(
+                "OperationCrossKitenJikoku"
+            ),
             kijun_dia_index=node.trailing_attributes.get_int("KijunDiaIndex"),
             comment=node.trailing_attributes.get("Comment"),
             _children=node.children,
