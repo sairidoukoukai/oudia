@@ -242,13 +242,48 @@ The **DispProp Node** defines the display properties for various elements of the
 
 #### Attributes
 
-- `JikokuhyouFont` ([Font](#data-types), [repeatable](#field-tags)): Specifies the font used for the timetable text. It should be repeated 8 (`CentDedRessyasyubetsu::JIKOKUHYOUFONT_COUNT`) times. If fewer than 8 are provided, the unspecified font properties will not be set, e.g., `PointTextHeight=9;Facename=Meiryo UI;Bold=1;Itaric=1`.
-- `JikokuhyouVFont` ([Font](#data-types), [optional](#field-tags)): Specifies the vertical font used for the timetable text, e.g. `JikokuhyouVFont=PointTextHeight=9;Facename=@メイリオ`
+- `JikokuhyouFont` ([Font](#data-types), [repeatable](#field-tags)): Specifies the font used for the timetable text. This attribute should be repeated 8 times(`CentDedRessyasyubetsu::JIKOKUHYOUFONT_COUNT`). If fewer than 8 values are provided, the remaining fonts will not be set. Example: `PointTextHeight=9;Facename=Meiryo UI;Bold=1;Itaric=1`.
+- `JikokuhyouVFont` ([Font](#data-types), [optional](#field-tags)): Specifies the vertical font used for the timetable text. Example: `JikokuhyouVFont=PointTextHeight=9;Facename=@メイリオ`.
 - `DiaEkimeiFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used for station names in the diagram.
-- `DiaMojiColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the text on the timetable using a hexadecimal color code.
+- `DiaJikokuFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used for displaying time in the diagram.
+- `DiaRessyaFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used for the train text in the diagram.
+- `OperationTableFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used in the operation table.
+- `AllOperationTableJikokuFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used for displaying time in the operation table.
+- `CommentFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used for comments.
+- `DiaMojiColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the text on the timetable using a hexadecimal color code. Example: `000000` (for black).
 - `DiaHaikeiColor` ([Color](#data-types), [optional](#field-tags)): Specifies the background color of the timetable using a hexadecimal color code.
-- `DiaRessyaColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the train text in the diagram using a hexadecimal color code.
-- `DiaJikuColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the diagram axis using a hexadecimal color code.
+- `DiaRessyaColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the train lines in the diagram using a hexadecimal color code.
+- `DiaJikuColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the axis in the using a hexadecimal color code.
+- `JikokuhyouBackColor` ([Color](#data-types), [optional](#field-tags), [repeatable](#field-tags)): Specifies the background color for the timetable's outer area. This attribute is repeatable 4 times for different layers.
+- `StdOpeTimeLowerColor` ([Color](#data-types), [optional](#field-tags)): Specifies the background color for operation times that are below the standard.
+- `StdOpeTimeHigherColor` ([Color](#data-types), [optional](#field-tags)): Specifies the background color for operation times that exceed the standard.
+- `StdOpeTimeUndefColor` ([Color](#data-types), [optional](#field-tags)): Specifies the background color for undefined operation times.
+- `StdOpeTimeIllegalColor` ([Color](#data-types), [optional](#field-tags)): Specifies the background color for illegal operation times.
+- `OperationStringColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the text in the operation table.
+- `OperationGridColor` ([Color](#data-types), [optional](#field-tags)): Specifies the color of the grid in the operation table.
+- `EkimeiLength` ([Number](#data-types), [optional](#field-tags)): Specifies the width of the station name column, in terms of full-width characters. Default is 6, with a range of 1 to 29.
+- `JikokuhyouRessyaWidth` ([Number](#data-types), [optional](#field-tags)): Specifies the width of the train column in the timetable. Default is 5, with a range of 4 to 255.
+- `AnySecondIncDec1` ([Number](#data-types), [optional](#field-tags)): Specifies the increment/decrement value in seconds for the first custom time adjustment. Default is 5, with a range of 1 to 60.
+- `AnySecondIncDec2` ([Number](#data-types), [optional](#field-tags)): Specifies the increment/decrement value in seconds for the second custom time adjustment. Default is 15, with a range of 1 to 60.
+- `DisplayRessyamei` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display the train name and number in the timetable view. Default is true.
+- `DisplayOuterTerminalEkimeiOriginSide` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display the outer terminal station name on the origin side. Default is true.
+- `DisplayOuterTerminalEkimeiTerminalSide` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display the outer terminal station name on the terminal side. Default is true.
+- `DiagramDisplayOuterTerminal` ([Number](#data-types), [optional](#field-tags)): Specifies how outer terminal station names and operation numbers are displayed in the diagram. Possible values:
+  - `0`: Station name + operation number (default)
+  - `1`: Station name only
+  - `2`: Operation number only
+  - `3`: None
+- `SecondRoundChaku` ([Number](#data-types), [optional](#field-tags)): Specifies how to handle arrival times when seconds are hidden. Possible values:
+  - `0`: Truncate (default)
+  - `1`: Round (round up if 30 seconds or more)
+  - `2`: Always round up
+- `SecondRoundHatsu` ([Number](#data-types), [optional](#field-tags)): Specifies how to handle departure times when seconds are hidden. Possible values:
+  - `0`: Truncate (default)
+  - `1`: Round (round up if 30 seconds or more)
+  - `2`: Always round up
+- `Display2400` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display 2400 for midnight in the timetable. Default is false.
+- `OperationNumberRows` ([Number](#data-types), [optional](#field-tags)): Specifies the number of rows for operation numbers in the timetable. Default is 1, with a range of 1 to 5.
+- `DisplayInOutLinkCode` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display the in/out link code column in the timetable. Default is true.
 
 #### References
 
