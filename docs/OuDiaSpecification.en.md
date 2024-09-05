@@ -376,6 +376,9 @@ The parenthesized types correspond to those used in the original OuDiaSecond C++
 - `Number` (`int`, `int`): A numerical value, usually an integer, that can represent quantities, indices, or values like time.
 - `Enumeration`: A predefined set of values from which only one can be chosen. These are typically used for fixed categories, like train types or station roles.
 - `Boolean` (`bool`, `bool`): A binary value, represented by `0` (false) or `1` (true), used for toggle-type fields such as enabling or disabling certain behaviors or features. If omitted, it usually defaults to `0` (false).
+- `Tuple` (multiple variables, `str`): A series of values with fixed amount of elements separated by `,` as a string.
+- `Dictionary` (? , `str`): A series of key value pairs separated by `;` <!-- TODO: Check how is it implemented in CPP -->
+- `NodeList` (`CDirectory`, `Children`): A list of child nodes.
 - `Color` (`CdFontColor`, `str`): A hexadecimal string representing an RGB color.
 - `Font` (`CdFontProp`, `str`): A list of font properties, separated by `;`. Includes sub-attributes such as:
   - `PointTextHeight` ([Number](#data-types)): The size of the text.
