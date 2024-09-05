@@ -33,9 +33,7 @@ def test_parser():
     assert oudia.loads("FileType=OuDia.1.02") == oudia.OuDia(
         file_type=oudia.FileType("OuDia", "1.02"),
     )
-    assert oudia.loads(
-        "FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n."
-    ) == oudia.OuDia(
+    assert oudia.loads("FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.") == oudia.OuDia(
         file_type=oudia.FileType("OuDia", "1.02"),
         _children=[oudia.Rosen("メロンキング線")],
     )
@@ -50,9 +48,7 @@ def test_parser():
 
 
 def test_pprint():
-    dia = oudia.loads(
-        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
-    )
+    dia = oudia.loads(f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n")
     print(f"{dia=}")
     print(f"{dia.to_node()=}")
     dia.pprint()
