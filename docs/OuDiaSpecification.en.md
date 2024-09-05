@@ -112,9 +112,9 @@ The **root node** represents the entire file. It contains various attributes tha
 #### Entries
 
 - `FileType` ([Text](#data-types), [required](#field-tags)): Specifies the version of the file format, for example, "OuDia.1.02". This may not necessarily be the same as the version of the program that generated the file.
-- ([NodeList](#data-types)\[[Rosen](#rosen-node); 1\]): Represents a route or line.
-- ([NodeList](#data-types)\[[DispProp](#dispprop-node); 1\]): Contains display properties like font styles and colors used in diagrams.
-- ([NodeList](#data-types)\[[WindowPlacement](#windowplacement-node)\]): Contains window view positions.
+- ([NodeList](#data-types)\[[Rosen](#rosen-node); 1\], [required](#field-tags)): Represents a route or line.
+- ([NodeList](#data-types)\[[DispProp](#dispprop-node); 1\], [required](#field-tags)): Contains display properties like font styles and colors used in diagrams.
+- ([NodeList](#data-types)\[[WindowPlacement](#windowplacement-node); 1\], [optional](#field-tags)): Contains window view positions.
 - `FileTypeAppComment` ([Text](#data-types), [optional](#field-tags)): Additional comments related to the file type or application, possibly detailing the version of the application or any specific information.
 
 ### Rosen Node
