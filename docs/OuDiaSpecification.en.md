@@ -109,20 +109,12 @@ To ensure best compatibility with OuDia/OuDiaSecond and other editor, parser or 
 
 The **root node** represents the entire file. It contains various attributes that define metadata about the file and serves as the top-level container for all the other nodes. This node does not have a header (`Type.`) or footer (`.`), unlike the other nodes.
 
-#### Attributes
+#### Entries
 
 - `FileType` ([Text](#data-types), [required](#field-tags)): Specifies the version of the file format, for example, "OuDia.1.02". This may not necessarily be the same as the version of the program that generated the file.
-
-#### Children
-
-The root node can contain the following children nodes:
-
-- [Rosen](#rosen-node): Represents a route or line.
-- [DispProp](#dispprop-node): Contains display properties like font styles and colors used in diagrams.
-- [WindowPlacement](#windowplacement-node): Contains window view positions.
-
-#### Trailing Attributes
-
+- ([NodeList](#data-types)\[[Rosen](#rosen-node); 1\]): Represents a route or line.
+- ([NodeList](#data-types)\[[DispProp](#dispprop-node); 1\]): Contains display properties like font styles and colors used in diagrams.
+- ([NodeList](#data-types)\[[WindowPlacement](#windowplacement-node)\]): Contains window view positions.
 - `FileTypeAppComment` ([Text](#data-types), [optional](#field-tags)): Additional comments related to the file type or application, possibly detailing the version of the application or any specific information.
 
 ### Rosen Node
