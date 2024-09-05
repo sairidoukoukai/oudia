@@ -5,51 +5,105 @@ This file is an unofficial specification of the OuDia/OuDiaSecond file format, w
 ## BNF defintion
 
 ```bnf
-<file> ::= <root_node>
+<file> ::= <bom> <root_node> | <root_node>
+<bom> ::= "\ufeff"
 
-<root_node> ::= <attribute_list> <children_list> <trailing_attributes>
+<root_node> ::= <entry_list>
 
-<attribute_list> ::= <attribute> | <attribute> <attribute_list>
-<attribute> ::= <key> "=" <value> <newline>
+<entry_list> ::= <entry> | <entry> <entry_list>
 
-<children_list> ::= <child_node> | <child_node> <children_list>
+<entry> ::= <property> | <node>
 
-<child_node> ::= <node_header> <attribute_list> <children_list> <trailing_attributes> <node_footer>
+<property> ::= <key> "=" <value> <newline>
+
+<node> ::= <node_header> <entry_list> <node_footer>
 
 <node_header> ::= <node_type> "." <newline>
-<node_type> ::= "Rosen" | "Eki" | "Ressyasyubetsu" | "Dia" | "Kudari" | ...
+<node_type> ::= "Rosen" | "Eki" | "Ressyasyubetsu" | "Dia" | "Kudari" | "EkiTrack2" | "DispProp" | ...
 
 <node_footer> ::= "." <newline>
 
-<trailing_attributes> ::= <attribute_list> | ε
+<key> ::= <camel_case_text>
+<value> ::= <any_text>
 
-<key> ::= <camel_case_Text>
-<value> ::= <alphanumeric_Text>
-
-<camel_case_Text> ::= <capital_letter> <alphanumeric_Text> | <capital_letter> <alphanumeric_Text> <camel_case_Text>
+<camel_case_text> ::= <capital_letter> <alphanumeric_text> | <capital_letter> <alphanumeric_text> <camel_case_text>
 
 <capital_letter> ::= "A" | "B" | "C" | ... | "Z"
-<alphanumeric_Text> ::= <letter> | <letter> <alphanumeric_Text> | <digit> | <digit> <alphanumeric_Text>
+<alphanumeric_text> ::= <letter> | <letter> <alphanumeric_text> | <digit> | <digit> <alphanumeric_text>
 
 <letter> ::= "a" | "b" | "c" | ... | "z" | <capital_letter>
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
-<newline> ::= "\n"
+<any_text> ::= ε | <any_character> | <any_character>  <any_text>
+
+<any_character> ::= ? Any Unicode Character ?
+
+<newline> ::= <lf> | <crlf>
+<crlf> ::= <cr> <lf>
+<lf> ::= "\n"
+<cr> ::= "\r"
 ```
 
-## Structure
+## Structure Overview
 
-An OuDia file (`.oud`) or OuDiaSecond file (`.oud2`) is a plain text file typically encoded in `UTF-8 BOM`. These files consist of multiple lines, typically separated by CRLF (`\r\n`). A number of lines are grouped into a node, and each node has a type.
+An OuDia file (`.oud`) or OuDiaSecond file (`.oud2`) is a plain text file typically encoded in `UTF-8 BOM`. These files consist of multiple lines, typically separated by CRLF (`\r\n`). Each line represents part of a node, and all lines belong to one node or another. A specific set of lines are grouped into a node, with each node having a defined type.
 
-The file itself (`<file>`) is a node called the root node (`<root_node>`). Non-root nodes (`<child_node>`) must begin with a header (`<node_header>`) that follows the format `Type.` where `Type` represents the node type, and end with a footer (`<node_footer>`), which is always `.`. The root node does not contain a header or footer.
+The file itself (`<file>`) is represented as a root node (`<root_node>`), and all other nodes are child nodes of this root. Each child node begins with a header (`<node_header>`) in the format `Type.`, where `Type` represents the node type (<`node_type`>), and ends with a footer (`<node_footer>`), which is always `.`. The root node does not contain a header or footer but directly consists of entries.
 
-Each node has attributes (`<attribute_list>`), children, and trailing attributes, in this order.
+### Node Structure
 
-Each node can have one or more attributes, which are either required or optional, depending on the node's type. A required attribute may have an empty value. Each attributes is defined using the format `Key=Value`, where the `Key` is written in CamelCase, and `Value` is the Text representation of the attribute’s value. Usually a key is unique for a node, however sometimes some specific key (such as `JikokuhyouFont` in `DispProp`) can be set multiple times with different value.
+Each node (`<node>`) is a list of entries composed of one or more entries (`<entry>`). The list of entries is typically ordered in a specific way, depending on the node type. The entries allowed in each node are predefined, depending on the node type. Some nodes only have properties, while others only have node lists, or a combination of both. Some entries are optional, meaning they can be omitted. Each entry can be either of the following:
 
-A node can also contain zero or more child nodes, allowing for hierarchical structures. The types of child nodes a node can have are determined by its own type. Not all nodes support children, and the specific types of allowed child nodes vary based on the parent node's type.
+1. **Property** (`<property>`): A property is defined as a `Key=Value` pair, where `Key` is represented in CamelCase (`<key>`) and `Value` is the text representation of the attribute's value (`<value>`). Usually, the key is unique, meaning a node has only one entry with the same key. However, certain keys in specific node types (e.g., `JikokuhyouFont` in the `DispProp` node) may appear multiple times with the same or different values. In this case, it is treated as a list of values associated with the same key. The value can also be an empty string.
+2. **Node List** (`<node_list>`): A node list is a sequence of nodes of the same type. It can have one or more items, and each item is a node with its own header, entries and footer. The node list has no special marking or identifier; it is represented by the concentration of nodes of the same type appearing sequentially. Sometimes there will be a container type (such as `EkiTrack2Cont`) that only holds children in a node list with no properties. Nodes can be nested through node lists.
 
-In addition to the primary attributes and child nodes, some nodes may include **trailing attributes**, which are a secondary list of attributes. These trailing attributes are placed after the list of child nodes and often serve as supplementary data that follows the main content of the node.
+### File Structure Example
+
+```oud
+FileType=OuDia.1.02
+Rosen.                         # Rosen node begins
+Rosenmei=Main Line             # Attribute for Rosen node
+Eki.                           # Eki node begins
+Ekimei=First Station           # Attribute for Eki node
+Ekijikokukeisiki=Jikokukeisiki_Hatsu
+Ekikibo=Ekikibo_Ippan
+DownMain=0
+UpMain=1
+EkiTrack2Cont.                 # EkiTrack2Cont node begins
+EkiTrack2.                     # EkiTrack2 child node begins
+TrackName=1番線                # Attribute for EkiTrack2 node
+TrackRyakusyou=1
+.                              # EkiTrack2 child node ends
+EkiTrack2.                     # Another EkiTrack2 child node begins
+TrackName=2番線
+TrackRyakusyou=2
+.                              # EkiTrack2 child node ends
+.                              # EkiTrack2Cont node ends
+JikokuhyouJikokuDisplayKudari=0,1
+JikokuhyouJikokuDisplayNobori=1,0
+JikokuhyouSyubetsuChangeDisplayKudari=0,0,0,0,1
+JikokuhyouSyubetsuChangeDisplayNobori=0,0,0,0,1
+DiagramColorNextEki=0
+JikokuhyouOuterDisplayKudari=0,0
+JikokuhyouOuterDisplayNobori=0,0
+.                              # Eki node ends
+Ressyasyubetsu.                # Another child node of Rosen node begins
+Syubetsumei=普通
+JikokuhyouMojiColor=00000000
+JikokuhyouFontIndex=0
+.                              # Ressyasyubetsu node ends
+.
+```
+
+### Fixed Order of Entries
+
+The order of properties and node lists within each node is fixed and defined by the node type. For example:
+
+- A [`Rosen` node](#rosen-node) will always begin with `Rosenmei` and other properties, followed by a list of [`Eki` nodes](#eki-node), then a list of [`Ressyasyubetsu` nodes](#ressyasyubetsu-node), a list of [`Dia` nodes](#dia) followed by any remaining properties.
+
+To ensure best compatibility with OuDia/OuDiaSecond and other editor, parser or converter software, it is recommended to strictly maintain the order of entries. This hierarchical structure, combined with the fixed order of attributes and node lists, allows for the efficient representation of complex timetable data in a structured and easily readable format.
+
+## Node Types
 
 ### Root Node
 
