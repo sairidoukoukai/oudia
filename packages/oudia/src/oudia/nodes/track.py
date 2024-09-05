@@ -13,6 +13,9 @@ class EkiTrack2(TypedNode):
     track_ryakusyo: str | None
     """トラック略称"""
 
+    track_nobori_ryakusyou: str | None
+    """通り略称"""
+
     _children: list["Node | TypedNode"] = field(default_factory=list)
 
     @property
@@ -24,6 +27,7 @@ class EkiTrack2(TypedNode):
         return cls(
             track_name=node.attributes.get_required("TrackName"),
             track_ryakusyo=node.attributes.get("TrackRyakusyou"),
+            track_nobori_ryakusyou=node.attributes.get("TrackNoboriRyakusyou"),
             _children=node.children,
         )
 
@@ -33,6 +37,7 @@ class EkiTrack2(TypedNode):
             attributes=Attributes(
                 ("TrackName", self.track_name),
                 ("TrackRyakusyou", self.track_ryakusyo),
+                ("TrackNoboriRyakusyou", self.track_nobori_ryakusyou),
             ),
             children=Children(),
             trailing_attributes=Attributes(),
