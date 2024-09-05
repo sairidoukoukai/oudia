@@ -242,21 +242,9 @@ The **DispProp Node** defines the display properties for various elements of the
 
 #### Attributes
 
-- `JikokuhyouFont` ([Text](#data-types), [required](#field-tags), [repeatable](#field-tags)): Specifies the font used for the timetable text. It should be repeated 8 (`CentDedRessyasyubetsu::JIKOKUHYOUFONT_COUNT`) times. If fewer than 8 are provided, the unspecified font properties will not be set. Includes attributes such as:
-  - `PointTextHeight` ([Number](#data-types)): The size of the text.
-  - `Facename` ([Text](#data-types)): The name of the font, e.g., `"ＭＳ ゴシック"`.
-  - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
-  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
-- `JikokuhyouVFont` ([Text](#data-types), [optional](#field-tags)): Specifies the vertical font used for the timetable text. Includes attributes such as:
-  - `PointTextHeight` ([Number](#data-types)): The size of the text.
-  - `Facename` ([Text](#data-types)): The name of the font, e.g., `"@ＭＳ ゴシック"`.
-  - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
-  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
-- `DiaEkimeiFont`Includes attributes such as:
-  - `PointTextHeight` ([Number](#data-types)): The size of the text.
-  - `Facename` ([Text](#data-types)): The name of the font, e.g., `"@ＭＳ ゴシック"`.
-  - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
-  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
+- `JikokuhyouFont` ([Font](#data-types), [repeatable](#field-tags)): Specifies the font used for the timetable text. It should be repeated 8 (`CentDedRessyasyubetsu::JIKOKUHYOUFONT_COUNT`) times. If fewer than 8 are provided, the unspecified font properties will not be set, e.g., `PointTextHeight=9;Facename=Meiryo UI;Bold=1;Itaric=1`.
+- `JikokuhyouVFont` ([Font](#data-types), [optional](#field-tags)): Specifies the vertical font used for the timetable text, e.g. `JikokuhyouVFont=PointTextHeight=9;Facename=@メイリオ`
+- `DiaEkimeiFont` ([Font](#data-types), [optional](#field-tags)): Specifies the font used for station names in the diagram.
 - `DiaMojiColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the text on the timetable using a hexadecimal color code.
 - `DiaHaikeiColor` ([Text](#data-types), [optional](#field-tags)): Specifies the background color of the timetable using a hexadecimal color code.
 - `DiaRessyaColor` ([Text](#data-types), [optional](#field-tags)): Specifies the color of the train text in the diagram using a hexadecimal color code.
@@ -292,10 +280,17 @@ The following data types are for reference only and are not explicitly required.
 
 The parenthesized types correspond to those used in the original OuDiaSecond C++ implementation and the current OuDia.Py Python implementation.
 
+- Primitive Types
 - `Text` (`tstring`, `str`): A string of characters, often representing a name, description, or identifier.
 - `Number` (`int`, `int`): A numerical value, usually an integer, that can represent quantities, indices, or values like time.
 - `Enumeration`: A predefined set of values from which only one can be chosen. These are typically used for fixed categories, like train types or station roles.
 - `Boolean` (`bool`, `bool`): A binary value, represented by `0` (false) or `1` (true), used for toggle-type fields such as enabling or disabling certain behaviors or features. If omitted, it usually defaults to `0` (false).
+- `Font` (`CdFontProp`, `str`): A list of font properties, separated by `;`. Includes sub-attributes such as:
+  - `PointTextHeight` ([Number](#data-types)): The size of the text.
+  - `Facename` ([Text](#data-types)): The name of the font, e.g., `"ＭＳ ゴシック"`.
+  - `Bold` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is bold.
+  - `Italic` ([Boolean](#data-types), [optional](#field-tags)): Indicates if the text is italicized.
+
 ## References
 
 ### Bibliography
