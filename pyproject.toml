@@ -10,3 +10,7 @@ virtual = true
 
 [tool.rye.workspace]
 members = ["packages/*"]
+
+[tool.black]
+target-version = ["py312"]
+line-length = 120
