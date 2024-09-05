@@ -14,16 +14,16 @@ class Ressyasyubetsu(TypedNode):
     """略称"""
 
     jikokuhyou_moji_color: str
-    """時刻表文字カラー"""
+    """時刻表文字色"""
 
     jikokuhyou_font_index: str
     """時刻表文字フォントインデックス"""
 
     jikokuhyou_back_color: str
-    """時刻表文字背景カラー"""
+    """時刻表文字背景色"""
 
     diagram_sen_color: str
-    """ダイヤグラム線カラー"""
+    """ダイヤグラム線色"""
 
     diagram_sen_style: str
     """ダイヤグラム線スタイル"""
