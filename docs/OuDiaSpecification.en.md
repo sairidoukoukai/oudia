@@ -104,7 +104,9 @@ The **Eki Node** represents a station (駅) on the route. It provides informatio
 
 #### Attributes
 
-- `Ekimei` ([Text](#data-types), [required](#field-tags)): The name of the station, e.g., "和光市".
+- `Ekimei` ([Text](#data-types), [required](#field-tags)): The name of the station, e.g., "四日市". Previously, empty station name was invalid, but will not throw errors now.
+- `EkimeiJikokuRyaku` ([Text](#data-types), [optional](#field-tags)): The abbreviation for the station name used in the timetable view, specifically for start and terminal stations. If empty, the full station name is used. [OuDiaSecond.1.07+](http://oudiasecond.seesaa.net/article/467843165.html)
+- `EkimeiDiaRyaku` ([Text](#data-types), [optional](#field-tags)): The abbreviation for the station name used in operational diagrams. If empty, the first character of the station name is used.
 - `Ekijikokukeisiki` ([Enumeration](#data-types), [required](#field-tags)): The type of timetable associated with the station. Possible values include:
   - `"Jikokukeisiki_Hatsu"` (departure only)
   - `"Jikokukeisiki_Hatsuchaku"` (both arrival and departure)
@@ -113,8 +115,28 @@ The **Eki Node** represents a station (駅) on the route. It provides informatio
 - `Ekikibo` ([Enumeration](#data-types), [required](#field-tags)): The station's classification based on its importance. Possible values include:
   - `"Ekikibo_Syuyou"` (major station)
   - `"Ekikibo_Ippan"` (general station)
+- <s>`Kyoukaisen`</s> ([Boolean](#data-types), [optional](#field-tags), [deprecated](#field-tags)): Specifies if the station is part of a boundary line between two jurisdictions. Removed since [OuDiaSecond Ver1.02](http://oudiasecond.seesaa.net/article/454143826.html).
+- `DiagramRessyajouhouHyoujiKudari` ([Enumeration](#data-types), [optional](#field-tags)): Controls the display of timetable information for downward-bound trains. Possible values include:
+  - `DiagramRessyajouhouHyouji_Origin` (only show starting stations, default)
+  - `"DiagramRessyajouhouHyouji_Anytime"` (always displayed)
+  - `"DiagramRessyajouhouHyouji_Not"` (not displayed)
+- `DiagramRessyajouhouHyoujiNobori` ([Enumeration](#data-types), [optional](#field-tags)): Controls the display of timetable information for upward-bound trains. Possible values include:
+  - `DiagramRessyajouhouHyouji_Origin` (only show starting stations, default)
+  - `"DiagramRessyajouhouHyouji_Anytime"` (always displayed)
+  - `"DiagramRessyajouhouHyouji_Not"` (not displayed)
 - `DownMain` ([Number](#data-types), [optional](#field-tags)): The main platform for downward trains.
 - `UpMain` ([Number](#data-types), [optional](#field-tags)): The main platform for upward trains.
+- `BrunchCoreEkiIndex` ([Number](#data-types), [optional](#field-tags)): Index of the core station in branching station settings. `-1` if not applicable.
+- `BrunchOpposite` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the branch is opposite the core station.
+- `LoopOriginEkiIndex` ([Number](#data-types), [optional](#field-tags)): Index of the origin station for loop settings. `-1` if not applicable.
+- `LoopOpposite` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the loop is in the opposite direction.
+- `JikokuhyouTrackDisplayKudari` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the departure track is displayed for downward trains.
+- `JikokuhyouTrackDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the departure track is displayed for upward trains.
+- `NextEkiDistance` ([Number](#data-types), [optional](#field-tags)): Specifies the distance to the next station in seconds. Defaults to 0, meaning the default distance is used.
+- `JikokuhyouTrackOmit` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether the track display is omitted for the station.
+- `JikokuhyouTrackDisplayKudari` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether track display is enabled for downward trains in the timetable.
+- `JikokuhyouTrackDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether track display is enabled for upward trains in the timetable.
+- `DiagramTrackDisplay` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether track display is enabled in the diagram.
 
 #### Children
 
@@ -124,15 +146,43 @@ The **Eki Node** can contain the following child nodes:
 - **OuterTerminal Node**: (optional, [repeatable](#field-tags)) Represents outer terminals that are connected to the station but belong to another line.
 
 #### Trailing Attributes
-
-- `JikokuhyouTrackOmit` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether to omit the timetable track information.
-- `JikokuhyouJikokuDisplayKudari` ([Text](#data-types), [optional](#field-tags)): Specifies the timetable display format for downward trains.
-- `JikokuhyouJikokuDisplayNobori` ([Text](#data-types), [optional](#field-tags)): Specifies the timetable display format for upward trains.
-- `JikokuhyouSyubetsuChangeDisplayKudari` ([Text](#data-types), [optional](#field-tags)): Specifies how to display timetable changes for train types on downward trains.
-- `JikokuhyouSyubetsuChangeDisplayNobori` ([Text](#data-types), [optional](#field-tags)): Specifies how to display timetable changes for train types on upward trains.
+- `OuterTerminalEkimei` ([Text](#data-types), [optional](#field-tags)): Represents outer terminals connected to the station.
+- `NextEkiDistance` ([Number](#data-types), [optional](#field-tags)): The distance to the next station in seconds.
+- `JikokuhyouTrackOmit` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to omit track display in the timetable.
+- `JikokuhyouOperationOrigin` ([Number](#data-types), [optional](#field-tags)): Specifies the number of operation columns at the origin side of the station in the timetable.
+- `JikokuhyouOperationTerminal` ([Number](#data-types), [optional](#field-tags)): Specifies the number of operation columns at the terminal side of the station in the timetable.
+- `JikokuhyouOperationOriginDownBeforeUpAfter` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display coupling and decoupling operations at the origin side for downward trains.
+- `JikokuhyouOperationOriginDownAfterUpBefore` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display coupling and decoupling operations at the origin side for upward trains.
+- `JikokuhyouOperationTerminalDownBeforeUpAfter` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display coupling and decoupling operations at the terminal side for downward trains.
+- `JikokuhyouOperationTerminalDownAfterUpBefore` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display coupling and decoupling operations at the terminal side for upward trains.
+- `JikokuhyouJikokuDisplayKudari` ([Tuple](#data-types)\[[Boolean](#data-types), [Boolean](#data-types)\], [optional](#field-tags)): Specifies whether to display arrival and departure times for downward trains in the customized timetable view. The first value corresponds to arrival time, and the second corresponds to departure time.
+- `JikokuhyouJikokuDisplayNobori` ([Tuple](#data-types)\[[Boolean](#data-types), [Boolean](#data-types)\], [optional](#field-tags)): Specifies whether to display arrival and departure times for upward trains in the customized timetable view. The first value corresponds to arrival time, and the second corresponds to departure time.
+- `JikokuhyouSyubetsuChangeDisplayKudari` ([Tuple](#data-types)\[[Integer](#data-types), [Integer](#data-types)\, [Integer](#data-types)\, [Integer](#data-types)\, [Integer](#data-types)\], [optional](#field-tags)): Specifies how to display train type changes for downward trains in the timetable. The values correspond to the following:
+  - `JikokuhyouRessyabangouDisplayKudari`: Specifies how train numbers are displayed.
+  - `JikokuhyouOperationNumberDisplayKudari`: Specifies how operation numbers are displayed.
+  - `JikokuhyouRessyaSyubetsuDisplayKudari`: Specifies how train categories are displayed.
+  - `JikokuhyouRessyameiDisplayKudari`: Specifies how train names and numbers are displayed.
+  - `JikokuhyouOperationNumberDisplayRowsKudari`: Specifies how many rows are used for operation numbers.
+- `JikokuhyouSyubetsuChangeDisplayNobori` ([Tuple](#data-types)\[[Integer](#data-types), [Integer](#data-types)\, [Integer](#data-types)\, [Integer](#data-types)\, [Integer](#data-types)\], [optional](#field-tags)): Specifies how to display train type changes for upward trains in the timetable. The values correspond to the following:
+  - `JikokuhyouRessyabangouDisplayNobori`: Specifies how train numbers are displayed.
+  - `JikokuhyouOperationNumberDisplayNobori`: Specifies how operation numbers are displayed.
+  - `JikokuhyouRessyaSyubetsuDisplayNobori`: Specifies how train categories are displayed.
+  - `JikokuhyouRessyameiDisplayNobori`: Specifies how train names and numbers are displayed.
+  - `JikokuhyouOperationNumberDisplayRowsNobori`: Specifies how many rows are used for operation numbers.
+- `JikokuhyouOuterDisplayKudari` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for downward trains.
+- `JikokuhyouOuterDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for upward trains.
+- `JikokuhyouOuterDisplayKudari` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for downward trains.
+- `JikokuhyouOuterDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for upward trains.
 - `DiagramColorNextEki` ([Number](#data-types), [optional](#field-tags)): Specifies the color for the next station in the diagram.
-- `JikokuhyouOuterDisplayKudari` ([Text](#data-types), [optional](#field-tags)): Specifies how outer displays are handled for downward trains.
-- `JikokuhyouOuterDisplayNobori` ([Text](#data-types), [optional](#field-tags)): Specifies how outer displays are handled for upward trains.
+- `OperationTableDisplayJikoku` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display times in the operation table.
+- `CrossingCheckRule` ([Custom](#data-types), [optional](#field-tags)): Specifies the rules for crossing checks
+
+#### References
+
+- OuDiaSecond Ver2.06.14
+  - `DiagramEdit/DiagramEdit/entDed/CconvCentDedOud.cpp`
+  - `DiagramEdit/DiagramEdit/entDed/CentDedEki.h`
+
 
 ### Ressyasyubetsu Node
 
@@ -313,6 +363,7 @@ The **DispProp Node** defines the display properties for various elements of the
 - `required`: Indicates that the field must be present in the node. Missing required fields will likely cause the file to be invalid or fail parsing.
 - `optional`: Optional value that can be omitted if not applicable. If omitted, the parser will likely apply a default value or handle it gracefully.
 - `repeatable`: Indicates that the field or node can appear multiple times within the same parent node. These fields can store multiple values or instances of the same data type.
+- `deprecated`: Indicates that the value may be or has already abandonded by later versions.
 
 #### Data Types
 
