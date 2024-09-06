@@ -2,7 +2,13 @@ from typing import Iterator, Sequence, TextIO, Type
 
 from oudia.nodes.node import EntryList, NodeList
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
-from .nodes import Eki, Rosen, Node, TypedNode, OuDia, FileType, Ressyasyubetsu, DispProp, CrossingCheckRule
+from .nodes import (
+    TYPE_TO_NODE,
+    Node,
+    TypedNode,
+    OuDia,
+    FileType,
+)
 
 import logging
 
@@ -10,16 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
-    TYPE_TO_NODE: dict[str, Type[TypedNode]] = {
-        "Root": OuDia,
-        "Rosen": Rosen,
-        "Eki": Eki,
-        "Ressyasyubetsu": Ressyasyubetsu,
-        "EkiTrack2": EkiTrack2,
-        "EkiTrack2Cont": EkiTrack2Cont,
-        "CrossingCheckRule": CrossingCheckRule,
-        "DispProp": DispProp,
-    }
     return TYPE_TO_NODE.get(type) if type else None
 
 
