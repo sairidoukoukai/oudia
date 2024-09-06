@@ -8,8 +8,8 @@ T = TypeVar("T", bound="Node | TypedNode")
 class NodeList[T](list[T]):
     type: Type[T]
 
-    def __init__(self, type: Type[T], args: list[T] | None = None) -> None:
-        super().__init__(args if args is not None else [])
+    def __init__(self, type: Type[T], l: list[T] | None = None) -> None:
+        super().__init__(l if l is not None else [])
         self.type = type
 
     def __str__(self) -> str:
