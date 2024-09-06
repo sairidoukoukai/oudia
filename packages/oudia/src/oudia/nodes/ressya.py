@@ -26,6 +26,9 @@ class Ressya(TypedNode):
     gousuu: str | None = None
     """号数"""
 
+    bikou: str | None = None
+    """備考"""
+
     @classmethod
     def from_node(cls, node: Node) -> "Ressya":
         return cls(
@@ -36,6 +39,7 @@ class Ressya(TypedNode):
             eki_jikoku_list=list(
                 EkiJikoku.from_str(x) if x else None for x in node.entries.get_required("EkiJikoku").split(",")
             ),
+            bikou=node.entries.get("Bikou"),
         )
 
     def to_node(self) -> Node:
@@ -47,5 +51,6 @@ class Ressya(TypedNode):
                 ("Ressyabangou", self.ressyabangou),
                 ("Ressyamei", self.ressyamei),
                 ("EkiJikoku", ",".join(str(x) if x else "" for x in self.eki_jikoku_list)),
+                ("Bikou", self.bikou),
             ),
         )
