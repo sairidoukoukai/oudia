@@ -235,7 +235,15 @@ def test_jikoku_conv_decode_rounding():
 def test_jikoku_conv_decode_no_colon_no_second():
     conv_no_colon_no_second = JikokuConv(no_colon=True, second=Second.NO_SECOND)
 
-    assert conv_no_colon_no_second.decode("0101").total_seconds == 3660  # No colon, no seconds
+    assert conv_no_colon_no_second.decode("0101").total_seconds == 3660
+    assert conv_no_colon_no_second.decode("0100").total_seconds == 3600
+
+
+def test_jikoku_conv_decode_no_colon_no_second_no_leading_zero():
+    conv_no_colon_no_second = JikokuConv(no_colon=True, second=Second.NO_SECOND, hour=Hour.ZERO_TO_NONE)
+
+    assert conv_no_colon_no_second.decode("101").total_seconds == 3660
+    assert conv_no_colon_no_second.decode("100").total_seconds == 3600
 
 
 def test_jikoku_conv_decode_invalid():

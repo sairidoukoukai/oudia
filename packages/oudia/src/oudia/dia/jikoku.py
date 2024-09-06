@@ -257,17 +257,21 @@ class JikokuConv:
 
         time_str = time_str.strip()
 
+        if self.hour is Hour.ZERO_TO_NONE or self.hour is Hour.ZERO_TO_SPACE:
+            if len(time_str) == 3 or len(time_str) == 5:
+                time_str = "0" + time_str
+
         if self.no_colon:
-            if len(time_str) == 4:
+            if len(time_str) == 4 or len(time_str) == 3:
                 hour_str = time_str[:2]
                 minute_str = time_str[2:]
                 second_str = None
-            elif len(time_str) == 6:
+            elif len(time_str) == 6 or len(time_str) == 5:
                 hour_str = time_str[:2]
                 minute_str = time_str[2:4]
                 second_str = time_str[4:]
             else:
-                raise ValueError("Invalid time format")
+                raise ValueError(f"Invalid time format: {time_str}")
         else:
             time_parts = time_str.split(":")
             if len(time_parts) == 2:
@@ -276,7 +280,7 @@ class JikokuConv:
             elif len(time_parts) == 3:
                 hour_str, minute_str, second_str = time_parts
             else:
-                raise ValueError("Invalid time format")
+                raise ValueError(f"Invalid time format: {time_str}")
 
         if self.display_2400 and is_chaku_jikoku and hour_str == "24" and minute_str == "00":
             hour = 0
