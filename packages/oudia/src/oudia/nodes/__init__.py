@@ -11,7 +11,7 @@ from .crossing_check_rule import CrossingCheckRule
 from .outer_terminal import OuterTerminal
 from .ressya import Ressya
 from .dia import Dia, Kudari, Nobori
-from .window_placement import WindowPlacement
+from .window_placement import WindowPlacement, ChildWindow
 
 TYPE_TO_NODE: dict[str, Type[TypedNode]] = {
     "Root": OuDia,
@@ -28,6 +28,7 @@ TYPE_TO_NODE: dict[str, Type[TypedNode]] = {
     "Nobori": Nobori,
     "Kudari": Kudari,
     "WindowPlacement": WindowPlacement,
+    "ChildWindow": ChildWindow,
 }
 
 __all__ = [
@@ -48,4 +49,5 @@ __all__ = [
     "Nobori",
     "Kudari",
     "WindowPlacement",
+    "ChildWindow",
 ]
