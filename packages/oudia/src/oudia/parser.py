@@ -23,9 +23,6 @@ def parse(text: str) -> Iterator[Node]:
     current_node: Node | None = None
 
     for line in text.splitlines():
-        line = line.strip()
-        if line.startswith("Ressyamei= "):
-            raise ValueError(f"Invalid line: {line}")
         if line.endswith("."):
             if line != ".":
                 # Block.
