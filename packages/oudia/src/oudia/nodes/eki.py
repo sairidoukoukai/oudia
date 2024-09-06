@@ -137,12 +137,6 @@ class Eki(TypedNode):
             jikokuhyou_operation_origin_down_after_up_before=node.entries.get_bool(
                 "JikokuhyouOperationOriginDownAfterUpBefore"
             ),
-            jikokuhyou_operation_terminal_down_before_up_after=node.entries.get_bool(
-                "JikokuhyouOperationTerminalDownBeforeUpAfter"
-            ),
-            jikokuhyou_operation_terminal_down_after_up_before=node.entries.get_bool(
-                "JikokuhyouOperationTerminalDownAfterUpBefore"
-            ),
             down_main=node.entries.get_int("DownMain"),
             up_main=node.entries.get_int("UpMain"),
             brunch_core_eki_index=node.entries.get_int("BrunchCoreEkiIndex"),
@@ -159,6 +153,12 @@ class Eki(TypedNode):
             jikokuhyou_track_omit=node.entries.get_bool("JikokuhyouTrackOmit"),
             jikokuhyou_operation_origin=node.entries.get_int("JikokuhyouOperationOrigin"),
             jikokuhyou_operation_terminal=node.entries.get_int("JikokuhyouOperationTerminal"),
+            jikokuhyou_operation_terminal_down_before_up_after=node.entries.get_bool(
+                "JikokuhyouOperationTerminalDownBeforeUpAfter"
+            ),
+            jikokuhyou_operation_terminal_down_after_up_before=node.entries.get_bool(
+                "JikokuhyouOperationTerminalDownAfterUpBefore"
+            ),
             jikokuhyou_jikoku_display_kudari=node.entries.get("JikokuhyouJikokuDisplayKudari"),
             jikokuhyou_jikoku_display_nobori=node.entries.get("JikokuhyouJikokuDisplayNobori"),
             jikokuhyou_syubetsu_change_display_kudari=node.entries.get("JikokuhyouSyubetsuChangeDisplayKudari"),
@@ -198,6 +198,8 @@ class Eki(TypedNode):
                 ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
                 ("JikokuhyouOperationOrigin", self.jikokuhyou_operation_origin),
                 ("JikokuhyouOperationTerminal", self.jikokuhyou_operation_terminal),
+                ("JikokuhyouOperationOriginDownBeforeUpAfter", self.jikokuhyou_operation_origin_down_before_up_after),
+                ("JikokuhyouOperationOriginDownAfterUpBefore", self.jikokuhyou_operation_origin_down_after_up_before),
                 ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
                 ("JikokuhyouJikokuDisplayNobori", self.jikokuhyou_jikoku_display_nobori),
                 ("JikokuhyouSyubetsuChangeDisplayKudari", self.jikokuhyou_syubetsu_change_display_kudari),
