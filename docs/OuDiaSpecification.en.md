@@ -131,7 +131,10 @@ The **Rosen Node** represents a single route or line in the transportation syste
 - ([NodeList](#data-types)\[[Dia Node](#dia-node)\]): Contains timetable data for different days or schedules (e.g., weekdays, weekends).
 - `KitenJikoku` ([Text](#data-types), [optional](#field-tags)): The starting time of the route's operation, e.g., "400" for 4:00 AM.
 - `DiagramDgrYZahyouKyoriDefault` ([Number](#data-types), [optional](#field-tags)): Default Y-coordinate distance between stations in diagrams.
-- `EnableOperation` ([Boolean](#data-types), [optional](#field-tags)): Indicates whether operational functionality is enabled. [OuDiaSecond.1.03+](http://oudiasecond.seesaa.net/article/457223251.html)
+- `EnableOperation` ([Integer](#data-types), [optional](#field-tags)): Indicates whether operational functionality is enabled. [OuDiaSecond.1.03+](http://oudiasecond.seesaa.net/article/457223251.html). It can take the following integer values:
+  - `0`: Indicates the operational functionality is disabled.
+  - `1`: Indicates the operational functionality is in easy mode, meaning only train connection without numbering.
+  - `2`: Indicates the oeprational functionality is in normal mode.
 - `OperationCrossKitenJikoku` ([Number](#data-types), [optional](#field-tags)): Indicates whether connecting operations across the diagram start time is enabled. [OuDiaSecond.1.10+](http://oudiasecond.seesaa.net/article/481081211.html)
 - `KijunDiaIndex` ([Number](#data-types), [optional](#field-tags)): Reference diagram index.
 - `Comment` ([Text](#data-types), [optional](#field-tags)): Any comments regarding the route, such as service notes or special instructions.
