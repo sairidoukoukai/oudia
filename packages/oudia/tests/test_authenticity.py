@@ -23,7 +23,10 @@ def test_oud2_import_export_private():
         with open(oud, "r", encoding="utf-8-sig") as f:
             text = f.read()
             dia = oudia.loads(text)
-        with open(oud.with_suffix(".dumped" + oud.suffix), "w", encoding="utf-8-sig") as f:
-            f.write(oudia.dumps(dia))
 
-        assert oudia.dumps(dia) == text
+        dumped = oudia.dumps(dia)
+
+        if dumped != text:
+            with open(oud.with_suffix(".dumped" + oud.suffix), "w", encoding="utf-8-sig") as f:
+                f.write(oudia.dumps(dia))
+        assert dumped == text
