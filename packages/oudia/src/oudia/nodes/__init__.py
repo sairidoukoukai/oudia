@@ -5,6 +5,7 @@ from .track import EkiTrack2, EkiTrack2Cont
 from .node import Node, TypedNode
 from .root import OuDia, FileType
 from .disp_prop import DispProp
+from .crossing_check_rule import CrossingCheckRule
 
 __all__ = [
     "Eki",
@@ -17,4 +18,5 @@ __all__ = [
     "EkiTrack2",
     "EkiTrack2Cont",
     "DispProp",
+    "CrossingCheckRule",
 ]

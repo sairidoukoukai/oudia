@@ -2,17 +2,7 @@ from typing import Iterator, Sequence, TextIO, Type
 
 from oudia.nodes.node import EntryList, NodeList
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
-from .nodes import (
-    Eki,
-    Rosen,
-    Node,
-    TypedNode,
-    OuDia,
-    FileType,
-    Ressyasyubetsu,
-    DispProp,
-)
-from typing import Annotated
+from .nodes import Eki, Rosen, Node, TypedNode, OuDia, FileType, Ressyasyubetsu, DispProp, CrossingCheckRule
 
 import logging
 
@@ -27,6 +17,7 @@ def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
         "Ressyasyubetsu": Ressyasyubetsu,
         "EkiTrack2": EkiTrack2,
         "EkiTrack2Cont": EkiTrack2Cont,
+        "CrossingCheckRule": CrossingCheckRule,
         "DispProp": DispProp,
     }
     return TYPE_TO_NODE.get(type) if type else None
