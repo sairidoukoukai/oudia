@@ -33,7 +33,7 @@ class Rosen(TypedNode):
     diagram_dgr_y_zahyou_kyori_default: int | None = None
     """ダイヤグラムDGRY座標距離デフォルト"""
 
-    enable_operation: bool | None = None
+    enable_operation: int | None = None
     """運用機能の有効無効（OuDiaSecond.1.03+）"""
 
     operation_cross_kiten_jikoku: bool | None = None
@@ -56,7 +56,7 @@ class Rosen(TypedNode):
             ressyasyubetsu_list=node.entries.get_list(1, Ressyasyubetsu),
             dia_list=node.entries.get_list(2, Node),
             diagram_dgr_y_zahyou_kyori_default=node.entries.get_int("DiagramDgrYZahyouKyoriDefault"),
-            enable_operation=node.entries.get_bool("EnableOperation"),
+            enable_operation=node.entries.get_int("EnableOperation"),
             operation_cross_kiten_jikoku=node.entries.get_bool("OperationCrossKitenJikoku"),
             kijun_dia_index=node.entries.get_int("KijunDiaIndex"),
             comment=node.entries.get("Comment"),
