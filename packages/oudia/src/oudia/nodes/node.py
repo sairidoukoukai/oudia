@@ -6,12 +6,18 @@ T = TypeVar("T", bound="Node | TypedNode")
 
 
 class NodeList[T](list[T]):
+    type: Type[T]
+
+    def __init__(self, type: Type[T], args: list[T] | None = None) -> None:
+        super().__init__(args if args is not None else [])
+        self.type = type
+
     def __str__(self) -> str:
         assert all(bool(child) for child in self)
         return "\n".join([str(child) for child in self])
 
     def __repr__(self) -> str:
-        return f"Children({super().__repr__()})"
+        return f"{self.__class__.__name__}({self.type.__name__}, {super().__repr__()})"
 
 
 Property = tuple[str, str]
@@ -78,8 +84,14 @@ class EntryList(list[Property | NodeList]):
 
     def get_list(self, key: int, t: Type[T]) -> NodeList[T]:
         if key >= len(self.node_lists):
-            return NodeList()
+            return NodeList(t)
         return self.node_lists[key]
+
+    def get_list_by_type(self, t: Type[T]) -> NodeList[T]:
+        for node_list in self.node_lists:
+            if node_list.type == t:
+                return node_list
+        return NodeList(t)
 
     def get(self, key: str) -> str | None:
         for k, v in self.properties:

@@ -94,9 +94,9 @@ class OuDia(TypedNode):
             type=None,
             entries=EntryList(
                 ("FileType", str(self.file_type)),
-                (None, NodeList([self.rosen])),
-                (None, NodeList([self.disp_prop])),
-                (None, NodeList([self.window_placement] if self.window_placement else [])),
+                (None, NodeList(Rosen, [self.rosen])),
+                (None, NodeList(DispProp, [self.disp_prop])),
+                (None, NodeList(Node, [self.window_placement] if self.window_placement else [])),
                 ("FileTypeAppComment", self.file_type_app_comment),
             ),
         )

@@ -1,6 +1,8 @@
 import logging
 import oudia
-from oudia.nodes.node import EntryList, NodeList
+from oudia.nodes.eki import Eki
+from oudia.nodes.node import EntryList, Node, NodeList
+from oudia.nodes.ressyasyubetsu import Ressyasyubetsu
 import pytest
 
 
@@ -23,9 +25,9 @@ EMPTY_ROSEN = oudia.Rosen(
     None,
     None,
     None,
-    NodeList(),
-    NodeList(),
-    NodeList(),
+    NodeList(Eki, []),
+    NodeList(Ressyasyubetsu, []),
+    NodeList(Node, []),
     None,
     None,
     None,
@@ -39,9 +41,9 @@ def test_node_conversion() -> None:
         type="Rosen",
         entries=EntryList(
             ("Rosenmei", "メロンキング線"),
-            (None, NodeList()),
-            (None, NodeList()),
-            (None, NodeList()),
+            (None, NodeList(Eki)),
+            (None, NodeList(Ressyasyubetsu)),
+            (None, NodeList(Node)),
         ),
     )
     typed_rosen_node = EMPTY_ROSEN

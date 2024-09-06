@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from oudia.nodes.track import EkiTrack2
+from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 
 from .node import EntryList, NodeList, Node, TypedNode
 
@@ -159,7 +159,9 @@ class Eki(TypedNode):
             jikokuhyou_track_display_kudari=node.entries.get_bool("JikokuhyouTrackDisplayKudari"),
             jikokuhyou_track_display_nobori=node.entries.get_bool("JikokuhyouTrackDisplayNobori"),
             next_eki_distance=node.entries.get_int("NextEkiDistance"),
-            eki_tracks=node.entries.get_list(3, EkiTrack2),
+            eki_tracks=NodeList(
+                EkiTrack2, track_list[0].tracks if (track_list := node.entries.get_list_by_type(EkiTrack2Cont)) else []
+            ),
             jikokuhyou_track_omit=node.entries.get_bool("JikokuhyouTrackOmit"),
             jikokuhyou_jikoku_display_kudari=node.entries.get("JikokuhyouJikokuDisplayKudari"),
             jikokuhyou_jikoku_display_nobori=node.entries.get("JikokuhyouJikokuDisplayNobori"),
@@ -195,12 +197,11 @@ class Eki(TypedNode):
                 ("JikokuhyouTrackDisplayNobori", self.jikokuhyou_track_display_nobori),
                 ("DiagramTrackDisplay", self.diagram_track_display),
                 ("NextEkiDistance", self.next_eki_distance),
-                (None, self.eki_tracks),
+                (None, NodeList(EkiTrack2Cont, [EkiTrack2Cont(self.eki_tracks)])),
                 ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
                 ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
                 ("JikokuhyouJikokuDisplayNobori", self.jikokuhyou_jikoku_display_nobori),
                 ("DiagramTrackDisplay", self.diagram_track_display),
-                (None, self.eki_tracks),
                 ("JikokuhyouSyubetsuChangeDisplayKudari", self.jikokuhyou_syubetsu_change_display_kudari),
                 ("JikokuhyouSyubetsuChangeDisplayNobori", self.jikokuhyou_syubetsu_change_display_nobori),
                 ("DiagramColorNextEki", self.diagram_color_next_eki),

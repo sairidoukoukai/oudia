@@ -39,16 +39,16 @@ class EkiTrack2(TypedNode):
 class EkiTrack2Cont(TypedNode):
     """駅トラック2コンテナ`"""
 
-    tracks: Sequence[EkiTrack2]
+    tracks: list[EkiTrack2]
 
     @classmethod
     def from_node(cls, node: Node) -> "EkiTrack2Cont":
         return EkiTrack2Cont(
-            tracks=[track for track in node.entries.node_lists[0] if isinstance(track, EkiTrack2)],
+            tracks=node.entries.get_list_by_type(EkiTrack2),
         )
 
     def to_node(self) -> Node:
         return Node(
             type="EkiTrack2Cont",
-            entries=EntryList((None, NodeList(self.tracks))),
+            entries=EntryList((None, NodeList(EkiTrack2, self.tracks))),
         )

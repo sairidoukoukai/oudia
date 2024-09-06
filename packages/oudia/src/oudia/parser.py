@@ -19,7 +19,20 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def parse(lines: list[str]) -> Iterator[Node]:
+def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
+    TYPE_TO_NODE: dict[str, Type[TypedNode]] = {
+        "Root": OuDia,
+        "Rosen": Rosen,
+        "Eki": Eki,
+        "Ressyasyubetsu": Ressyasyubetsu,
+        "EkiTrack2": EkiTrack2,
+        "EkiTrack2Cont": EkiTrack2Cont,
+        "DispProp": DispProp,
+    }
+    return TYPE_TO_NODE.get(type) if type else None
+
+
+def parse(lines: Sequence[str]) -> Iterator[Node]:
     stack: list[Node] = []
     current_node: Node | None = None
 
@@ -42,15 +55,16 @@ def parse(lines: list[str]) -> Iterator[Node]:
                     parent = stack.pop()
                     # add to last node list if
 
+                    current_typed_node_type = type_to_typed_node_type(current_node.type) or Node
+
                     if (
                         parent.entries.node_lists
                         and parent.entries.node_lists[-1]
-                        and parent.entries.node_lists[-1][-1]
-                        and parent.entries.node_lists[-1][-1].type == current_node.type
+                        and parent.entries.node_lists[-1].type is current_typed_node_type
                     ):
                         parent.entries.node_lists[-1].append(current_node)
                     else:
-                        parent.entries.append(NodeList([current_node]))
+                        parent.entries.append(NodeList(current_typed_node_type, [current_node]))
 
                     current_node = parent
                 else:
@@ -105,7 +119,7 @@ def loads(text: str) -> OuDia:
         node.entries
 
         def replace_node_list(node_list: NodeList) -> NodeList:
-            return NodeList([replace_node(child) for child in node_list])
+            return NodeList(node_list.type, [replace_node(child) for child in node_list])
 
         def replace_nodes_in_entry_list(entry_list: EntryList) -> EntryList:
             result = EntryList()
@@ -123,17 +137,7 @@ def loads(text: str) -> OuDia:
 
         # replaced_children = NodeList([replace_node(child) for child in node.children])
 
-        TYPE_TO_NODE: dict[str, type[TypedNode]] = {
-            "Root": OuDia,
-            "Rosen": Rosen,
-            "Eki": Eki,
-            "Ressyasyubetsu": Ressyasyubetsu,
-            "EkiTrack2": EkiTrack2,
-            "EkiTrack2Cont": EkiTrack2Cont,
-            "DispProp": DispProp,
-        }
-
-        CurrentType: type[TypedNode] | None = TYPE_TO_NODE.get(node.type) if node.type else None
+        CurrentType: type[TypedNode] | None = type_to_typed_node_type(node.type) if node.type else None
 
         if CurrentType:
             new_node = CurrentType.from_node(new_node)
