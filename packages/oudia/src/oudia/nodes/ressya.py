@@ -41,20 +41,64 @@ class Ressya(TypedNode):
         eki_jikoku_plain = [
             EkiJikoku.from_str(x) if x else None for x in node.entries.get_required("EkiJikoku").split(",")
         ]
-        # add operations
+
+        parent_before_operations: dict[int, BeforeOperation] = {}
+        parent_after_operations: dict[int, AfterOperation] = {}
+
         for key, value in node.entries.properties:
             if key.startswith("Operation"):
-                operation_type = OperationType(key[-1])
-                id = int(key[9:-1])
+                indicator = key[9:]  # '73B' / '73B.0A'
+                operation_type = OperationType(indicator[-1])  # 'A' / 'B' -> OperationType.AFTER / OperationType.BEFORE
 
-                if id >= len(eki_jikoku_plain) or not (current_eki_jikoku := eki_jikoku_plain[id]):
-                    raise ValueError(f"Invalid operation: Operation {id} {operation_type}")
+                if "." not in key:
+                    # Operation73B
+                    id = int(indicator[:-1])  # 73
 
-                match operation_type:
-                    case OperationType.AFTER:
-                        current_eki_jikoku.after_operation_list.append(AfterOperation.from_str(value))
-                    case OperationType.BEFORE:
-                        current_eki_jikoku.before_operation_list.append(BeforeOperation.from_str(value))
+                    if id >= len(eki_jikoku_plain):
+                        raise ValueError(f"Invalid operation: Operation {id} {operation_type}")
+
+                    match operation_type:
+                        case OperationType.BEFORE:
+                            parent_before_operations[id] = BeforeOperation.from_str(value)
+                        case OperationType.AFTER:
+                            parent_after_operations[id] = AfterOperation.from_str(value)
+                else:
+                    # Operation73B.0A
+                    parent_indicator, child_indicator = indicator.split(".")  # '73B', '0A'
+                    parent_id = int(parent_indicator[:-1])  # 73
+                    parent_operation_type = OperationType(parent_indicator[-1])
+
+                    if parent_id not in parent_before_operations and parent_id not in parent_after_operations:
+                        raise ValueError(f"Invalid operation: Operation {parent_id} {operation_type}")
+
+                    match parent_operation_type, operation_type:
+                        case OperationType.BEFORE, OperationType.BEFORE:
+                            parent_before_operations[parent_id].before_operation_list.append(
+                                BeforeOperation.from_str(value)
+                            )
+                        case OperationType.BEFORE, OperationType.AFTER:
+                            parent_before_operations[parent_id].after_operation_list.append(
+                                AfterOperation.from_str(value)
+                            )
+
+                        case OperationType.AFTER, OperationType.BEFORE:
+                            parent_after_operations[parent_id].before_operation_list.append(
+                                BeforeOperation.from_str(value)
+                            )
+                        case OperationType.AFTER, OperationType.AFTER:
+                            parent_after_operations[parent_id].after_operation_list.append(
+                                AfterOperation.from_str(value)
+                            )
+
+        for i, before_operation in parent_before_operations.items():
+            if (current_eki_jikoku := eki_jikoku_plain[i]) is None:
+                raise ValueError(f"Invalid before operation: Ekijikoku[{i}] does not exist")
+            current_eki_jikoku.before_operation_list.append(before_operation)
+
+        for i, after_operation in parent_after_operations.items():
+            if (current_eki_jikoku := eki_jikoku_plain[i]) is None:
+                raise ValueError(f"Invalid after operation: Ekijikoku[{i}] does not exist")
+            current_eki_jikoku.after_operation_list.append(after_operation)
 
         return cls(
             houkou=node.entries.get("Houkou"),
@@ -71,10 +115,20 @@ class Ressya(TypedNode):
         for i, eki_jikoku in enumerate(self.eki_jikoku_list):
             if not eki_jikoku:
                 continue
-            for operation in eki_jikoku.after_operation_list:
-                operation_entries.append((f"Operation{i}A", str(operation)))
+
             for operation in eki_jikoku.before_operation_list:
                 operation_entries.append((f"Operation{i}B", str(operation)))
+                for j, child in enumerate(operation.before_operation_list):
+                    operation_entries.append((f"Operation{i}B.{j}B", str(child)))
+                for j, child in enumerate(operation.after_operation_list):
+                    operation_entries.append((f"Operation{i}B.{j}A", str(child)))
+
+            for operation in eki_jikoku.after_operation_list:
+                operation_entries.append((f"Operation{i}A", str(operation)))
+                for j, child in enumerate(operation.before_operation_list):
+                    operation_entries.append((f"Operation{i}A.{j}B", str(child)))
+                for j, child in enumerate(operation.after_operation_list):
+                    operation_entries.append((f"Operation{i}A.{j}A", str(child)))
 
         return Node(
             type="Ressya",
