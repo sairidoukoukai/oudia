@@ -136,8 +136,8 @@ class Eki(TypedNode):
             diagram_color_next_eki=node.entries.get_int("DiagramColorNextEki"),
             diagram_track_display=node.entries.get_bool("DiagramTrackDisplay"),
             outer_terminal=node.entries.get_list(0, Node),
-            jikokuhyou_operation_origin=node.entries.get_list(1, Node),
-            jikokuhyou_operation_terminal=node.entries.get_list(2, Node),
+            jikokuhyou_operation_origin=node.entries.get_int("JikokuhyouOperationOrigin"),
+            jikokuhyou_operation_terminal=node.entries.get_int("JikokuhyouOperationTerminal"),
             jikokuhyou_operation_origin_down_before_up_after=node.entries.get_bool(
                 "JikokuhyouOperationOriginDownBeforeUpAfter"
             ),
