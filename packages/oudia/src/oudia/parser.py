@@ -1,7 +1,6 @@
 from typing import Iterator, Sequence, TextIO, Type
 
 from oudia.nodes.node import EntryList, NodeList
-from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 from .nodes import (
     TYPE_TO_NODE,
     Node,
@@ -19,12 +18,14 @@ def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
     return TYPE_TO_NODE.get(type) if type else None
 
 
-def parse(lines: Sequence[str]) -> Iterator[Node]:
+def parse(text: str) -> Iterator[Node]:
     stack: list[Node] = []
     current_node: Node | None = None
 
-    for line in lines:
+    for line in text.splitlines():
         line = line.strip()
+        if line.startswith("Ressyamei= "):
+            raise ValueError(f"Invalid line: {line}")
         if line.endswith("."):
             if line != ".":
                 # Block.
@@ -95,7 +96,7 @@ def loads(text: str) -> OuDia:
             file_type.software,
         )
 
-    nodes = list(parse(f"Root.\n{text.strip()}\n.".splitlines()))
+    nodes = list(parse(f"Root.\n{text.strip()}\n."))
 
     # replace node with typednode by type recursively
     def replace_node(node) -> Node | TypedNode:
