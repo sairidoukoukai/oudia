@@ -160,6 +160,7 @@ class JikokuConv:
     """秒の丸め方（発）"""
 
     display_2400: bool = False
+    """24:00以上を表示"""
 
     def encode(
         self,
@@ -245,3 +246,64 @@ class JikokuConv:
             result += f"{temp_jikoku.get_second():02}"
 
         return result
+
+    def decode(
+        self,
+        time_str: str,
+        is_chaku_jikoku: bool = False,
+    ) -> Jikoku:
+        if not time_str:
+            return Jikoku(None)
+
+        time_str = time_str.strip()
+
+        if self.no_colon:
+            if len(time_str) == 4:
+                hour_str = time_str[:2]
+                minute_str = time_str[2:]
+                second_str = None
+            elif len(time_str) == 6:
+                hour_str = time_str[:2]
+                minute_str = time_str[2:4]
+                second_str = time_str[4:]
+            else:
+                raise ValueError("Invalid time format")
+        else:
+            time_parts = time_str.split(":")
+            if len(time_parts) == 2:
+                hour_str, minute_str = time_parts
+                second_str = None
+            elif len(time_parts) == 3:
+                hour_str, minute_str, second_str = time_parts
+            else:
+                raise ValueError("Invalid time format")
+
+        if self.display_2400 and is_chaku_jikoku and hour_str == "24" and minute_str == "00":
+            hour = 0
+            minute = 0
+            second = 0
+        else:
+            hour = int(hour_str)
+            minute = int(minute_str)
+            second = int(second_str) if second_str else 0
+
+        total_seconds = hour * 3600 + minute * 60 + second
+
+        if minute > 59:
+            raise ValueError("Invalid minute value")
+
+        if second > 59:
+            raise ValueError("Invalid second value")
+
+        if self.second == Second.NO_SECOND:
+            # Reverse rounding behavior (if it was rounded during encode)
+            if self.second_round_chaku == SecondRound.ROUND_UP and is_chaku_jikoku:
+                total_seconds = max(total_seconds - 59, 0)
+            elif self.second_round_hatsu == SecondRound.ROUND_UP and not is_chaku_jikoku:
+                total_seconds = max(total_seconds - 59, 0)
+            elif self.second_round_chaku == SecondRound.ROUND and is_chaku_jikoku:
+                total_seconds = max(total_seconds - 30, 0)
+            elif self.second_round_hatsu == SecondRound.ROUND and not is_chaku_jikoku:
+                total_seconds = max(total_seconds - 30, 0)
+
+        return Jikoku(total_seconds)

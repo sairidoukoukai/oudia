@@ -1,3 +1,5 @@
+import pytest
+
 from oudia.dia.jikoku import Hour, Second, SecondRound, Jikoku, JikokuConv
 
 
@@ -111,13 +113,13 @@ def test_jikoku_conv_encode_default():
     assert default_jikoku_conv.encode(Jikoku(24 * 3600 - 1), True, Jikoku(24 * 3600)) == "23:59:59"
 
 
-def test_jikoku_conv_no_colon():
+def test_jikoku_conv_encode_no_colon():
     conv_no_colon = JikokuConv(no_colon=True)
 
     assert conv_no_colon.encode(Jikoku(3661), True, Jikoku(0)) == "010101"  # No colon between hour, minute, and second
 
 
-def test_jikoku_conv_no_second():
+def test_jikoku_conv_encode_no_second():
     conv_no_second = JikokuConv(second=Second.NO_SECOND)
     assert conv_no_second.encode(Jikoku(3661), True, Jikoku(0)) == "01:01"  # No second
 
@@ -126,12 +128,12 @@ def test_jikoku_conv_no_second():
     assert conv_not_if_zero.encode(Jikoku(0), True, Jikoku(0)) == "00:00"
 
 
-def test_jikoku_conv_no_colon_no_second():
+def test_jikoku_conv_encode_no_colon_no_second():
     conv_no_colon_no_second = JikokuConv(no_colon=True, second=Second.NO_SECOND)
     assert conv_no_colon_no_second.encode(Jikoku(3661), True, Jikoku(0)) == "0101"  # No colon and no seconds
 
 
-def test_jikoku_conv_rounding():
+def test_jikoku_conv_encode_rounding():
     conv_round_up = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND_UP)
     assert conv_round_up.encode(Jikoku(3661), True, Jikoku(0)) == "01:02"  # Rounded up to next minute
 
@@ -145,7 +147,7 @@ def test_jikoku_conv_rounding():
     assert conv_round.encode(Jikoku(3661), False, Jikoku(0)) == "01:01"
 
 
-def test_jikoku_conv_hour():
+def test_jikoku_conv_encode_hour():
     conv = JikokuConv(hour=Hour.ZERO)
     assert conv.encode(Jikoku(3600), True, Jikoku(0)) == "01:00:00"
     assert conv.encode(Jikoku(3661), True, Jikoku(0)) == "01:01:01"
@@ -159,7 +161,7 @@ def test_jikoku_conv_hour():
     assert conv.encode(Jikoku(3661), True, Jikoku(0)) == " 1:01:01"
 
 
-def test_jikoku_display_2400():
+def test_jikoku_encode_display_2400():
     conv = JikokuConv(display_2400=True)
     assert conv.encode(Jikoku(3600), True, Jikoku(0)) == "01:00:00"
     assert conv.encode(Jikoku(3661), True, Jikoku(0)) == "01:01:01"
@@ -168,37 +170,96 @@ def test_jikoku_display_2400():
     assert conv.encode(Jikoku(24 * 3600 + 1), True, Jikoku(0)) == "24:00:01"
 
 
-# # Continue
-# conv = JikokuConv(no_colon=False, hour=EHour.ZERO, second=ESecond.OUTPUT, second_round_chaku=ESecondRound.ROUND_UP)
+def test_jikoku_conv_decode_default():
+    default_jikoku_conv = JikokuConv()
 
-# # Test encoding with no second round and different combinations of Jikoku
-# assert conv.encode(Jikoku(3600), True, Jikoku(0)) == "01:00:00"  # 1 hour
-# assert conv.encode(Jikoku(3661), False, Jikoku(0)) == "01:01:01"  # 1 hour, 1 min, 1 sec
+    assert default_jikoku_conv.decode("00:00:00").total_seconds == 0
+    assert default_jikoku_conv.decode("23:59:59").total_seconds == 24 * 3600 - 1
+    assert default_jikoku_conv.decode("01:00:00").total_seconds == 3600
+    assert default_jikoku_conv.decode("01:01:01").total_seconds == 3661
+    assert default_jikoku_conv.decode("00:48:48").total_seconds == 2928
 
-# # Test with no seconds
-# conv_no_seconds = JikokuConv(second=ESecond.NO_SECOND)
-# assert conv_no_seconds.encode(Jikoku(3661), True, Jikoku(0)) == "01:01"  # Ignore seconds
 
-# # Test rounding seconds
-# conv_round_up = JikokuConv(second=ESecond.NO_SECOND, second_round_chaku=ESecondRound.ROUND_UP)
-# assert conv_round_up.encode(Jikoku(3661), True, Jikoku(0)) == "01:02"  # Rounded up to next minute
+def test_jikoku_conv_decode_no_second():
+    conv_no_second = JikokuConv(second=Second.NO_SECOND)
+    assert conv_no_second.decode("01:01").total_seconds == 3660
+    assert conv_no_second.decode("01:01:00").total_seconds == 3660
+    assert conv_no_second.decode("01:01:01").total_seconds == 3661
 
-# conv_round_down = JikokuConv(second=ESecond.NO_SECOND, second_round_chaku=ESecondRound.ROUND_DOWN)
-# assert conv_round_down.encode(Jikoku(3661), True, Jikoku(0)) == "01:01"  # Rounded down to 1:01
+    conv_no_second_if_zero = JikokuConv(second=Second.NOT_IF_ZERO)
+    assert conv_no_second_if_zero.decode("01:01").total_seconds == 3660
+    assert conv_no_second_if_zero.decode("01:01:00").total_seconds == 3660
+    assert conv_no_second_if_zero.decode("01:01:01").total_seconds == 3661
 
-# # Test 2400 hour display
-# conv_2400 = JikokuConv(display_2400=True)
-# assert conv_2400.encode(Jikoku(0), True, Jikoku(0)) == "24:00:00"  # Midnight 2400 format
-# assert conv_2400.encode(Jikoku(86400), True, Jikoku(0)) == "24:00:00"  # Midnight in 2400 format
 
-# # Test different hour formats
-# conv_hour_none = JikokuConv(hour=EHour.ZERO_TO_NONE)
-# assert conv_hour_none.encode(Jikoku(3600), True, Jikoku(0)) == "1:00:00"  # Remove leading 0 in hours
+def test_jikoku_conv_decode_display_2400():
+    conv_display_2400_off = JikokuConv(display_2400=False)
+    conv_display_2400_on = JikokuConv(display_2400=True)
+    assert conv_display_2400_off.decode("24:00:00", is_chaku_jikoku=True).total_seconds == 0
+    assert conv_display_2400_off.decode("24:00:00", is_chaku_jikoku=False).total_seconds == 0
+    assert conv_display_2400_on.decode("24:00:00", is_chaku_jikoku=True).total_seconds == 0
+    assert conv_display_2400_on.decode("24:00:00", is_chaku_jikoku=False).total_seconds == 0
 
-# conv_hour_space = JikokuConv(hour=EHour.ZERO_TO_SPACE)
-# assert conv_hour_space.encode(Jikoku(3600), True, Jikoku(0)) == " 1:00:00"  # Space before single digit hour
 
-# # Test ignoring seconds if zero
-# conv_ignore_zero_seconds = JikokuConv(second=ESecond.NOT_IF_ZERO)
-# assert conv_ignore_zero_seconds.encode(Jikoku(3600), True, Jikoku(0)) == "01:00"  # No seconds if 00
-# assert conv_ignore_zero_seconds.encode(Jikoku(3601), True, Jikoku(0)) == "01:00:01"  # Show seconds if not 0
+def test_jikoku_conv_decode_hour():
+    conv_has_leading_zero = JikokuConv(hour=Hour.ZERO)
+    assert conv_has_leading_zero.decode("01:00:00").total_seconds == 3600
+
+    conv_no_leading_zero = JikokuConv(hour=Hour.ZERO_TO_NONE)
+    assert conv_no_leading_zero.decode("1:00:00").total_seconds == 3600
+
+    conv_zero_to_space = JikokuConv(hour=Hour.ZERO_TO_SPACE)
+    assert conv_zero_to_space.decode(" 1:01:01").total_seconds == 3661
+
+
+def test_jikoku_conv_decode_no_colon():
+    conv_no_colon = JikokuConv(no_colon=True)
+
+    assert conv_no_colon.decode("010101").total_seconds == 3661
+    assert conv_no_colon.decode("0101").total_seconds == 3660
+
+
+def test_jikoku_conv_decode_overflowed():
+    conv = JikokuConv()
+    assert conv.decode("25:00:00") == Jikoku(24 * 3600 + 3600)
+
+
+def test_jikoku_conv_decode_rounding():
+    conv_round_up = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND_UP)
+    assert conv_round_up.decode("01:02").total_seconds == 3720
+
+    conv_round_down = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_DOWN)
+    assert conv_round_down.decode("01:01").total_seconds == 3660  # Rounding down to previous minute
+
+
+def test_jikoku_conv_decode_no_colon_no_second():
+    conv_no_colon_no_second = JikokuConv(no_colon=True, second=Second.NO_SECOND)
+
+    assert conv_no_colon_no_second.decode("0101").total_seconds == 3660  # No colon, no seconds
+
+
+def test_jikoku_conv_decode_invalid():
+    conv = JikokuConv()
+
+    # Test invalid time string formats
+    with pytest.raises(ValueError):
+        conv.decode("invalid")
+
+    with pytest.raises(ValueError):
+        conv.decode("24:61:00")
+
+    with pytest.raises(ValueError):
+        conv.decode("24:00:60")  # Invalid second (greater than 59)
+
+    with pytest.raises(ValueError):
+        conv.decode("012")  # Invalid length without colon
+
+    with pytest.raises(ValueError):
+        conv.decode("12345")  # Too few or too many digits without colon
+
+    with pytest.raises(ValueError):
+        conv.decode("12:75")  # Invalid minute
+
+    # Non-numeric characters
+    with pytest.raises(ValueError):
+        conv.decode("aa:bb")  # Invalid non-numeric input
