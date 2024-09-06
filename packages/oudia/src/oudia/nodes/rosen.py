@@ -9,40 +9,40 @@ from .node import EntryList, NodeList, Node, TypedNode
 class Rosen(TypedNode):
     """路線"""
 
-    rosenmei: str | None
+    rosenmei: str | None = None
     """路線名"""
 
-    kudari_dia_alias: str | None
+    kudari_dia_alias: str | None = None
     """下りダイア別名（OuDiaSecond.1.04+）"""
 
-    nobori_dia_alias: str | None
+    nobori_dia_alias: str | None = None
     """上りダイア別名（OuDiaSecond.1.04+）"""
 
-    kiten_jikoku: str | None
+    kiten_jikoku: str | None = None
     """起点時刻"""
 
-    eki_list: NodeList[Eki] | None
+    eki_list: NodeList[Eki] | None = None
     """駅リスト"""
 
-    ressyasyubetsu_list: NodeList[Ressyasyubetsu] | None
+    ressyasyubetsu_list: NodeList[Ressyasyubetsu] | None = None
     """列車種別リスト"""
 
-    dia_list: NodeList[Node] | None
+    dia_list: NodeList[Node] | None = None
     """ダイアリスト"""
 
-    diagram_dgr_y_zahyou_kyori_default: int | None
+    diagram_dgr_y_zahyou_kyori_default: int | None = None
     """ダイヤグラムDGRY座標距離デフォルト"""
 
-    enable_operation: bool | None
+    enable_operation: bool | None = None
     """運用機能の有効無効（OuDiaSecond.1.03+）"""
 
-    operation_cross_kiten_jikoku: bool | None
+    operation_cross_kiten_jikoku: bool | None = None
     """ダイヤグラム起点時刻を挟んで運用を接続する（OuDiaSecond.1.10+）"""
 
-    kijun_dia_index: int | None
+    kijun_dia_index: int | None = None
     """基準ダイヤインデックス"""
 
-    comment: str | None
+    comment: str | None = None
     """コメント"""
 
     @classmethod
