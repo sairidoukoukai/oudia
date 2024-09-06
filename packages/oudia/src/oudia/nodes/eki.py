@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
 
-from oudia.nodes import EkiTrack2, EkiTrack2Cont, CrossingCheckRule
-
-from .node import EntryList, NodeList, Node, TypedNode,
-
+from .node import EntryList, NodeList, Node, TypedNode
+from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
+from oudia.nodes.crossing_check_rule import CrossingCheckRule
 
 
 @dataclass
