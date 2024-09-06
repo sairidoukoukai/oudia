@@ -10,10 +10,10 @@ class EkiTrack2(TypedNode):
     track_name: str
     """トラック名"""
 
-    track_ryakusyo: str | None
+    track_ryakusyo: str | None = None
     """トラック略称"""
 
-    track_nobori_ryakusyou: str | None
+    track_nobori_ryakusyou: str | None = None
     """通り略称"""
 
     @classmethod
