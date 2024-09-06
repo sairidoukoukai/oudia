@@ -40,7 +40,7 @@ class Nobori(TypedNode):
 
     def to_node(self) -> Node:
         return Node(
-            type="Rosen",
+            type="Nobori",
             entries=EntryList(
                 NodeList(Ressya, self.ressya_list),
             ),
@@ -70,7 +70,7 @@ class Dia(TypedNode):
 
     def to_node(self) -> Node:
         return Node(
-            type="Rosen",
+            type="Dia",
             entries=EntryList(
                 ("DiaName", self.dia_name),
                 NodeList(Kudari, self.kudari),
