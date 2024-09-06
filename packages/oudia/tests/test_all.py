@@ -41,9 +41,9 @@ def test_node_conversion() -> None:
         type="Rosen",
         entries=EntryList(
             ("Rosenmei", "メロンキング線"),
-            (None, NodeList(Eki)),
-            (None, NodeList(Ressyasyubetsu)),
-            (None, NodeList(Node)),
+            NodeList(Eki),
+            NodeList(Ressyasyubetsu),
+            NodeList(Node),
         ),
     )
     typed_rosen_node = EMPTY_ROSEN
