@@ -206,7 +206,7 @@ The **Eki Node** represents a station (駅) on the route. It provides informatio
 - `JikokuhyouOuterDisplayNobori` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display outer-terminal information for upward trains.
 - `DiagramColorNextEki` ([Number](#data-types), [optional](#field-tags)): Specifies the color for the next station in the diagram.
 - `OperationTableDisplayJikoku` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether to display times in the operation table.
-- `CrossingCheckRule` ([Custom](#data-types), [optional](#field-tags)): Specifies the rules for crossing checks
+- ([NodeList](#data-types)\[[CrossingCheckRule](#crossing-check-rule-node)\], [optional](#field-tags)): Specifies the rules for crossing checks
 
 #### References
 
@@ -289,7 +289,31 @@ The **Dia Node** represents a timetable (ダイヤ) for the route. It holds sche
   - `3` (horizontal stripes)
   - `4` (checkered pattern)
 - ([NodeList](#data-types)\[[Kudari Node](#kudari-node)\]): Represents downward-bound trains on the route.
-- ([NodeList](#data-types)\[[Nobori Node](#nobori-node))\]): Represents upward-bound trains on the route.
+- ([NodeList](#data-types)\[[Nobori Node](#nobori-node)\]): Represents upward-bound trains on the route.
+
+### CrossingCheckRule Node
+
+The **CrossingCheckRule Node** represents a set of rules for detecting crossing conflicts (交差支障チェックルール) in the train operation system. These rules are used to determine if a conflict occurs when trains cross paths or operate on shared tracks. This node contains attributes that describe the crossing conditions, headway constraints, and the tracks involved. [OuDiaSecond Ver2.06+](http://oudiasecond.seesaa.net/article/481739204.html).
+
+#### Entries
+
+- `Caption` ([Text](#data-types), [required](#field-tags)): A description or label for the crossing check rule. It is mandatory and represents the rule's name.
+- `Enable` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether the rule is active or not. If set to `1`, the rule is enabled; if set to `0`, the rule is disabled. Defaults to `1` if not provided.
+- `HeadwaySecond` ([Number](#data-types), [optional](#field-tags)): The upper time limit (in seconds) for detecting a crossing conflict. If two movements occur within this time, a conflict is detected. The default value is `60`.
+- `HeadwaySecondMinimum` ([Number](#data-types), [optional](#field-tags)): The lower time limit (in seconds) for detecting a crossing conflict. If the headway is greater than this value but less than `HeadwaySecond`, a conflict is detected. The default value is `0`. This attribute was introduced in [OuDiaSecond Ver2.06.05+](http://oudiasecond.seesaa.net/article/481739204.html).
+- `BeforeFromTrackContentCont` ([Text](#data-types), [required](#field-tags)): A list of tracks from which the train departs in the initial movement. Each track is represented by a combination of track type and index.
+- `BeforeToTrackContentCont` ([Text](#data-types), [required](#field-tags)): A list of tracks to which the train arrives in the initial movement. Each track is represented by a combination of track type and index.
+- `BeforeIsArrival` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether the initial movement is an arrival (`true`) or departure (`false`). Defaults to `false` (departure).
+- `BeforeIsTsuuka` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether the initial movement is a pass-through (`true`) or a stop (`false`). Defaults to `false` (stop).
+- `AfterFromTrackContentCont` ([Text](#data-types), [required](#field-tags)): A list of tracks from which the train departs in the subsequent movement. Each track is represented by a combination of track type and index.
+- `AfterToTrackContentCont` ([Text](#data-types), [required](#field-tags)): A list of tracks to which the train arrives in the subsequent movement. Each track is represented by a combination of track type and index.
+- `AfterIsArrival` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether the subsequent movement is an arrival (`true`) or departure (`false`). Defaults to `false` (departure).
+- `AfterIsTsuuka` ([Boolean](#data-types), [optional](#field-tags)): Specifies whether the subsequent movement is a pass-through (`true`) or a stop (`false`). Defaults to `false` (stop).
+
+#### Notes
+- The headway time (`HeadwaySecond` and `HeadwaySecondMinimum`) defines the time window for checking if two movements conflict with each other. If the actual time gap between two movements falls between these values, a conflict is considered to have occurred.
+- The track movements (`BeforeFromTrackContentCont`, `BeforeToTrackContentCont`, `AfterFromTrackContentCont`, `AfterToTrackContentCont`) represent the track changes in each stage of movement and are used to define the operational constraints for crossing.
+
 
 ### Ressya Node
 
