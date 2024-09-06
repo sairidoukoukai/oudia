@@ -13,19 +13,19 @@ class Ressyasyubetsu(TypedNode):
     ryakusyou: str | None
     """略称"""
 
-    jikokuhyou_moji_color: str
+    jikokuhyou_moji_color: str | None
     """時刻表文字色"""
 
-    jikokuhyou_font_index: str
+    jikokuhyou_font_index: str | None
     """時刻表文字フォントインデックス"""
 
-    jikokuhyou_back_color: str
+    jikokuhyou_back_color: str | None
     """時刻表文字背景色"""
 
-    diagram_sen_color: str
+    diagram_sen_color: str | None
     """ダイヤグラム線色"""
 
-    diagram_sen_style: str
+    diagram_sen_style: str | None
     """ダイヤグラム線スタイル"""
 
     diagram_sen_is_bold: bool | None
@@ -42,13 +42,13 @@ class Ressyasyubetsu(TypedNode):
         return cls(
             syubetsumei=node.entries.get_required("Syubetsumei"),
             ryakusyou=node.entries.get("Ryakusyou"),
-            jikokuhyou_moji_color=node.entries.get_required("JikokuhyouMojiColor"),
-            jikokuhyou_font_index=node.entries.get_required("JikokuhyouFontIndex"),
-            jikokuhyou_back_color=node.entries.get_required("JikokuhyouBackColor"),
-            diagram_sen_color=node.entries.get_required("DiagramSenColor"),
-            diagram_sen_style=node.entries.get_required("DiagramSenStyle"),
+            jikokuhyou_moji_color=node.entries.get("JikokuhyouMojiColor"),
+            jikokuhyou_font_index=node.entries.get("JikokuhyouFontIndex"),
+            jikokuhyou_back_color=node.entries.get("JikokuhyouBackColor"),
+            diagram_sen_color=node.entries.get("DiagramSenColor"),
+            diagram_sen_style=node.entries.get("DiagramSenStyle"),
             diagram_sen_is_bold=node.entries.get_bool("DiagramSenIsBold"),
-            stop_mark_draw_type=node.entries.get_required("StopMarkDrawType"),
+            stop_mark_draw_type=node.entries.get("StopMarkDrawType"),
             parent_syubetsu_index=node.entries.get_int("ParentSyubetsuIndex"),
         )
 
