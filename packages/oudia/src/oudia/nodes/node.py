@@ -26,6 +26,8 @@ Entry = Property | NodeList
 
 
 class EntryList(list[Property | NodeList]):
+    def __init__(self, *args: tuple[str, str | int | bool | None] | NodeList) -> None:
+        super().__init__([self.parse_item(arg) for arg in args])
 
     @staticmethod
     def parse_value(value: str | int | bool | None) -> str:
@@ -35,37 +37,30 @@ class EntryList(list[Property | NodeList]):
             return "1" if value else "0"
         return str(value)
 
-    # def __init__(self, *args: tuple[str, str | int | bool | None]) -> None:
-
     @staticmethod
-    def parse_item(value: tuple[str | None, str | int | bool | NodeList | None]) -> Entry:
-        k, v = value
-        if k is not None and isinstance(v, NodeList):
-            raise ValueError("NodeList cannnot have key")
-        if isinstance(v, NodeList):
-            return v
-        if k is None:
-            raise ValueError("Key must be specified for properties")
-        return (k, EntryList.parse_value(v))
-
-    # def __new__(cls, x) -> "Attributes":
-    #     return super(Attributes, cls).__new__(X)
-    def __init__(self, *args: tuple[str | None, str | int | bool | None | NodeList]) -> None:
-        super().__init__([self.parse_item((k, v)) for k, v in args if v is not None])
-
-        # entries: Property
-
-        # super().__init__([(k, self.parse_value(v)) if k else v for k, v in args if v is not None])
+    def parse_item(entry: tuple[str, str | int | bool | None] | NodeList) -> Entry:
+        assert isinstance(entry, NodeList) or isinstance(entry, tuple)
+        if isinstance(entry, NodeList):
+            return entry
+        if isinstance(entry, tuple):
+            k, v = entry
+            if k is not None and isinstance(v, NodeList):
+                raise ValueError("NodeList cannnot have key")
+            if isinstance(v, NodeList):
+                return v
+            if k is None:
+                raise ValueError("Key must be specified for properties")
+            return (k, EntryList.parse_value(v))
 
     def __str__(self) -> str:
         result = ""
 
         def format_entry(entry: Property | NodeList) -> str:
+            assert isinstance(entry, NodeList) or isinstance(entry, tuple)
             if isinstance(entry, tuple):
                 return f"{entry[0]}={entry[1]}"
             if isinstance(entry, NodeList):
                 return str(entry)
-            raise ValueError(f"Unexpected entry type: {type(entry)}")
 
         return "\n".join(format_entry(entry) for entry in self if entry)
 

@@ -50,5 +50,5 @@ class EkiTrack2Cont(TypedNode):
     def to_node(self) -> Node:
         return Node(
             type="EkiTrack2Cont",
-            entries=EntryList((None, NodeList(EkiTrack2, self.tracks))),
+            entries=EntryList(NodeList(EkiTrack2, self.tracks)),
         )
