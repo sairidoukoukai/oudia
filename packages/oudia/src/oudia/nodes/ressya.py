@@ -1,4 +1,5 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from oudia.dia.eki_jikoku import EkiJikoku
 
 from .node import EntryList, Node, TypedNode
 
@@ -6,6 +7,9 @@ from .node import EntryList, Node, TypedNode
 @dataclass
 class Ressya(TypedNode):
     """列車"""
+
+    eki_jikoku_list: list[EkiJikoku]
+    """駅時刻"""
 
     houkou: str | None = None
     """方向（上り・下り）"""
@@ -19,8 +23,8 @@ class Ressya(TypedNode):
     ressyamei: str | None = None
     """列車名"""
 
-    eki_jikoku: str | None = None
-    """駅時刻"""
+    gousuu: str | None = None
+    """号数"""
 
     @classmethod
     def from_node(cls, node: Node) -> "Ressya":
@@ -29,17 +33,19 @@ class Ressya(TypedNode):
             syubetsu=node.entries.get_int("Syubetsu"),
             ressyabangou=node.entries.get("Ressyabangou"),
             ressyamei=node.entries.get("Ressyamei"),
-            eki_jikoku=node.entries.get("EkiJikoku"),
+            eki_jikoku_list=list(
+                map(EkiJikoku.from_str, [x for x in node.entries.get_required("EkiJikoku").split(",") if x])
+            ),
         )
 
     def to_node(self) -> Node:
         return Node(
-            type="Rosen",
+            type="Ressya",
             entries=EntryList(
                 ("Houkou", self.houkou),
                 ("Syubetsu", self.syubetsu),
                 ("Ressyabangou", self.ressyabangou),
                 ("Ressyamei", self.ressyamei),
-                ("EkiJikoku", self.eki_jikoku),
+                ("EkiJikoku", ",".join(map(str, self.eki_jikoku_list))),
             ),
         )
