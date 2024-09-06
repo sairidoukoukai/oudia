@@ -1,4 +1,4 @@
-from typing import Iterator, TextIO
+from typing import Iterator, Sequence, TextIO, Type
 
 from oudia.nodes.node import EntryList, NodeList
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
