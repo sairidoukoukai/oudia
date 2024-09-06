@@ -8,7 +8,7 @@ from .node import EntryList, Node, TypedNode
 class Ressya(TypedNode):
     """列車"""
 
-    eki_jikoku_list: list[EkiJikoku]
+    eki_jikoku_list: list[EkiJikoku | None]
     """駅時刻"""
 
     houkou: str | None = None
@@ -34,7 +34,7 @@ class Ressya(TypedNode):
             ressyabangou=node.entries.get("Ressyabangou"),
             ressyamei=node.entries.get("Ressyamei"),
             eki_jikoku_list=list(
-                map(EkiJikoku.from_str, [x for x in node.entries.get_required("EkiJikoku").split(",") if x])
+                EkiJikoku.from_str(x) if x else None for x in node.entries.get_required("EkiJikoku").split(",")
             ),
         )
 
@@ -46,6 +46,6 @@ class Ressya(TypedNode):
                 ("Syubetsu", self.syubetsu),
                 ("Ressyabangou", self.ressyabangou),
                 ("Ressyamei", self.ressyamei),
-                ("EkiJikoku", ",".join(map(str, self.eki_jikoku_list))),
+                ("EkiJikoku", ",".join(str(x) if x else "" for x in self.eki_jikoku_list)),
             ),
         )
