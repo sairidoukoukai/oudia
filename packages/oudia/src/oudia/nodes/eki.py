@@ -1,4 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
+from oudia.nodes.outer_terminal import OuterTerminal
 
 from .node import EntryList, NodeList, Node, TypedNode
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
@@ -60,7 +62,7 @@ class Eki(TypedNode):
     eki_tracks: NodeList[EkiTrack2]
     """駅の番線"""
 
-    outer_terminal: NodeList[Node]
+    outer_terminals: NodeList[OuterTerminal]
     """時刻表外表示の端末名"""
 
     next_eki_distance: int | None
@@ -128,9 +130,7 @@ class Eki(TypedNode):
             diagram_ressyajouhou_hyouji_kudari=node.entries.get("DiagramRessyajouhouHyoujiKudari"),
             diagram_ressyajouhou_hyouji_nobori=node.entries.get("DiagramRessyajouhouHyoujiNobori"),
             diagram_color_next_eki=node.entries.get_int("DiagramColorNextEki"),
-            outer_terminal=node.entries.get_list(0, Node),
-            jikokuhyou_operation_origin=node.entries.get_int("JikokuhyouOperationOrigin"),
-            jikokuhyou_operation_terminal=node.entries.get_int("JikokuhyouOperationTerminal"),
+            outer_terminals=node.entries.get_list_by_type(OuterTerminal),
             jikokuhyou_operation_origin_down_before_up_after=node.entries.get_bool(
                 "JikokuhyouOperationOriginDownBeforeUpAfter"
             ),
@@ -157,6 +157,8 @@ class Eki(TypedNode):
                 EkiTrack2, track_list[0].tracks if (track_list := node.entries.get_list_by_type(EkiTrack2Cont)) else []
             ),
             jikokuhyou_track_omit=node.entries.get_bool("JikokuhyouTrackOmit"),
+            jikokuhyou_operation_origin=node.entries.get_int("JikokuhyouOperationOrigin"),
+            jikokuhyou_operation_terminal=node.entries.get_int("JikokuhyouOperationTerminal"),
             jikokuhyou_jikoku_display_kudari=node.entries.get("JikokuhyouJikokuDisplayKudari"),
             jikokuhyou_jikoku_display_nobori=node.entries.get("JikokuhyouJikokuDisplayNobori"),
             jikokuhyou_syubetsu_change_display_kudari=node.entries.get("JikokuhyouSyubetsuChangeDisplayKudari"),
@@ -192,15 +194,18 @@ class Eki(TypedNode):
                 ("DiagramTrackDisplay", self.diagram_track_display),
                 ("NextEkiDistance", self.next_eki_distance),
                 NodeList(EkiTrack2Cont, [EkiTrack2Cont(self.eki_tracks)]),
+                NodeList(OuterTerminal, self.outer_terminals),
                 ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
+                ("JikokuhyouOperationOrigin", self.jikokuhyou_operation_origin),
+                ("JikokuhyouOperationTerminal", self.jikokuhyou_operation_terminal),
                 ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
                 ("JikokuhyouJikokuDisplayNobori", self.jikokuhyou_jikoku_display_nobori),
                 ("JikokuhyouSyubetsuChangeDisplayKudari", self.jikokuhyou_syubetsu_change_display_kudari),
                 ("JikokuhyouSyubetsuChangeDisplayNobori", self.jikokuhyou_syubetsu_change_display_nobori),
                 ("DiagramColorNextEki", self.diagram_color_next_eki),
+                ("OperationTableDisplayJikoku", self.operation_table_display_jikoku),
                 ("JikokuhyouOuterDisplayKudari", self.jikokuhyou_outer_display_kudari),
                 ("JikokuhyouOuterDisplayNobori", self.jikokuhyou_outer_display_nobori),
                 self.crossing_check_rule_list if self.crossing_check_rule_list else NodeList(Node, []),
-                ("OperationTableDisplayJikoku", self.operation_table_display_jikoku),
             ),
         )
