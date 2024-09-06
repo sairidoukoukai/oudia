@@ -24,10 +24,10 @@ class Eki(TypedNode):
     ekikibo: str
     """駅規模"""
 
-    diagram_ressyajouhou_hyouji_kudari: str
+    diagram_ressyajouhou_hyouji_kudari: str | None
     """ダイヤ列車情報表示形式（下り）"""
 
-    diagram_ressyajouhou_hyouji_nobori: str
+    diagram_ressyajouhou_hyouji_nobori: str | None
     """ダイヤ列車情報表示形式（上り）"""
 
     down_main: int | None
@@ -131,8 +131,8 @@ class Eki(TypedNode):
             ekimei_dia_ryaku=node.entries.get("EkimeiDiaRyaku"),
             ekijikokukeisiki=node.entries.get_required(key="Ekijikokukeisiki"),
             ekikibo=node.entries.get_required("Ekikibo"),
-            diagram_ressyajouhou_hyouji_kudari=node.entries.get_bool("DiagramRessyajouhouHyoujiKudari"),
-            diagram_ressyajouhou_hyouji_nobori=node.entries.get_bool("DiagramRessyajouhouHyoujiNobori"),
+            diagram_ressyajouhou_hyouji_kudari=node.entries.get("DiagramRessyajouhouHyoujiKudari"),
+            diagram_ressyajouhou_hyouji_nobori=node.entries.get("DiagramRessyajouhouHyoujiNobori"),
             diagram_color_next_eki=node.entries.get_int("DiagramColorNextEki"),
             diagram_track_display=node.entries.get_bool("DiagramTrackDisplay"),
             outer_terminal=node.entries.get_list(0, Node),
