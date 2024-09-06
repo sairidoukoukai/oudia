@@ -101,3 +101,147 @@ class Jikoku:
 
     def __str__(self):
         return f"{self.get_hour():02}:{self.get_minute():02}:{self.get_second():02}" if self else ""
+
+
+class Hour(Enum):
+    """時の変換方法"""
+
+    ZERO = 0
+    """'0X' -> '0X'"""
+
+    ZERO_TO_NONE = 1
+    """'0X' -> 'X'"""
+
+    ZERO_TO_SPACE = 2
+    """'0X' -> ' X'"""
+
+
+class Second(Enum):
+    """秒の変換方法"""
+
+    OUTPUT = 0
+    """秒を出力"""
+
+    NO_SECOND = 1
+    """秒を出力しない"""
+
+    NOT_IF_ZERO = 2
+    """秒が0の場合は出力しない"""
+
+
+class SecondRound(Enum):
+    ROUND_DOWN = 0
+    """切り捨て"""
+
+    ROUND = 1
+    """30秒で四捨五入"""
+
+    ROUND_UP = 2
+    """切り上げ"""
+
+
+@dataclass
+class JikokuConv:
+    """時刻の変換"""
+
+    no_colon: bool = False
+    """コロンの有無"""
+
+    hour: Hour = Hour.ZERO
+    """時の変換方法"""
+
+    second: Second = Second.OUTPUT
+    """秒の変換方法"""
+
+    second_round_chaku: SecondRound = SecondRound.ROUND_DOWN
+    """秒の丸め方（着）"""
+
+    second_round_hatsu: SecondRound = SecondRound.ROUND_DOWN
+    """秒の丸め方（発）"""
+
+    display_2400: bool = False
+
+    def encode(
+        self,
+        jikoku: Jikoku,
+        is_chaku_jikoku: bool = False,
+        compare_jikoku: Jikoku | None = None,
+    ) -> str:
+        if not jikoku:
+            return ""
+
+        temp_jikoku = Jikoku(jikoku.total_seconds)
+
+        if self.second == Second.NO_SECOND:
+            if not compare_jikoku:
+                if (is_chaku_jikoku and self.second_round_chaku == SecondRound.ROUND_UP) or (
+                    not is_chaku_jikoku and self.second_round_hatsu == SecondRound.ROUND_UP
+                ):
+                    temp_jikoku.add_seconds(59)
+                elif (is_chaku_jikoku and self.second_round_chaku == SecondRound.ROUND) or (
+                    not is_chaku_jikoku and self.second_round_hatsu == SecondRound.ROUND
+                ):
+                    temp_jikoku.add_seconds(30)
+            else:
+                if (
+                    jikoku.get_hour() == compare_jikoku.get_hour()
+                    and jikoku.get_minute() == compare_jikoku.get_minute()
+                ):
+                    if (
+                        is_chaku_jikoku
+                        and self.second_round_chaku == SecondRound.ROUND_UP
+                        and jikoku.get_second() > 0
+                        and jikoku.get_second() < 30
+                        and compare_jikoku.get_second() > 0
+                        and compare_jikoku.get_second() < 30
+                    ):
+                        pass  # Skip rounding
+                    elif (
+                        not is_chaku_jikoku
+                        and self.second_round_hatsu == SecondRound.ROUND_DOWN
+                        and jikoku.get_second() >= 30
+                        and compare_jikoku.get_second() >= 30
+                    ):
+                        temp_jikoku.add_seconds(59)
+                    elif (
+                        is_chaku_jikoku
+                        and self.second_round_chaku == SecondRound.ROUND_UP
+                        and jikoku.get_second() < 30
+                        and compare_jikoku.get_second() >= 30
+                    ):
+                        if jikoku.get_second() + compare_jikoku.get_second() >= 60:
+                            temp_jikoku.add_seconds(59)
+                else:
+                    if (is_chaku_jikoku and self.second_round_chaku == SecondRound.ROUND_UP) or (
+                        not is_chaku_jikoku and self.second_round_hatsu == SecondRound.ROUND_UP
+                    ):
+                        temp_jikoku.add_seconds(59)
+                    elif (is_chaku_jikoku and self.second_round_chaku == SecondRound.ROUND) or (
+                        not is_chaku_jikoku and self.second_round_hatsu == SecondRound.ROUND
+                    ):
+                        temp_jikoku.add_seconds(30)
+
+        hour = temp_jikoku.get_hour()
+        if self.display_2400 and is_chaku_jikoku and hour == 0 and temp_jikoku.get_minute() == 0:
+            hour = 24
+
+        if self.hour == Hour.ZERO_TO_NONE:
+            hour_str = f"{hour}"
+        elif self.hour == Hour.ZERO_TO_SPACE:
+            hour_str = f"{hour:2}"
+        else:
+            hour_str = f"{hour:02}"
+
+        if not self.no_colon:
+            hour_str += ":"
+
+        minute_str = f"{temp_jikoku.get_minute():02}"
+
+        result = hour_str + minute_str
+
+        if self.second == Second.OUTPUT or (self.second == Second.NOT_IF_ZERO and temp_jikoku.get_second() != 0):
+            if not self.no_colon:
+                result += ":"
+            result += f"{temp_jikoku.get_second():02}"
+
+        return result
