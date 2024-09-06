@@ -70,7 +70,7 @@ class EntryList(list[Property | NodeList]):
         return "\n".join(format_entry(entry) for entry in self if entry)
 
     def __repr__(self) -> str:
-        return f"Attributes({', '.join(str(pair) for pair in self)})"
+        return f"{self.__class__.__name__}({', '.join(repr(pair) for pair in self)})"
 
     @property
     def properties(self) -> list[Property]:
