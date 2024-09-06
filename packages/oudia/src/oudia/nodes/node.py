@@ -27,7 +27,7 @@ Entry = Property | NodeList
 
 class EntryList(list[Property | NodeList]):
     def __init__(self, *args: tuple[str, str | int | bool | None] | NodeList) -> None:
-        super().__init__([self.parse_item(arg) for arg in args])
+        super().__init__([entry for arg in args if (entry := self.parse_item(arg)) is not None])
 
     @staticmethod
     def parse_value(value: str | int | bool | None) -> str:
@@ -38,16 +38,16 @@ class EntryList(list[Property | NodeList]):
         return str(value)
 
     @staticmethod
-    def parse_item(entry: tuple[str, str | int | bool | None] | NodeList) -> Entry:
+    def parse_item(entry: tuple[str, str | int | bool | None] | NodeList) -> Entry | None:
+        if entry is None:
+            return None
         assert isinstance(entry, NodeList) or isinstance(entry, tuple)
         if isinstance(entry, NodeList):
             return entry
         if isinstance(entry, tuple):
             k, v = entry
-            if k is not None and isinstance(v, NodeList):
-                raise ValueError("NodeList cannnot have key")
-            if isinstance(v, NodeList):
-                return v
+            if v is None:
+                return None
             if k is None:
                 raise ValueError("Key must be specified for properties")
             return (k, EntryList.parse_value(v))
