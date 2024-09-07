@@ -18,6 +18,8 @@ asttokens==2.4.1
     # via stack-data
 comm==0.2.2
     # via ipykernel
+coverage==7.6.1
+    # via pytest-cov
 debugpy==1.8.5
     # via ipykernel
 decorator==5.1.1
@@ -63,6 +65,8 @@ pure-eval==0.2.3
 pygments==2.18.0
     # via ipython
 pytest==8.3.2
+    # via pytest-cov
+pytest-cov==5.0.0
 python-dateutil==2.9.0.post0
     # via jupyter-client
 pyzmq==26.2.0
