@@ -37,9 +37,10 @@ class EkiTrack2(TypedNode):
 
 @dataclass
 class EkiTrack2Cont(TypedNode):
-    """駅トラック2コンテナ`"""
+    """駅トラック2コンテナ"""
 
     tracks: list[EkiTrack2]
+    """トラックリスト"""
 
     @classmethod
     def from_node(cls, node: Node) -> "EkiTrack2Cont":
