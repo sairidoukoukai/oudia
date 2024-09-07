@@ -1,4 +1,4 @@
-from typing import Iterator, Sequence, TextIO, Type
+from typing import Iterator, TextIO, Type
 
 from oudia.nodes.node import EntryList, NodeList
 from .nodes import (
@@ -33,7 +33,6 @@ def parse(text: str) -> Iterator[Node]:
                 if current_node:
                     stack.append(current_node)
                 current_node = new_node
-                is_trailing = False
             elif current_node:
                 # .
                 if stack:
