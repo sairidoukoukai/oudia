@@ -193,11 +193,23 @@ class Eki(TypedNode):
                 ("JikokuhyouTrackDisplayNobori", self.jikokuhyou_track_display_nobori),
                 ("DiagramTrackDisplay", self.diagram_track_display),
                 ("NextEkiDistance", self.next_eki_distance),
-                NodeList(EkiTrack2Cont, [EkiTrack2Cont(self.eki_tracks)]) if self.eki_tracks else NodeList(EkiTrack2Cont, []),
+                (
+                    NodeList(EkiTrack2Cont, [EkiTrack2Cont(self.eki_tracks)])
+                    if self.eki_tracks
+                    else NodeList(EkiTrack2Cont, [])
+                ),
                 NodeList(OuterTerminal, self.outer_terminals),
                 ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
                 ("JikokuhyouOperationOrigin", self.jikokuhyou_operation_origin),
                 ("JikokuhyouOperationTerminal", self.jikokuhyou_operation_terminal),
+                (
+                    "JikokuhyouOperationTerminalDownBeforeUpAfter",
+                    self.jikokuhyou_operation_terminal_down_before_up_after,
+                ),
+                (
+                    "JikokuhyouOperationTerminalDownAfterUpBefore",
+                    self.jikokuhyou_operation_terminal_down_after_up_before,
+                ),
                 ("JikokuhyouOperationOriginDownBeforeUpAfter", self.jikokuhyou_operation_origin_down_before_up_after),
                 ("JikokuhyouOperationOriginDownAfterUpBefore", self.jikokuhyou_operation_origin_down_after_up_before),
                 ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
