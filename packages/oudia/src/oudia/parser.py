@@ -23,6 +23,11 @@ def parse(text: str) -> Iterator[Node]:
     current_node: Node | None = None
 
     for line in text.splitlines():
+        if "=" not in line:
+            line = line.strip()  # to prevent stupid human error
+        else:
+            line = line.lstrip()  # to allow indented for debug
+
         if line.endswith("."):
             if line != ".":
                 # Block.
