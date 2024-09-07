@@ -18,10 +18,8 @@ def test_oud2_import_export_empty():
 
 
 def test_oud2_import_export_private():
-    for oud in Path("./tests/private").glob("*.oud*"):
-        if ".dumped.oud" in oud.name:
-            oud.unlink()
-            continue
+    for artifact in Path("./tests/private").glob("**/*.dumped.oud*"):
+        artifact.unlink()
 
         with open(oud, "r", encoding="utf-8-sig") as f:
             text = f.read()
