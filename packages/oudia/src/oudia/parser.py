@@ -1,8 +1,8 @@
-from typing import Iterator, TextIO, Type
+from typing import Iterator, TextIO
 
 from oudia.nodes.node import EntryList, NodeList
 from .nodes import (
-    TYPE_TO_NODE,
+    type_to_typed_node_type,
     Node,
     TypedNode,
     OuDia,
@@ -14,14 +14,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
-
 def parse(text: str) -> Iterator[Node]:
     stack: list[Node] = []
-    current_node: Node | None = None
-    last_list_type: str | None = None
+    current = None
 
     for line in text.splitlines():
+        if not line:
+            continue
+
         if "=" not in line:
             line = line.strip()  # to prevent stupid human error
         else:
@@ -29,40 +29,42 @@ def parse(text: str) -> Iterator[Node]:
 
         if line.endswith("."):
             if line != ".":
-                # Block.
-                new_node = Node(
-                    line[:-1],
-                    entries=EntryList(),
-                )
-                if current_node:
-                    stack.append(current_node)
-                current_node = new_node
-            elif current_node:
-                # .
+                # `Node.`` (start of node)
+                node_type = line[:-1]
+                new_node = Node(node_type, EntryList())
+
+                if current is not None:
+                    stack.append(current)
+
+                current = new_node
+            elif current:
+                # `.` (end of node)
                 if stack:
                     parent = stack.pop()
-                    # add to last node list if
 
-                    if last_list_type == current_node.type:
-                        parent.entries.node_lists[-1].append(current_node)
-                    else:
-                        parent.entries.append(NodeList(Node, [current_node]))
-                        last_list_type = current_node.type
-
-                    current_node = parent
+                    found = False
+                    for child in parent.entries:
+                        if isinstance(child, NodeList) and child and child[0].type == current.type:
+                            child.append(current)
+                            found = True
+                            break
+                    if not found:
+                        parent.entries.append(NodeList(Node, [current]))
+                    current = parent
                 else:
-                    yield current_node
-                    current_node = None
-                    last_list_type = None
+                    yield current
+                    current = None
 
         elif "=" in line:
-            # Key=Value
+            # `Key=Value` (property)
             key, value = line.split("=", 1)
-            if current_node:
-                current_node.entries.append((key, value))
+            if current:
+                current.entries.append((key, value))
 
-    if current_node:
-        yield current_node
+    if current:
+        for i, child in enumerate(current.entries):
+            if isinstance(child, list) and len(child) == 1:
+                current.entries[i] = NodeList(Node, [child[0]])
 
 
 def replace_node_list(node_list: NodeList) -> NodeList:
