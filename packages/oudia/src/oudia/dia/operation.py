@@ -338,8 +338,6 @@ class AfterOperation:
 
     def __str__(self) -> str:
         result = f"{self.operation.value}/"
-
-        result += repr(self)
         match self.operation:
             case AOperation.SHUNT:
                 result += str(self.int_data_1)  # shuntTrackIndex
