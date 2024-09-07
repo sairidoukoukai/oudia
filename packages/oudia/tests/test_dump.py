@@ -1,3 +1,5 @@
+"""This module test the end-to-end `dump` and `dumps` functions"""
+
 import oudia
 
 from nodes.test_node import EMPTY_ROSEN
