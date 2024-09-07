@@ -14,10 +14,22 @@ A library for parsing and exporting OuDia file format.
 ```python
 import oudia
 
-with open("meronking_line.oud", "r") as f:
+
+with open("sairibus.oud", "r", encoding="shift-jis") as f:
+    dia = oudia.load(f)
+    print(dia.file_type)
+    for eki in dia.rosen.eki_list:
+        print(eki.ekimei)
+
+with open("meronking_line.oud2", "r", encoding="utf-8-sig") as f:
     dia = oudia.load(f)
     print(dia.file_type)
     print(dia.rosen)
+
+with open( "meronking_line_dumped.oud2", "w", encoding="utf-8-sig") as f:
+    dumped_str = oudia.dumps(dia)
+    f.write(dumped_str)
+
 ```
 
 ## 参考 / References
