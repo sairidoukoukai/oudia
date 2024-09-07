@@ -56,4 +56,5 @@ __all__ = [
     "Kudari",
     "WindowPlacement",
     "ChildWindow",
+    "Dia",
 ]
