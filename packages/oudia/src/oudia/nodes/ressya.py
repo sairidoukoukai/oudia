@@ -24,6 +24,9 @@ class Ressya(TypedNode):
     syubetsu: int | None = None
     """種別"""
 
+    unyoubangou: str | None = None
+    """運用番号"""
+
     ressyabangou: str | None = None
     """列車番号"""
 
@@ -105,6 +108,7 @@ class Ressya(TypedNode):
             syubetsu=node.entries.get_int("Syubetsu"),
             ressyabangou=node.entries.get("Ressyabangou"),
             ressyamei=node.entries.get("Ressyamei"),
+            unyoubangou=node.entries.get("Unyoubangou"),
             eki_jikoku_list=eki_jikoku_plain,
             bikou=node.entries.get("Bikou"),
         )
@@ -137,6 +141,7 @@ class Ressya(TypedNode):
                 ("Syubetsu", self.syubetsu),
                 ("Ressyabangou", self.ressyabangou),
                 ("Ressyamei", self.ressyamei),
+                ("Unyoubangou", self.unyoubangou),
                 ("EkiJikoku", ",".join(str(x) if x else "" for x in self.eki_jikoku_list)),
                 *operation_entries,
                 ("Bikou", self.bikou),
