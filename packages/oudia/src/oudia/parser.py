@@ -21,6 +21,7 @@ def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
 def parse(text: str) -> Iterator[Node]:
     stack: list[Node] = []
     current_node: Node | None = None
+    last_list_type: str | None = None
 
     for line in text.splitlines():
         if "=" not in line:
@@ -44,21 +45,17 @@ def parse(text: str) -> Iterator[Node]:
                     parent = stack.pop()
                     # add to last node list if
 
-                    current_typed_node_type = type_to_typed_node_type(current_node.type) or Node
-
-                    if (
-                        parent.entries.node_lists
-                        and parent.entries.node_lists[-1]
-                        and parent.entries.node_lists[-1].type is current_typed_node_type
-                    ):
+                    if last_list_type == current_node.type:
                         parent.entries.node_lists[-1].append(current_node)
                     else:
-                        parent.entries.append(NodeList(current_typed_node_type, [current_node]))
+                        parent.entries.append(NodeList(Node, [current_node]))
+                        last_list_type = current_node.type
 
                     current_node = parent
                 else:
                     yield current_node
                     current_node = None
+                    last_list_type = None
 
         elif "=" in line:
             # Key=Value
