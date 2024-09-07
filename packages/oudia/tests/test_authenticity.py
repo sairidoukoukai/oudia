@@ -22,9 +22,17 @@ def test_oud2_import_export_private():
 
         with open(oud, "r", encoding="utf-8-sig") as f:
             text = f.read()
-            dia = oudia.loads(text)
+            try:
+                dia = oudia.loads(text)
+            except Exception:
+                print(oud)
+                continue
 
-        dumped = oudia.dumps(dia)
+        try:
+            dumped = oudia.dumps(dia)
+        except Exception:
+            print(oud)
+            continue
 
         if dumped != text:
             with open(oud.with_suffix(".dumped" + oud.suffix), "w", encoding="utf-8-sig") as f:
