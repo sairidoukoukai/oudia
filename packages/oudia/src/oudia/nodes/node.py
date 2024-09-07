@@ -77,11 +77,6 @@ class EntryList(list[Property | NodeList]):
 
     T = TypeVar("T", bound="TypedNode | Node")
 
-    def get_list(self, key: int, t: Type[T]) -> NodeList[T]:
-        if key >= len(self.node_lists):
-            return NodeList(t)
-        return self.node_lists[key]
-
     def get_list_by_type(self, t: Type[T]) -> NodeList[T]:
         for node_list in self.node_lists:
             if node_list.type == t:
