@@ -148,3 +148,76 @@ def test_parse_eki_track2_cont():
 
 
 # endregion
+
+# region node-replacing
+
+
+def test_replace_single_node():
+    assert replace_node(
+        Node(
+            type="EkiTrack2",
+            entries=EntryList(("TrackName", "1番線")),
+        )
+    ) == EkiTrack2(track_name="1番線")
+
+
+def test_replace_node_list():
+    assert replace_node_list(
+        NodeList(
+            Node,
+            [
+                Node(
+                    type="EkiTrack2",
+                    entries=EntryList(("TrackName", "1番線")),
+                ),
+                Node(
+                    type="EkiTrack2",
+                    entries=EntryList(("TrackName", "2番線")),
+                ),
+            ],
+        )
+    ) == NodeList(EkiTrack2, [EkiTrack2(track_name="1番線"), EkiTrack2(track_name="2番線")])
+
+
+def test_replace_nodes_in_entry_list() -> None:
+    assert replace_nodes_in_entry_list(
+        EntryList(
+            NodeList(
+                Node,
+                [
+                    Node(
+                        type="EkiTrack2",
+                        entries=EntryList(("TrackName", "1番線")),
+                    ),
+                    Node(
+                        type="EkiTrack2",
+                        entries=EntryList(("TrackName", "2番線")),
+                    ),
+                ],
+            )
+        )
+    ) == EntryList(NodeList(EkiTrack2, [EkiTrack2(track_name="1番線"), EkiTrack2(track_name="2番線")]))
+
+
+def test_replace_nested_nodes() -> None:
+    replaced_node = replace_node(
+        Node(
+            type="EkiTrack2Cont",
+            entries=EntryList(
+                NodeList(
+                    Node,
+                    [
+                        Node(
+                            type="EkiTrack2",
+                            entries=EntryList(("TrackName", "1番線")),
+                        )
+                    ],
+                )
+            ),
+        )
+    )
+
+    assert replaced_node == EkiTrack2Cont(tracks=[EkiTrack2(track_name="1番線")])
+
+
+# endregion
