@@ -89,8 +89,6 @@ def replace_node(node) -> Node | TypedNode:
     # if not isinstance(node, Node):
     #     return node
 
-    print(f"{node.entries=}")
-
     new_node = Node(
         node.type,
         entries=replace_nodes_in_entry_list(node.entries),
