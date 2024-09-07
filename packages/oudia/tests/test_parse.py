@@ -127,6 +127,155 @@ def test_parse_children():
     ]
 
 
+def test_parse_multi_children():
+    assert list(
+        oudia.parser.parse(
+            "\n".join(
+                [
+                    "NodeCont.",
+                    "SomeProperty=Value",
+                    "NodeA.",
+                    "SomeProperty=Value",
+                    ".",
+                    "NodeA.",
+                    "SomeProperty=Value",
+                    ".",
+                    "NodeB.",
+                    "SomeProperty=Value",
+                    ".",
+                    "NodeB.",
+                    "SomeProperty=Value",
+                    ".",
+                    ".",
+                ]
+            )
+        )
+    ) == [
+        Node(
+            "NodeCont",
+            EntryList(
+                ("SomeProperty", "Value"),
+                NodeList(
+                    Node,
+                    [
+                        Node(
+                            "NodeA",
+                            EntryList(("SomeProperty", "Value")),
+                        ),
+                        Node(
+                            "NodeA",
+                            EntryList(("SomeProperty", "Value")),
+                        ),
+                    ],
+                ),
+                NodeList(
+                    Node,
+                    [
+                        Node(
+                            "NodeB",
+                            EntryList(("SomeProperty", "Value")),
+                        ),
+                        Node(
+                            "NodeB",
+                            EntryList(("SomeProperty", "Value")),
+                        ),
+                    ],
+                ),
+            ),
+        )
+    ]
+
+
+def test_parse_complex_nesting():
+    assert list(
+        oudia.parser.parse(
+            "\n".join(
+                [
+                    "GrandParent.",
+                    "Name=John Doe",
+                    "Uncle.",
+                    "Name=Jim Doe",
+                    ".",
+                    "Uncle.",
+                    "Name=Jimmy Doe",
+                    ".",
+                    "Aunt.",
+                    "Name=Jane Doe",
+                    ".",
+                    "Parent.",
+                    "Name=John Jr. Doe",
+                    "Sibling.",
+                    "Name=Jane Jr. Doe",
+                    ".",
+                    "Child.",
+                    "Name=Johnny Doe",
+                    ".",
+                    ".",
+                    ".",
+                ]
+            )
+        )
+    ) == [
+        Node(
+            "GrandParent",
+            EntryList(
+                ("Name", "John Doe"),
+                NodeList(
+                    Node,
+                    [
+                        Node(
+                            "Uncle",
+                            EntryList(("Name", "Jim Doe")),
+                        ),
+                        Node(
+                            "Uncle",
+                            EntryList(("Name", "Jimmy Doe")),
+                        ),
+                    ],
+                ),
+                NodeList(
+                    Node,
+                    [
+                        Node(
+                            "Aunt",
+                            EntryList(("Name", "Jane Doe")),
+                        ),
+                    ],
+                ),
+                NodeList(
+                    Node,
+                    [
+                        Node(
+                            "Parent",
+                            EntryList(
+                                ("Name", "John Jr. Doe"),
+                                NodeList(
+                                    Node,
+                                    [
+                                        Node(
+                                            "Sibling",
+                                            EntryList(("Name", "Jane Jr. Doe")),
+                                        ),
+                                    ],
+                                ),
+                                NodeList(
+                                    Node,
+                                    [
+                                        Node(
+                                            "Child",
+                                            EntryList(("Name", "Johnny Doe")),
+                                        ),
+                                    ],
+                                ),
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+        ),
+    ]
+
+
 def test_parse_eki_track2_cont():
 
     assert list(
