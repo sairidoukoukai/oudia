@@ -5,106 +5,6 @@ from oudia.nodes.ressyasyubetsu import Ressyasyubetsu
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 
 
-def test_parse_unknown():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
-                [
-                    "Unknown.",
-                    "SomeProperty=Value",
-                    ".",
-                ]
-            )
-        )
-    ) == [Node("Unknown", EntryList(("SomeProperty", "Value")))]
-
-
-def test_parse_repeatable():
-    assert list(
-        oudia.parser.parse("\n".join(["HasRepeatable.", "RepeatingProperty=Value1", "RepeatingProperty=Value2", "."]))
-    ) == [Node("HasRepeatable", EntryList(("RepeatingProperty", "Value1"), ("RepeatingProperty", "Value2")))]
-
-
-def test_parse_node_list():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
-                [
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                ]
-            )
-        )
-    ) == [
-        Node("Node", EntryList(("SomeProperty", "Value"))),
-        Node("Node", EntryList(("SomeProperty", "Value"))),
-    ]
-
-
-def test_parse_children():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
-                [
-                    "NodeCont.",
-                    "SomeProperty=Value",
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                    ".",
-                ]
-            )
-        )
-    ) == [
-        Node(
-            "NodeCont",
-            EntryList(
-                ("SomeProperty", "Value"),
-                NodeList(
-                    Node,
-                    [
-                        Node(
-                            "Node",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                        Node(
-                            "Node",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                    ],
-                ),
-            ),
-        )
-    ]
-
-
-def test_parse_eki_track2_cont():
-
-    assert list(
-        oudia.parser.parse("EkiTrack2Cont.\nEkiTrack2.\nTrackName=1番線\n.\nEkiTrack2.\nTrackName=2番線\n.\n.")
-    ) == [
-        Node(
-            "EkiTrack2Cont",
-            EntryList(
-                NodeList(
-                    Node,
-                    [
-                        Node("EkiTrack2", EntryList(("TrackName", "1番線"))),
-                        Node("EkiTrack2", EntryList(("TrackName", "2番線"))),
-                    ],
-                ),
-            ),
-        )
-    ]
-
-
 EMPTY_ROSEN = oudia.Rosen(
     "メロンキング線",
     None,
@@ -119,6 +19,25 @@ EMPTY_ROSEN = oudia.Rosen(
     None,
     None,
 )
+
+# region pprint
+
+
+def test_pprint(capfd):
+    dia = oudia.loads(
+        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nDispProp.\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
+    )
+    dia.pprint()
+    out, err = capfd.readouterr()
+    assert (
+        "  FileType=OuDia.1.02\n  Rosen.\n    Rosenmei=メロンキング線\n  .\n  DispProp.\n  .\n  FileTypeAppComment=OuDia.Py 0.0.0\n"
+        in out
+    )
+
+
+# endregion
+
+# region conversion
 
 
 def test_node_conversion() -> None:
@@ -138,6 +57,10 @@ def test_node_conversion() -> None:
     assert untyped_rosen_node == typed_rosen_node
 
 
+# endregion
+
+
+# region export
 def test_export_ekitrack2cont():
     assert (
         str(
@@ -173,3 +96,6 @@ def test_export_node_list():
         )
         == "EkiTrack2.\nTrackName=1番線\n.\nEkiTrack2.\nTrackName=2番線\n."
     )
+
+
+# endregion

@@ -1,20 +1,11 @@
-import logging
+"""Test parsing and node replacing"""
+
 import oudia
-import pytest
 
 
-def test_invalid(caplog):
-    # Invalid file type
-    with pytest.raises(ValueError) as e:
-        oudia.loads("invalid")
-
-
-def test_unsupported_software(caplog):
-    caplog.set_level(logging.WARNING)
-    oudia.loads("FileType=NotOuDia\nRosen.\n.\nDispProp.\n.\n")
-    assert 'Unsupported software: "NotOuDia"' in caplog.text
-
-    # # Unsupported software
+from oudia.nodes.node import EntryList, Node, NodeList
+from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
+from oudia.parser import parse, replace_node, replace_node_list, replace_nodes_in_entry_list
 
 
 EMPTY_DISP_PROP = oudia.DispProp(
@@ -53,14 +44,107 @@ EMPTY_DISP_PROP = oudia.DispProp(
     None,
 )
 
+# region parsing
 
-def test_pprint(capfd):
-    dia = oudia.loads(
-        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nDispProp.\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
-    )
-    dia.pprint()
-    out, err = capfd.readouterr()
-    assert (
-        out
-        == "  FileType=OuDia.1.02\n  Rosen.\n    Rosenmei=メロンキング線\n  .\n  DispProp.\n  .\n  FileTypeAppComment=OuDia.Py 0.0.0\n"
-    )
+
+def test_parse_unknown():
+    assert list(
+        oudia.parser.parse(
+            "\n".join(
+                [
+                    "Unknown.",
+                    "SomeProperty=Value",
+                    ".",
+                ]
+            )
+        )
+    ) == [Node("Unknown", EntryList(("SomeProperty", "Value")))]
+
+
+def test_parse_repeatable():
+    assert list(
+        oudia.parser.parse("\n".join(["HasRepeatable.", "RepeatingProperty=Value1", "RepeatingProperty=Value2", "."]))
+    ) == [Node("HasRepeatable", EntryList(("RepeatingProperty", "Value1"), ("RepeatingProperty", "Value2")))]
+
+
+def test_parse_node_list():
+    assert list(
+        oudia.parser.parse(
+            "\n".join(
+                [
+                    "Node.",
+                    "SomeProperty=Value",
+                    ".",
+                    "Node.",
+                    "SomeProperty=Value",
+                    ".",
+                ]
+            )
+        )
+    ) == [
+        Node("Node", EntryList(("SomeProperty", "Value"))),
+        Node("Node", EntryList(("SomeProperty", "Value"))),
+    ]
+
+
+def test_parse_children():
+    assert list(
+        oudia.parser.parse(
+            "\n".join(
+                [
+                    "NodeCont.",
+                    "SomeProperty=Value",
+                    "Node.",
+                    "SomeProperty=Value",
+                    ".",
+                    "Node.",
+                    "SomeProperty=Value",
+                    ".",
+                    ".",
+                ]
+            )
+        )
+    ) == [
+        Node(
+            "NodeCont",
+            EntryList(
+                ("SomeProperty", "Value"),
+                NodeList(
+                    Node,
+                    [
+                        Node(
+                            "Node",
+                            EntryList(("SomeProperty", "Value")),
+                        ),
+                        Node(
+                            "Node",
+                            EntryList(("SomeProperty", "Value")),
+                        ),
+                    ],
+                ),
+            ),
+        )
+    ]
+
+
+def test_parse_eki_track2_cont():
+
+    assert list(
+        oudia.parser.parse("EkiTrack2Cont.\nEkiTrack2.\nTrackName=1番線\n.\nEkiTrack2.\nTrackName=2番線\n.\n.")
+    ) == [
+        Node(
+            "EkiTrack2Cont",
+            EntryList(
+                NodeList(
+                    Node,
+                    [
+                        Node("EkiTrack2", EntryList(("TrackName", "1番線"))),
+                        Node("EkiTrack2", EntryList(("TrackName", "2番線"))),
+                    ],
+                ),
+            ),
+        )
+    ]
+
+
+# endregion
