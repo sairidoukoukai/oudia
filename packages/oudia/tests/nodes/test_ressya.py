@@ -62,9 +62,85 @@ def test_ressya_invalid():
             Operation15A=5/$0
             .
         """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=1;750$0,2$0,1;815/815$0,1;820/820$0
+            Operation3B.0A=5/$0
+            .
+        """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=1;750$0,2$0,1;815/815$0,1;820/820$0
+            Operation3A.0B=5/$0
+            .
+        """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=1;750$0,2$0,1;815/815$0,1;820/820$0
+            Operation3A=5/$0
+            Operation3A.15B=5/$0
+            .
+        """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=1;750$0,2$0,1;815/815$0,1;820/820$0
+            Operation3A=5/$0
+            Operation3A.15A=5/$0
+            .
+        """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=1;750$0,2$0,1;815/815$0,1;820/820$0
+            Operation3B=5/$0
+            Operation3B.15A=5/$0
+            .
+        """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=1;750$0,2$0,1;815/815$0,1;820/820$0
+            Operation3B=5/$0
+            Operation3B.15B=5/$0
+            .
+        """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=,,,,,
+            Operation0B=5/$0
+            .
+        """,
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=,,,,,
+            Operation3A=5/$0
+            .
+        """,
     ]
 
     for ressya_str in RESSYAS:
         ressya_str = inspect.cleandoc(ressya_str)
-        with pytest.raises(ValueError):
+        with pytest.raises((ValueError, IndexError)):
             ressya = parse_ressya(ressya_str)
