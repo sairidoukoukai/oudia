@@ -4,24 +4,26 @@ import oudia
 import sys
 from pathlib import Path
 
+base_dir = Path(__file__).parent
+
 
 def test_oud2_import_export_empty():
-    with open("./tests/empty.oud2", "r", encoding="utf-8-sig") as f:
+    with open(base_dir / "empty.oud2", "r", encoding="utf-8-sig") as f:
         text = f.read()
         dia = oudia.loads(text)
         # print(dia)
         # print(dia.pprint())
-    with open("./tests/empty_dumped.oud2", "w", encoding="utf-8-sig") as f:
+    with open(base_dir / "empty_dumped.oud2", "w", encoding="utf-8-sig") as f:
         f.write(oudia.dumps(dia))
 
     assert oudia.dumps(dia) == text
 
 
 def test_oud2_import_export_private():
-    for artifact in Path("./tests/private").glob("**/*.dumped.oud*"):
+    for artifact in Path(base_dir / "private").glob("**/*.dumped.oud*"):
         artifact.unlink()
 
-    for oud in Path("./tests/private").glob("*.oud*"):
+    for oud in Path(base_dir / "private").glob("*.oud*"):
         with open(oud, "r", encoding="utf-8-sig") as f:
             text = f.read()
             try:
@@ -50,10 +52,10 @@ def test_oud2_import_export_private():
 
 
 def test_oud_import_export_private_shift_jis():
-    for artifact in Path("./tests/private/oud").glob("**/*.dumped.oud*"):
+    for artifact in Path(base_dir / "private/oud").glob("**/*.dumped.oud*"):
         artifact.unlink()
 
-    for oud in Path("./tests/private/oud").glob("*.oud*"):
+    for oud in Path(base_dir / "private/oud").glob("*.oud*"):
         try:
             with open(oud, "r", encoding="shift-jis") as f:
                 text = f.read()
