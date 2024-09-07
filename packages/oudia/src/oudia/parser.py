@@ -65,6 +65,49 @@ def parse(text: str) -> Iterator[Node]:
         yield current_node
 
 
+def replace_node_list(node_list: NodeList) -> NodeList:
+    nodes = [replace_node(child) for child in node_list]
+    first_node_type = type(nodes[0]) if nodes else Node
+
+    return NodeList(first_node_type, nodes)
+
+
+def replace_nodes_in_entry_list(entry_list: EntryList) -> EntryList:
+    result = EntryList()
+    for entry in entry_list:
+        if isinstance(entry, NodeList):
+            result.append(replace_node_list(entry))
+        else:
+            result.append(entry)
+    return result
+
+
+def replace_node(node) -> Node | TypedNode:
+    """Recursively replace `Node` with `TypedNode` by `type`."""
+
+    assert isinstance(node, Node)
+    # if not isinstance(node, Node):
+    #     return node
+
+    print(f"{node.entries=}")
+
+    new_node = Node(
+        node.type,
+        entries=replace_nodes_in_entry_list(node.entries),
+    )
+
+    # replaced_children = NodeList([replace_node(child) for child in node.children])
+
+    CurrentType: type[TypedNode] | None = type_to_typed_node_type(node.type) if node.type else None
+
+    if CurrentType:
+        new_node = CurrentType.from_node(new_node)
+    else:
+        logger.warning(f"Unsupported node type: {node.type}")
+
+    return new_node
+
+
 def loads(text: str) -> OuDia:
     """
     Loads OuDia data from a given text.
@@ -93,42 +136,6 @@ def loads(text: str) -> OuDia:
         )
 
     nodes = list(parse(f"Root.\n{text.strip()}\n."))
-
-    # replace node with typednode by type recursively
-    def replace_node(node) -> Node | TypedNode:
-        assert isinstance(node, Node)
-        # if not isinstance(node, Node):
-        #     return node
-
-        node.entries
-
-        def replace_node_list(node_list: NodeList) -> NodeList:
-            return NodeList(node_list.type, [replace_node(child) for child in node_list])
-
-        def replace_nodes_in_entry_list(entry_list: EntryList) -> EntryList:
-            result = EntryList()
-            for entry in entry_list:
-                if isinstance(entry, NodeList):
-                    result.append(replace_node_list(entry))
-                else:
-                    result.append(entry)
-            return result
-
-        new_node = Node(
-            node.type,
-            entries=replace_nodes_in_entry_list(node.entries),
-        )
-
-        # replaced_children = NodeList([replace_node(child) for child in node.children])
-
-        CurrentType: type[TypedNode] | None = type_to_typed_node_type(node.type) if node.type else None
-
-        if CurrentType:
-            new_node = CurrentType.from_node(new_node)
-        else:
-            logger.warning(f"Unsupported node type: {node.type}")
-
-        return new_node
 
     # print(f"{nodes[0]=}")
     root = replace_node(nodes[0])
