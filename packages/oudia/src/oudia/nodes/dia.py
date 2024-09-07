@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from oudia.nodes import Ressya
+from .ressya import Ressya
 
 from .node import EntryList, Node, TypedNode, NodeList
 

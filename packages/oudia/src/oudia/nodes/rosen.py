@@ -1,5 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
+from oudia.nodes.dia import Dia
 from oudia.nodes.eki import Eki
 from oudia.nodes.ressyasyubetsu import Ressyasyubetsu
 from .node import EntryList, NodeList, Node, TypedNode
@@ -8,6 +9,15 @@ from .node import EntryList, NodeList, Node, TypedNode
 @dataclass
 class Rosen(TypedNode):
     """路線"""
+
+    eki_list: NodeList[Eki]
+    """駅リスト"""
+
+    ressyasyubetsu_list: NodeList[Ressyasyubetsu]
+    """列車種別リスト"""
+
+    dia_list: NodeList[Dia]
+    """ダイアリスト"""
 
     rosenmei: str | None = None
     """路線名"""
@@ -20,15 +30,6 @@ class Rosen(TypedNode):
 
     kiten_jikoku: str | None = None
     """起点時刻"""
-
-    eki_list: NodeList[Eki] | None = None
-    """駅リスト"""
-
-    ressyasyubetsu_list: NodeList[Ressyasyubetsu] | None = None
-    """列車種別リスト"""
-
-    dia_list: NodeList[Node] | None = None
-    """ダイアリスト"""
 
     diagram_dgr_y_zahyou_kyori_default: int | None = None
     """ダイヤグラムDGRY座標距離デフォルト"""
@@ -52,9 +53,9 @@ class Rosen(TypedNode):
             kudari_dia_alias=node.entries.get("KudariDiaAlias"),
             nobori_dia_alias=node.entries.get("NoboriDiaAlias"),
             kiten_jikoku=node.entries.get("KitenJikoku"),
-            eki_list=node.entries.get_list(0, Eki),
-            ressyasyubetsu_list=node.entries.get_list(1, Ressyasyubetsu),
-            dia_list=node.entries.get_list(2, Node),
+            eki_list=node.entries.get_list_by_type(Eki),
+            ressyasyubetsu_list=node.entries.get_list_by_type(Ressyasyubetsu),
+            dia_list=node.entries.get_list_by_type(Dia),
             diagram_dgr_y_zahyou_kyori_default=node.entries.get_int("DiagramDgrYZahyouKyoriDefault"),
             enable_operation=node.entries.get_int("EnableOperation"),
             operation_cross_kiten_jikoku=node.entries.get_bool("OperationCrossKitenJikoku"),
@@ -69,9 +70,9 @@ class Rosen(TypedNode):
                 ("Rosenmei", self.rosenmei),
                 ("KudariDiaAlias", self.kudari_dia_alias),
                 ("NoboriDiaAlias", self.nobori_dia_alias),
-                self.eki_list if self.eki_list else NodeList(Eki, []),
-                self.ressyasyubetsu_list if self.ressyasyubetsu_list else NodeList(Ressyasyubetsu, []),
-                self.dia_list if self.dia_list else NodeList(Node, []),
+                self.eki_list,
+                self.ressyasyubetsu_list,
+                self.dia_list,
                 ("KitenJikoku", self.kiten_jikoku),
                 ("DiagramDgrYZahyouKyoriDefault", self.diagram_dgr_y_zahyou_kyori_default),
                 ("OperationCrossKitenJikoku", self.operation_cross_kiten_jikoku),
