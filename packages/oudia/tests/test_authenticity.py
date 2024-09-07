@@ -21,6 +21,7 @@ def test_oud2_import_export_private():
     for artifact in Path("./tests/private").glob("**/*.dumped.oud*"):
         artifact.unlink()
 
+    for oud in Path("./tests/private").glob("*.oud*"):
         with open(oud, "r", encoding="utf-8-sig") as f:
             text = f.read()
             try:
@@ -46,3 +47,33 @@ def test_oud2_import_export_private():
                 print(repr(dia))
 
         assert dumped == text
+
+
+def test_oud_import_export_private_shift_jis():
+    for artifact in Path("./tests/private/oud").glob("**/*.dumped.oud*"):
+        artifact.unlink()
+
+    for oud in Path("./tests/private").glob("*.oud*"):
+        with open(oud, "r", encoding="shift-jis") as f:
+            text = f.read()
+            try:
+                dia = oudia.loads(text)
+            except Exception:
+                print(oud)
+                continue
+
+        try:
+            dumped = oudia.dumps(dia)
+        except Exception:
+            print(oud)
+            continue
+
+        if dumped != text:
+            with open(oud.with_suffix(".dumped" + oud.suffix), "w", encoding="utf-8-sig") as f:
+                f.write(oudia.dumps(dia))
+
+            with open(oud.with_suffix(".dumped" + oud.suffix + ".pprint.txt"), "w", encoding="utf-8") as sys.stdout:
+                dia.pprint()
+
+            with open(oud.with_suffix(".dumped" + oud.suffix + ".repr.py"), "w", encoding="utf-8") as sys.stdout:
+                print(repr(dia))
