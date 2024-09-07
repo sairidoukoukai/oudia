@@ -14,8 +14,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
-    return TYPE_TO_NODE.get(type) if type else None
 
 
 def parse(text: str) -> Iterator[Node]:

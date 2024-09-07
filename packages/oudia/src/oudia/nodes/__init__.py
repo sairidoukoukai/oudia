@@ -13,6 +13,7 @@ from .ressya import Ressya
 from .dia import Dia, Kudari, Nobori
 from .window_placement import WindowPlacement, ChildWindow
 
+
 TYPE_TO_NODE: dict[str, Type[TypedNode]] = {
     "Root": OuDia,
     "Rosen": Rosen,
@@ -30,6 +31,11 @@ TYPE_TO_NODE: dict[str, Type[TypedNode]] = {
     "WindowPlacement": WindowPlacement,
     "ChildWindow": ChildWindow,
 }
+
+
+def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
+    return TYPE_TO_NODE.get(type) if type else None
+
 
 __all__ = [
     "TYPE_TO_NODE",
