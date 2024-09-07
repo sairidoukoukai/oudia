@@ -4,7 +4,8 @@ from oudia.parser import parse
 
 
 def parse_ressya(text: str) -> Ressya:
-    ressya_node = next(parse(text))
+    ressya_node = parse(text)
+    assert ressya_node is not None
     return Ressya.from_node(ressya_node)
 
 

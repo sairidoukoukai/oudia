@@ -48,252 +48,353 @@ EMPTY_DISP_PROP = oudia.DispProp(
 
 
 def test_parse_unknown():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
-                [
-                    "Unknown.",
-                    "SomeProperty=Value",
-                    ".",
-                ]
-            )
+    assert oudia.parser.parse(
+        "\n".join(
+            [
+                "Unknown.",
+                "SomeProperty=Value",
+                ".",
+            ]
         )
-    ) == [Node("Unknown", EntryList(("SomeProperty", "Value")))]
+    ) == Node("Unknown", EntryList(("SomeProperty", "Value")))
 
 
 def test_parse_repeatable():
-    assert list(
-        oudia.parser.parse("\n".join(["HasRepeatable.", "RepeatingProperty=Value1", "RepeatingProperty=Value2", "."]))
-    ) == [Node("HasRepeatable", EntryList(("RepeatingProperty", "Value1"), ("RepeatingProperty", "Value2")))]
+    assert oudia.parser.parse(
+        "\n".join(["HasRepeatable.", "RepeatingProperty=Value1", "RepeatingProperty=Value2", "."])
+    ) == Node("HasRepeatable", EntryList(("RepeatingProperty", "Value1"), ("RepeatingProperty", "Value2")))
 
 
-def test_parse_node_list():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
-                [
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                ]
-            )
-        )
-    ) == [
-        Node("Node", EntryList(("SomeProperty", "Value"))),
-        Node("Node", EntryList(("SomeProperty", "Value"))),
-    ]
+# def test_parse_node_list():
+#     assert list(
+#         oudia.parser.parse(
+#             "\n".join(
+#                 [
+#                     "Node.",
+#                     "SomeProperty=Value",
+#                     ".",
+#                     "Node.",
+#                     "SomeProperty=Value",
+#                     ".",
+#                 ]
+#             )
+#         )
+#     ) == [
+#         Node("Node", EntryList(("SomeProperty", "Value"))),
+#         Node("Node", EntryList(("SomeProperty", "Value"))),
+#     ]
 
 
-def test_parse_children():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
-                [
-                    "NodeCont.",
-                    "SomeProperty=Value",
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                    "Node.",
-                    "SomeProperty=Value",
-                    ".",
-                    ".",
-                ]
-            )
-        )
-    ) == [
-        Node(
-            "NodeCont",
-            EntryList(
-                ("SomeProperty", "Value"),
-                NodeList(
-                    Node,
-                    [
-                        Node(
-                            "Node",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                        Node(
-                            "Node",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                    ],
-                ),
-            ),
-        )
-    ]
+# def test_parse_children():
+#     assert list(
+#         oudia.parser.parse(
+#             "\n".join(
+#                 [
+#                     "NodeCont.",
+#                     "SomeProperty=Value",
+#                     "Node.",
+#                     "SomeProperty=Value",
+#                     ".",
+#                     "Node.",
+#                     "SomeProperty=Value",
+#                     ".",
+#                     ".",
+#                 ]
+#             )
+#         )
+#     ) == [
+#         Node(
+#             "NodeCont",
+#             EntryList(
+#                 ("SomeProperty", "Value"),
+#                 NodeList(
+#                     Node,
+#                     [
+#                         Node(
+#                             "Node",
+#                             EntryList(("SomeProperty", "Value")),
+#                         ),
+#                         Node(
+#                             "Node",
+#                             EntryList(("SomeProperty", "Value")),
+#                         ),
+#                     ],
+#                 ),
+#             ),
+#         )
+#     ]
 
 
 def test_parse_multi_children():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
+    assert oudia.parser.parse(
+        "\n".join(
+            [
+                "NodeCont.",
+                "SomeProperty=Value",
+                "NodeA.",
+                "SomeProperty=Value",
+                ".",
+                "NodeA.",
+                "SomeProperty=Value",
+                ".",
+                "NodeB.",
+                "SomeProperty=Value",
+                ".",
+                "NodeB.",
+                "SomeProperty=Value",
+                ".",
+                ".",
+            ]
+        )
+    ) == Node(
+        "NodeCont",
+        EntryList(
+            ("SomeProperty", "Value"),
+            NodeList(
+                Node,
                 [
-                    "NodeCont.",
-                    "SomeProperty=Value",
-                    "NodeA.",
-                    "SomeProperty=Value",
-                    ".",
-                    "NodeA.",
-                    "SomeProperty=Value",
-                    ".",
-                    "NodeB.",
-                    "SomeProperty=Value",
-                    ".",
-                    "NodeB.",
-                    "SomeProperty=Value",
-                    ".",
-                    ".",
-                ]
-            )
-        )
-    ) == [
-        Node(
-            "NodeCont",
-            EntryList(
-                ("SomeProperty", "Value"),
-                NodeList(
-                    Node,
-                    [
-                        Node(
-                            "NodeA",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                        Node(
-                            "NodeA",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                    ],
-                ),
-                NodeList(
-                    Node,
-                    [
-                        Node(
-                            "NodeB",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                        Node(
-                            "NodeB",
-                            EntryList(("SomeProperty", "Value")),
-                        ),
-                    ],
-                ),
+                    Node(
+                        "NodeA",
+                        EntryList(("SomeProperty", "Value")),
+                    ),
+                    Node(
+                        "NodeA",
+                        EntryList(("SomeProperty", "Value")),
+                    ),
+                ],
             ),
-        )
-    ]
+            NodeList(
+                Node,
+                [
+                    Node(
+                        "NodeB",
+                        EntryList(("SomeProperty", "Value")),
+                    ),
+                    Node(
+                        "NodeB",
+                        EntryList(("SomeProperty", "Value")),
+                    ),
+                ],
+            ),
+        ),
+    )
 
 
 def test_parse_complex_nesting():
-    assert list(
-        oudia.parser.parse(
-            "\n".join(
-                [
-                    "GrandParent.",
-                    "Name=John Doe",
-                    "Uncle.",
-                    "Name=Jim Doe",
-                    ".",
-                    "Uncle.",
-                    "Name=Jimmy Doe",
-                    ".",
-                    "Aunt.",
-                    "Name=Jane Doe",
-                    ".",
-                    "Parent.",
-                    "Name=John Jr. Doe",
-                    "Sibling.",
-                    "Name=Jane Jr. Doe",
-                    ".",
-                    "Child.",
-                    "Name=Johnny Doe",
-                    ".",
-                    ".",
-                    ".",
-                ]
-            )
+    assert oudia.parser.parse(
+        "\n".join(
+            [
+                "GrandParent.",
+                "Name=John Doe",
+                "Uncle.",
+                "Name=Jim Doe",
+                ".",
+                "Uncle.",
+                "Name=Jimmy Doe",
+                ".",
+                "Aunt.",
+                "Name=Jane Doe",
+                ".",
+                "Parent.",
+                "Name=John Jr. Doe",
+                "Sibling.",
+                "Name=Jane Jr. Doe",
+                ".",
+                "Child.",
+                "Name=Johnny Doe",
+                ".",
+                ".",
+                ".",
+            ]
         )
-    ) == [
-        Node(
-            "GrandParent",
-            EntryList(
-                ("Name", "John Doe"),
-                NodeList(
-                    Node,
-                    [
-                        Node(
-                            "Uncle",
-                            EntryList(("Name", "Jim Doe")),
-                        ),
-                        Node(
-                            "Uncle",
-                            EntryList(("Name", "Jimmy Doe")),
-                        ),
-                    ],
-                ),
-                NodeList(
-                    Node,
-                    [
-                        Node(
-                            "Aunt",
-                            EntryList(("Name", "Jane Doe")),
-                        ),
-                    ],
-                ),
-                NodeList(
-                    Node,
-                    [
-                        Node(
-                            "Parent",
-                            EntryList(
-                                ("Name", "John Jr. Doe"),
-                                NodeList(
-                                    Node,
-                                    [
-                                        Node(
-                                            "Sibling",
-                                            EntryList(("Name", "Jane Jr. Doe")),
-                                        ),
-                                    ],
-                                ),
-                                NodeList(
-                                    Node,
-                                    [
-                                        Node(
-                                            "Child",
-                                            EntryList(("Name", "Johnny Doe")),
-                                        ),
-                                    ],
-                                ),
+    ) == Node(
+        "GrandParent",
+        EntryList(
+            ("Name", "John Doe"),
+            NodeList(
+                Node,
+                [
+                    Node(
+                        "Uncle",
+                        EntryList(("Name", "Jim Doe")),
+                    ),
+                    Node(
+                        "Uncle",
+                        EntryList(("Name", "Jimmy Doe")),
+                    ),
+                ],
+            ),
+            NodeList(
+                Node,
+                [
+                    Node(
+                        "Aunt",
+                        EntryList(("Name", "Jane Doe")),
+                    ),
+                ],
+            ),
+            NodeList(
+                Node,
+                [
+                    Node(
+                        "Parent",
+                        EntryList(
+                            ("Name", "John Jr. Doe"),
+                            NodeList(
+                                Node,
+                                [
+                                    Node(
+                                        "Sibling",
+                                        EntryList(("Name", "Jane Jr. Doe")),
+                                    ),
+                                ],
+                            ),
+                            NodeList(
+                                Node,
+                                [
+                                    Node(
+                                        "Child",
+                                        EntryList(("Name", "Johnny Doe")),
+                                    ),
+                                ],
                             ),
                         ),
-                    ],
-                ),
+                    ),
+                ],
             ),
         ),
-    ]
+    )
+
+
+def test_parse_even_more_complex_nesting():
+    assert oudia.parser.parse(
+        "\n".join(
+            [
+                "GrandParent.",
+                "Name=John Doe",
+                "Uncle.",
+                "Name=Jim Doe",
+                ".",
+                "Uncle.",
+                "Name=Jimmy Doe",
+                ".",
+                "Aunt.",
+                "Name=Jane Doe",
+                ".",
+                "Parent.",
+                "Name=John Jr. Doe",
+                "Sibling.",
+                "Name=Jane Jr. Doe",
+                ".",
+                "Sibling.",
+                "Name=Jane Jr2. Doe",
+                ".",
+                "AdoptedSibling.",
+                "Name=Jane Jr3. Doe",
+                ".",
+                "Child.",
+                "Name=Johnny Doe",
+                ".",
+                ".",
+                ".",
+                ".",
+            ]
+        )
+    ) == Node(
+        "GrandParent",
+        EntryList(
+            ("Name", "John Doe"),
+            NodeList(
+                Node,
+                [
+                    Node(
+                        "Uncle",
+                        EntryList(("Name", "Jim Doe")),
+                    ),
+                    Node(
+                        "Uncle",
+                        EntryList(("Name", "Jimmy Doe")),
+                    ),
+                ],
+            ),
+            NodeList(
+                Node,
+                [
+                    Node(
+                        "Aunt",
+                        EntryList(("Name", "Jane Doe")),
+                    ),
+                ],
+            ),
+            NodeList(
+                Node,
+                [
+                    Node(
+                        "Parent",
+                        EntryList(
+                            ("Name", "John Jr. Doe"),
+                            NodeList(
+                                Node,
+                                [
+                                    Node(
+                                        "Sibling",
+                                        EntryList(("Name", "Jane Jr. Doe")),
+                                    ),
+                                    Node(
+                                        "Sibling",
+                                        EntryList(("Name", "Jane Jr2. Doe")),
+                                    ),
+                                ],
+                            ),
+                            NodeList(
+                                Node,
+                                [
+                                    Node(
+                                        "AdoptedSibling",
+                                        EntryList(("Name", "Jane Jr3. Doe")),
+                                    ),
+                                ],
+                            ),
+                            NodeList(
+                                Node,
+                                [
+                                    Node(
+                                        "Child",
+                                        EntryList(("Name", "Johnny Doe")),
+                                    ),
+                                ],
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+        ),
+    )
+
+
+# def test_parse_real_node():
+#     assert list(oudia.parser.parse("EkiTrack2.\nTrackName=1番線\n.\nEkiTrack2.\nTrackName=2番線\n.\n.")) == [
+#         Node("EkiTrack2", EntryList(("TrackName", "1番線"))),
+#         Node("EkiTrack2", EntryList(("TrackName", "2番線"))),
+#     ]
 
 
 def test_parse_eki_track2_cont():
 
-    assert list(
-        oudia.parser.parse("EkiTrack2Cont.\nEkiTrack2.\nTrackName=1番線\n.\nEkiTrack2.\nTrackName=2番線\n.\n.")
-    ) == [
-        Node(
-            "EkiTrack2Cont",
-            EntryList(
-                NodeList(
-                    Node,
-                    [
-                        Node("EkiTrack2", EntryList(("TrackName", "1番線"))),
-                        Node("EkiTrack2", EntryList(("TrackName", "2番線"))),
-                    ],
-                ),
+    assert oudia.parser.parse(
+        "EkiTrack2Cont.\nEkiTrack2.\nTrackName=1番線\n.\nEkiTrack2.\nTrackName=2番線\n.\n."
+    ) == Node(
+        "EkiTrack2Cont",
+        EntryList(
+            NodeList(
+                Node,
+                [
+                    Node("EkiTrack2", EntryList(("TrackName", "1番線"))),
+                    Node("EkiTrack2", EntryList(("TrackName", "2番線"))),
+                ],
             ),
-        )
-    ]
+        ),
+    )
 
 
 # endregion

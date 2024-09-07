@@ -1,4 +1,4 @@
-from typing import Iterator, TextIO
+from typing import TextIO
 
 from oudia.nodes.node import EntryList, NodeList
 from .nodes import (
@@ -14,7 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def parse(text: str) -> Iterator[Node]:
+def parse(text: str) -> Node | None:
     stack: list[Node] = []
     current = None
 
@@ -37,23 +37,19 @@ def parse(text: str) -> Iterator[Node]:
                     stack.append(current)
 
                 current = new_node
-            elif current:
+            elif current and stack:
                 # `.` (end of node)
-                if stack:
-                    parent = stack.pop()
+                parent = stack.pop()
 
-                    found = False
-                    for child in parent.entries:
-                        if isinstance(child, NodeList) and child and child[0].type == current.type:
-                            child.append(current)
-                            found = True
-                            break
-                    if not found:
-                        parent.entries.append(NodeList(Node, [current]))
-                    current = parent
-                else:
-                    yield current
-                    current = None
+                found = False
+                for child in parent.entries:
+                    if isinstance(child, NodeList) and child and child[0].type == current.type:
+                        child.append(current)
+                        found = True
+                        break
+                if not found:
+                    parent.entries.append(NodeList(Node, [current]))
+                current = parent
 
         elif "=" in line:
             # `Key=Value` (property)
@@ -65,6 +61,8 @@ def parse(text: str) -> Iterator[Node]:
         for i, child in enumerate(current.entries):
             if isinstance(child, list) and len(child) == 1:
                 current.entries[i] = NodeList(Node, [child[0]])
+
+    return current
 
 
 def replace_node_list(node_list: NodeList) -> NodeList:
@@ -135,10 +133,8 @@ def loads(text: str) -> OuDia:
             file_type.software,
         )
 
-    nodes = list(parse(f"Root.\n{text.strip()}\n."))
+    root = replace_node(parse(f"Root.\n{text.strip()}\n."))
 
-    # print(f"{nodes[0]=}")
-    root = replace_node(nodes[0])
     assert isinstance(root, OuDia)
     # print(f"{root=}")
     # print(f"{root.file_type_app_comment=}")
