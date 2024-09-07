@@ -61,21 +61,90 @@ class BeforeOperation:
 
     @classmethod
     def from_str(cls, text: str) -> "BeforeOperation":
+        operation_type, rest = text.split("/", 1)
+
         # TODO:
+        operation = BOperation(int(operation_type))
+
+        int_data_1 = 0
+        int_data_2 = 0
+        int_data_3 = 0
+        jikoku_data_1 = Jikoku(None)
+        jikoku_data_2 = Jikoku(None)
+        jikoku_data_3 = Jikoku(None)
+        bool_data_1 = False
+        bool_data_2 = False
+        in_out_link_code = ""
+        operation_number_1 = []
+        operation_number_2 = []
+        operation_number_3 = []
+
+        match operation:
+            case BOperation.SHUNT:
+                # SHUNT: "shuntTrackIndex$hatsuJikoku/chakuJikoku$isDisplayChakuJikoku"
+                parts = rest.split("$")
+                int_data_1 = int(parts[0])  # shuntTrackIndex
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1].split("/")[0])  # hastuJikoku
+                jikoku_data_2 = (
+                    JIKOKU_CONV.decode(parts[1].split("/")[1]) if "/" in parts[1] else Jikoku(None)
+                )  # chakuJikoku
+                bool_data_1 = parts[2] == "1"  # isDisplayChakuJikoku
+
+            case BOperation.CONNECT:
+                # CONNECT: "IsConnectToFront$ConnectJikoku"
+                parts = rest.split("$")
+                bool_data_1 = parts[0] == "1"  # IsConnectToFront
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1])  # Connect Jikoku
+
+            case BOperation.RELEASE:
+                # RELEASE: "Release Position$Release Index Count/Release Jikoku"
+                parts = rest.split("$")
+                int_data_1 = int(parts[0])  # Release Position
+                int_data_2 = int(parts[1].split("/")[0])  # Release Index Count
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1].split("/")[1])  # Release Jikoku
+
+            case BOperation.OUT:
+                # OUT: "OutJikoku$InOutLinkCode/OperationNumberOriginal"
+                parts = rest.split("$")
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[0])  # Out Jikoku
+                in_out_link_code = parts[1].split("/")[0]  # InOutLinkCode
+                operation_number_1 = parts[1].split("/")[1].split(";")  # Operation Number Original
+
+            case BOperation.OUTER:
+                # OUTER: "OuterShihatsuekiIndex$OuterShihatsuJikoku/ChakuJikoku$InOutLinkCode/OperationNumberOriginal"
+                parts = rest.split("$")
+                int_data_1 = int(parts[0])  # Outer Shihatsueki Index
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1].split("/")[0])  # Outer Shihatsu Jikoku
+                jikoku_data_2 = JIKOKU_CONV.decode(parts[1].split("/")[1])  # Chaku Jikoku
+                in_out_link_code = parts[2].split("/")[0]  # InOutLinkCode
+                operation_number_1 = parts[2].split("/")[1].split(";")  # Operation Number Original
+
+            case BOperation.JUNCTION:
+                # JUNCTION: "OriginJikoku$OperationNumberTemp"
+                parts = rest.split("$")
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[0])  # Origin Jikoku
+                operation_number_1 = parts[1].split(";")  # Operation Number Temp
+
+            case BOperation.NUMBER_CHANGE:
+                # NUMBER_CHANGE: "OperationNumber"
+                operation_number_1 = rest.split(";")  # Operation Number
+                bool_data_1 = False  # Operation Number Reverse is False
+
+        # Return the constructed BeforeOperation object with the extracted values
         return cls(
-            operation=BOperation(int(text[0])),
-            bool_data_1=False,
-            bool_data_2=False,
-            int_data_1=0,
-            int_data_2=0,
-            int_data_3=0,
-            jikoku_data_1=Jikoku(None),
-            jikoku_data_2=Jikoku(None),
-            jikoku_data_3=Jikoku(None),
-            operation_number_1=[],
-            operation_number_2=[],
-            operation_number_3=[],
-            in_out_link_code="",
+            operation=operation,
+            int_data_1=int_data_1,
+            int_data_2=int_data_2,
+            int_data_3=int_data_3,
+            jikoku_data_1=jikoku_data_1,
+            jikoku_data_2=jikoku_data_2,
+            jikoku_data_3=jikoku_data_3,
+            bool_data_1=bool_data_1,
+            bool_data_2=bool_data_2,
+            in_out_link_code=in_out_link_code,
+            operation_number_1=operation_number_1,
+            operation_number_2=operation_number_2,
+            operation_number_3=operation_number_3,
             before_operation_list=[],
             after_operation_list=[],
         )
@@ -190,19 +259,79 @@ class AfterOperation:
 
     @classmethod
     def from_str(cls, text: str) -> "AfterOperation":
-        # TODO:
+        operation_type, rest = text.split("/", 1)
+        operation = AOperation(int(operation_type))
+
+        int_data_1 = 0
+        int_data_2 = 0
+        jikoku_data_1 = Jikoku(None)
+        jikoku_data_2 = Jikoku(None)
+        bool_data_1 = False
+        in_out_link_code = ""
+
+        operation_number_1 = []
+
+        match operation:
+            case AOperation.SHUNT:
+                # SHUNT: "shuntTrackIndex$hatsuJikoku/chakuJikoku$isDisplayHatsuJikoku"
+                parts = rest.split("$")
+                int_data_1 = int(parts[0])  # shuntTrackIndex
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1].split("/")[0])  # hastuJikoku
+                jikoku_data_2 = (
+                    JIKOKU_CONV.decode(parts[1].split("/")[1]) if "/" in parts[1] else Jikoku(None)
+                )  # chakuJikoku
+                bool_data_1 = parts[2] == "1"  # isDisplayHatsuJikoku
+
+            case AOperation.CONNECT:
+                # CONNECT: "IsConnectToFront$ConnectJikoku"
+                parts = rest.split("$")
+                bool_data_1 = parts[0] == "1"  # IsConnectToFront
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1])  # Connect Jikoku
+
+            case AOperation.RELEASE:
+                # RELEASE: "ReleasePosition$ReleaseIndexCount/ReleaseJikoku"
+                parts = rest.split("$")
+                int_data_1 = int(parts[0])  # Release Position
+                int_data_2 = int(parts[1].split("/")[0])  # Release Index Count
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1].split("/")[1])  # Release Jikoku
+
+            case AOperation.IN:
+                # IN: "InJikoku$InOutLinkCode"
+                parts = rest.split("$")
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[0])  # In Jikoku
+                in_out_link_code = parts[1]  # InOutLinkCode
+
+            case AOperation.OUTER:
+                # OUTER: "OuterShuchakuekiIndex$OuterShihatsuJikoku/OuterShuchakuJikoku$InOutLinkCode"
+                parts = rest.split("$")
+                int_data_1 = int(parts[0])  # Outer Shuchakueki Index
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[1].split("/")[0])  # Outer Shihatsu Jikoku
+                jikoku_data_2 = JIKOKU_CONV.decode(parts[1].split("/")[1])  # Outer Shuchaku Jikoku
+                in_out_link_code = parts[2]  # InOutLinkCode
+
+            case AOperation.JUNCTION:
+                # JUNCTION: "TerminalJikoku$NextJunctionType"
+                parts = rest.split("$")
+                jikoku_data_1 = JIKOKU_CONV.decode(parts[0])  # Terminal Jikoku
+                int_data_1 = int(parts[1])  # Next Junction Type
+
+            case AOperation.NUMBER_CHANGE:
+                # NUMBER_CHANGE: "OperationNumber"
+                operation_number_1 = rest.split(";")  # Operation Number
+                bool_data_1 = False  # Operation Number Reverse is False
+
         return cls(
-            operation=AOperation(int(text[0])),
-            bool_data_1=False,
+            operation=operation,
+            int_data_1=int_data_1,
+            int_data_2=int_data_2,
+            jikoku_data_1=jikoku_data_1,
+            jikoku_data_2=jikoku_data_2,
+            bool_data_1=bool_data_1,
             bool_data_2=False,
-            int_data_1=0,
-            int_data_2=0,
-            jikoku_data_1=Jikoku(None),
-            jikoku_data_2=Jikoku(None),
-            operation_number_1=[],
+            in_out_link_code=in_out_link_code,
+            operation_number_1=operation_number_1,
             operation_number_2=[],
             operation_number_3=[],
-            in_out_link_code="",
             before_operation_list=[],
             after_operation_list=[],
         )
@@ -210,6 +339,7 @@ class AfterOperation:
     def __str__(self) -> str:
         result = f"{self.operation.value}/"
 
+        result += repr(self)
         match self.operation:
             case AOperation.SHUNT:
                 result += str(self.int_data_1)  # shuntTrackIndex
