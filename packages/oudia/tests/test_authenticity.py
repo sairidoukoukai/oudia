@@ -46,21 +46,25 @@ def test_oud2_import_export_private():
             with open(oud.with_suffix(".dumped" + oud.suffix + ".repr.py"), "w", encoding="utf-8") as sys.stdout:
                 print(repr(dia))
 
-        assert dumped == text
+        assert dumped == text, f"Re-exported file is not the same as original: {oud}"
 
 
 def test_oud_import_export_private_shift_jis():
     for artifact in Path("./tests/private/oud").glob("**/*.dumped.oud*"):
         artifact.unlink()
 
-    for oud in Path("./tests/private").glob("*.oud*"):
-        with open(oud, "r", encoding="shift-jis") as f:
-            text = f.read()
-            try:
-                dia = oudia.loads(text)
-            except Exception:
-                print(oud)
-                continue
+    for oud in Path("./tests/private/oud").glob("*.oud*"):
+        try:
+            with open(oud, "r", encoding="shift-jis") as f:
+                text = f.read()
+                try:
+                    dia = oudia.loads(text)
+                except Exception:
+                    print(oud)
+                    continue
+        except Exception:
+            print(oud)
+            raise
 
         try:
             dumped = oudia.dumps(dia)
@@ -69,7 +73,7 @@ def test_oud_import_export_private_shift_jis():
             continue
 
         if dumped != text:
-            with open(oud.with_suffix(".dumped" + oud.suffix), "w", encoding="utf-8-sig") as f:
+            with open(oud.with_suffix(".dumped" + oud.suffix), "w", encoding="shift-jis") as f:
                 f.write(oudia.dumps(dia))
 
             with open(oud.with_suffix(".dumped" + oud.suffix + ".pprint.txt"), "w", encoding="utf-8") as sys.stdout:
@@ -77,3 +81,5 @@ def test_oud_import_export_private_shift_jis():
 
             with open(oud.with_suffix(".dumped" + oud.suffix + ".repr.py"), "w", encoding="utf-8") as sys.stdout:
                 print(repr(dia))
+
+        assert dumped == text, f"Re-exported file is not the same as original: {oud}"
