@@ -17,3 +17,9 @@ def test_unsupported_software(caplog):
     assert 'Unsupported software: "NotOuDia"' in caplog.text
 
     # # Unsupported software
+
+
+def test_utf8_bom_by_utf8():
+    assert oudia.loads(
+        "FileType=NotOuDia\nRosen.\n.\nDispProp.\n.\n".encode("utf-8-sig").decode("utf-8")
+    ) == oudia.loads("FileType=NotOuDia\nRosen.\n.\nDispProp.\n.\n")

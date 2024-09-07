@@ -3,6 +3,23 @@ from oudia.dia.jikoku import Jikoku
 import pytest
 
 
+def test_invalid_ekijikoku():
+    with pytest.raises(ValueError) as e:
+        EkiJikoku.from_str("invalid")
+
+    with pytest.raises(ValueError) as e:
+        EkiJikoku.from_str("2abc")
+
+    with pytest.raises(ValueError) as e:
+        EkiJikoku.from_str("1;10a$b")
+
+    with pytest.raises(ValueError) as e:
+        EkiJikoku.from_str("a;$12")
+
+    with pytest.raises(ValueError) as e:
+        EkiJikoku.from_str("0;invalid")
+
+
 def test_ekijikoku_ekiatsukai_none_str():
     eki_jikoku = EkiJikoku(
         ekiatsukai=Ekiatsukai.NONE,

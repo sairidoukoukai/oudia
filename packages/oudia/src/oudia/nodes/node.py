@@ -39,8 +39,6 @@ class EntryList(list[Property | NodeList]):
 
     @staticmethod
     def parse_item(entry: tuple[str, str | int | bool | None] | NodeList) -> Entry | None:
-        if entry is None:
-            return None
         assert isinstance(entry, NodeList) or isinstance(entry, tuple)
         if isinstance(entry, NodeList):
             return entry
@@ -48,8 +46,6 @@ class EntryList(list[Property | NodeList]):
             k, v = entry
             if v is None:
                 return None
-            if k is None:
-                raise ValueError("Key must be specified for properties")
             return (k, EntryList.parse_value(v))
 
     def __str__(self) -> str:
@@ -196,7 +192,7 @@ class TypedNode(ABC):
     """
 
     @abstractmethod
-    def to_node(self) -> Node:
+    def to_node(self) -> Node:  # pragma: no cover
         """
         Returns the node as a `Node` object.
 
@@ -207,7 +203,7 @@ class TypedNode(ABC):
 
     @classmethod
     @abstractmethod
-    def from_node(cls, node: Node) -> "TypedNode":
+    def from_node(cls, node: Node) -> "TypedNode":  # pragma: no cover
         """
         Creates a typed node from a `Node` object.
 

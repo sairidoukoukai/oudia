@@ -161,13 +161,151 @@ def test_jikoku_conv_encode_hour():
     assert conv.encode(Jikoku(3661), True, Jikoku(0)) == " 1:01:01"
 
 
-def test_jikoku_encode_display_2400():
+def test_jikoku_conv_encode_display_2400():
     conv = JikokuConv(display_2400=True)
     assert conv.encode(Jikoku(3600), True, Jikoku(0)) == "01:00:00"
     assert conv.encode(Jikoku(3661), True, Jikoku(0)) == "01:01:01"
 
     assert conv.encode(Jikoku(24 * 3600), True, Jikoku(0)) == "24:00:00"
     assert conv.encode(Jikoku(24 * 3600 + 1), True, Jikoku(0)) == "24:00:01"
+
+
+def test_jikoku_conv_encode_rounding_add_59():
+    conv_round_up_chaku = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND_UP)
+    assert conv_round_up_chaku.encode(Jikoku(3661), True, Jikoku(0)) == "01:02"
+    assert conv_round_up_chaku.encode(Jikoku(3661), True) == "01:02"
+
+    conv_round_up_hatsu = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_UP)
+    assert conv_round_up_hatsu.encode(Jikoku(3661), False, Jikoku(0)) == "01:02"
+    assert conv_round_up_hatsu.encode(Jikoku(3661), False) == "01:02"
+
+
+def test_jikoku_conv_encode_rounding_add_30():
+    conv_round_chaku = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND)
+    assert conv_round_chaku.encode(Jikoku(3630), True, Jikoku(0)) == "01:01"
+    assert conv_round_chaku.encode(Jikoku(3630), True, None) == "01:01"
+
+    conv_round_hatsu = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND)
+    assert conv_round_hatsu.encode(Jikoku(3630), False, Jikoku(0)) == "01:01"
+    assert conv_round_hatsu.encode(Jikoku(3630), False, None) == "01:01"
+
+
+def test_jikoku_conv_encode_skip_rounding():
+    conv_skip_rounding = JikokuConv(second_round_chaku=SecondRound.ROUND_UP)
+    assert conv_skip_rounding.encode(Jikoku(18030), True, Jikoku(18020)) == "05:00:30"
+
+    conv_round_down_hatsu = JikokuConv(second_round_hatsu=SecondRound.ROUND_DOWN)
+    assert conv_round_down_hatsu.encode(Jikoku(18030), False, Jikoku(18030)) == "05:00:30"
+
+    assert conv_skip_rounding.encode(Jikoku(18020), True, Jikoku(18020)) == "05:00:20"
+
+    conv_no_second_roundup_up = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND_UP)
+    assert conv_no_second_roundup_up.encode(Jikoku(18020), True, Jikoku(18020)) == "05:00"
+
+    assert conv_no_second_roundup_up.encode(Jikoku(18020), False, Jikoku(18035)) == "05:00"
+
+    assert conv_no_second_roundup_up.encode(Jikoku(18020), True, Jikoku(18035)) == "05:00"
+
+    #                     elif (
+    #     is_chaku_jikoku
+    #     and self.second_round_chaku == SecondRound.ROUND_UP
+    #     and jikoku.get_second() < 30
+    #     and compare_jikoku.get_second() >= 30
+    # ):
+    #     if jikoku.get_second() + compare_jikoku.get_second() >= 60:
+    #         temp_jikoku.add_seconds(59)
+    assert conv_no_second_roundup_up.encode(Jikoku(18020), False, Jikoku(18035)) == "05:00"
+
+    #     if (
+    #     is_chaku_jikoku
+    #     and self.second_round_chaku == SecondRound.ROUND_UP
+    #     and jikoku.get_second() > 0
+    #     and jikoku.get_second() < 30
+    #     and compare_jikoku.get_second() > 0
+    #     and compare_jikoku.get_second() < 30
+    # ):
+    #     pass  # Skip rounding
+    # elif (
+    #     not is_chaku_jikoku
+    #     and self.second_round_hatsu == SecondRound.ROUND_DOWN
+    #     and jikoku.get_second() >= 30
+    #     and compare_jikoku.get_second() >= 30
+    # ):
+    #     temp_jikoku.add_seconds(59)
+    # elif (
+    #     is_chaku_jikoku
+    #     and self.second_round_chaku == SecondRound.ROUND_UP
+    #     and jikoku.get_second() < 30
+    #     and compare_jikoku.get_second() >= 30
+    # ):
+    #     if jikoku.get_second() + compare_jikoku.get_second() >= 60:
+    #         temp_jikoku.add_seconds(59)
+
+    assert conv_no_second_roundup_up.encode(Jikoku(18020), False, Jikoku(18035)) == "05:00"
+    assert conv_no_second_roundup_up.encode(Jikoku(18020), True, Jikoku(18035)) == "05:00"
+    assert conv_no_second_roundup_up.encode(Jikoku(18020), False, Jikoku(18035)) == "05:00"
+
+    conv_no_second_rounddown_down = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_DOWN)
+    assert conv_no_second_rounddown_down.encode(Jikoku(18020), False, Jikoku(18035)) == "05:00"
+    assert conv_no_second_rounddown_down.encode(Jikoku(18020), True, Jikoku(18035)) == "05:00"
+    assert conv_no_second_rounddown_down.encode(Jikoku(18020), False, Jikoku(18035)) == "05:00"
+    assert conv_no_second_rounddown_down.encode(Jikoku(18020), True, Jikoku(18035)) == "05:00"
+    assert conv_no_second_rounddown_down.encode(Jikoku(18020), False, Jikoku(18035)) == "05:00"
+
+
+def test_jikoku_conv_encode_sum_rounding():
+    conv = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND_UP)
+
+    assert conv.encode(Jikoku(17930), True, Jikoku(18031)) == "04:59"
+
+    conv = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND_DOWN)
+
+    assert conv.encode(Jikoku(17930), True, Jikoku(18031)) == "04:58"
+
+    conv = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_DOWN)
+
+    assert conv.encode(Jikoku(17930), True, Jikoku(18031)) == "04:58"
+
+    conv = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_UP)
+
+    assert conv.encode(Jikoku(17930), True, Jikoku(18031)) == "04:58"
+
+    conv = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_DOWN)
+    assert conv.encode(Jikoku(17930), True, Jikoku(18031)) == "04:58"
+    assert conv.encode(Jikoku(17930), False, Jikoku(18031)) == "04:58"
+
+
+def test_jikoku_conv_encode_sum_rounding2():
+    conv = JikokuConv(
+        second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_DOWN, second_round_chaku=SecondRound.ROUND_DOWN
+    )
+    assert conv.encode(Jikoku(3635), False, Jikoku(3636)) == "01:01"
+
+    # is_chaku_jikoku
+    # and self.second_round_chaku == SecondRound.ROUND_UP
+    #     and self.second_round_hatsu == SecondRound.ROUND_DOWN
+    #     and jikoku.get_second() >= 30
+    #     and compare_jikoku.get_second() >= 30
+    #     and not self.second_round_chaku == SecondRound.ROUND_UP
+    #     and not jikoku.get_second() > 0
+    #     and not jikoku.get_second() < 30
+    #     and not compare_jikoku.get_second() > 0
+    #     and not compare_jikoku.get_second() < 30
+    #     and jikoku.get_hour() == compare_jikoku.get_hour()
+    #     and jikoku.get_minute() == compare_jikoku.get_minute()
+    #     and compare_jikoku
+
+    conv = JikokuConv(
+        second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_DOWN, second_round_chaku=SecondRound.ROUND_UP
+    )
+    assert conv.encode(Jikoku(3615), True, Jikoku(3648)) == "01:01"
+
+    #     and self.second == Second.NO_SECOND
+
+
+def test_jikoku_conv_encode_sum_rounding_add_59():
+    conv_add_59 = JikokuConv(second_round_chaku=SecondRound.ROUND_UP)
+    assert conv_add_59.encode(Jikoku(17930), True, Jikoku(18031)) == "04:58:50"
 
 
 def test_jikoku_conv_decode_default():
@@ -249,6 +387,8 @@ def test_jikoku_conv_decode_no_colon_no_second_no_leading_zero():
 def test_jikoku_conv_decode_invalid():
     conv = JikokuConv()
 
+    assert conv.decode("") == Jikoku(None)
+
     # Test invalid time string formats
     with pytest.raises(ValueError):
         conv.decode("invalid")
@@ -268,6 +408,29 @@ def test_jikoku_conv_decode_invalid():
     with pytest.raises(ValueError):
         conv.decode("12:75")  # Invalid minute
 
-    # Non-numeric characters
     with pytest.raises(ValueError):
         conv.decode("aa:bb")  # Invalid non-numeric input
+
+    conv_no_colon = JikokuConv(no_colon=True)
+    with pytest.raises(ValueError):
+        conv_no_colon.decode("67890")
+
+    with pytest.raises(ValueError):
+        conv_no_colon.decode("12:345")
+
+    assert conv_no_colon.decode("0101") == Jikoku(3660)
+    assert conv_no_colon.decode("120101") == Jikoku(43261)
+
+
+def test_jikoku_conv_decode_reverse_rounding():
+    conv_round_up_chaku = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND_UP)
+    assert conv_round_up_chaku.decode("01:02", True) == Jikoku(3661)
+
+    conv_round_up_hatsu = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND_UP)
+    assert conv_round_up_hatsu.decode("01:02", False) == Jikoku(3661)
+
+    conv_round_chaku = JikokuConv(second=Second.NO_SECOND, second_round_chaku=SecondRound.ROUND)
+    assert conv_round_chaku.decode("01:01", True) == Jikoku(3630)
+
+    conv_round_hatsu = JikokuConv(second=Second.NO_SECOND, second_round_hatsu=SecondRound.ROUND)
+    assert conv_round_hatsu.decode("01:01", False) == Jikoku(3630)

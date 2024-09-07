@@ -4,6 +4,7 @@ from oudia.nodes.eki import Eki
 from oudia.nodes.node import EntryList, Node, NodeList
 from oudia.nodes.ressyasyubetsu import Ressyasyubetsu
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
+import pytest
 
 
 EMPTY_ROSEN = oudia.Rosen(
@@ -20,7 +21,7 @@ EMPTY_ROSEN = oudia.Rosen(
 # region pprint
 
 
-def test_pprint(capfd):
+def test_node_pprint(capfd):
     dia = oudia.loads(
         f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nDispProp.\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
     )
@@ -30,6 +31,48 @@ def test_pprint(capfd):
         "  FileType=OuDia.1.02\n  Rosen.\n    Rosenmei=メロンキング線\n  .\n  DispProp.\n  .\n  FileTypeAppComment=OuDia.Py 0.0.0\n"
         in out
     )
+
+
+def test_typed_node_pprint(capfd):
+    dia = oudia.loads(
+        f"FileType=OuDia.1.02\nRosen.\nRosenmei=メロンキング線\n.\nDispProp.\n.\nFileTypeAppComment=OuDia.Py 0.0.0\n"
+    )
+    dia.rosen.pprint()
+    out, err = capfd.readouterr()
+    assert "Rosen.\n  Rosenmei=メロンキング線\n." in out
+
+
+def test_node_repr():
+    assert (
+        repr(
+            Node(
+                type="Rosen",
+                entries=EntryList(
+                    ("Rosenmei", "メロンキング線"),
+                    NodeList(Eki),
+                    NodeList(Ressyasyubetsu),
+                    NodeList(Node),
+                ),
+            )
+        )
+        == "Node(type='Rosen', entries=EntryList(('Rosenmei', 'メロンキング線'), NodeList(Eki, []), NodeList(Ressyasyubetsu, []), NodeList(Node, [])))"
+    )
+
+
+# endregion
+
+# region EntryList
+
+
+def test_entry_list_get_required():
+    assert EntryList(("Rosenmei", "メロンキング線")).get_required("Rosenmei") == "メロンキング線"
+
+    with pytest.raises(expected_exception=ValueError):
+        EntryList(("Rosenmei", "メロンキング線")).get_required("Rosenmei2")
+
+
+def test_entry_parse_value():
+    assert EntryList.parse_value(None) == ""
 
 
 # endregion
@@ -52,6 +95,18 @@ def test_node_conversion() -> None:
     assert untyped_rosen_node == typed_rosen_node.to_node()
     assert typed_rosen_node.from_node(untyped_rosen_node) == typed_rosen_node
     assert untyped_rosen_node == typed_rosen_node
+
+
+def test_node_equality() -> None:
+    assert 0 != oudia.Node(
+        type="Rosen",
+        entries=EntryList(
+            ("Rosenmei", "メロンキング線"),
+            NodeList(Eki),
+            NodeList(Ressyasyubetsu),
+            NodeList(Node),
+        ),
+    )
 
 
 # endregion

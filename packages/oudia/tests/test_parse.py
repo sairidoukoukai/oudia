@@ -65,6 +65,21 @@ def test_parse_repeatable():
     ) == Node("HasRepeatable", EntryList(("RepeatingProperty", "Value1"), ("RepeatingProperty", "Value2")))
 
 
+def test_parse_with_empty_lines():
+    assert oudia.parser.parse(
+        "\n".join(
+            [
+                "",
+                "Node.",
+                "",
+                "SomeProperty=Value",
+                "",
+                ".",
+            ]
+        )
+    ) == Node("Node", EntryList(("SomeProperty", "Value")))
+
+
 # def test_parse_node_list():
 #     assert list(
 #         oudia.parser.parse(
@@ -468,6 +483,18 @@ def test_replace_nested_nodes() -> None:
     )
 
     assert replaced_node == EkiTrack2Cont(tracks=[EkiTrack2(track_name="1番線")])
+
+
+def test_replace_unknown_node_type() -> None:
+    assert replace_node(
+        Node(
+            type="Unknown",
+            entries=EntryList(("TrackName", "1番線")),
+        )
+    ) == Node(
+        type="Unknown",
+        entries=EntryList(("TrackName", "1番線")),
+    )
 
 
 # endregion
