@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from oudia.nodes.disp_prop import DispProp
 from oudia.nodes.rosen import Rosen
+from oudia.nodes.window_placement import WindowPlacement
 
 from .node import EntryList, NodeList, Node, TypedNode
 
@@ -55,7 +56,7 @@ class OuDia(TypedNode):
     disp_prop: DispProp
     """表示プロパティ"""
 
-    window_placement: Node | None
+    window_placement: WindowPlacement | None
     """ウィンドの配置"""
 
     file_type_app_comment: str | None = None
@@ -83,9 +84,9 @@ class OuDia(TypedNode):
         assert node.type == "Root"
         return cls(
             file_type=FileType.from_str(node.entries.get_required("FileType")),
-            rosen=node.entries.get_list(0, Rosen)[0],
-            disp_prop=node.entries.get_list(1, DispProp)[0],
-            window_placement=v[0] if (v := node.entries.get_list(2, Node)) else None,
+            rosen=node.entries.get_list_by_type(Rosen)[0],
+            disp_prop=node.entries.get_list_by_type(DispProp)[0],
+            window_placement=v[0] if (v := node.entries.get_list_by_type(WindowPlacement)) else None,
             file_type_app_comment=node.entries.get("FileTypeAppComment"),
         )
 
@@ -96,7 +97,7 @@ class OuDia(TypedNode):
                 ("FileType", str(self.file_type)),
                 NodeList(Rosen, [self.rosen]),
                 NodeList(DispProp, [self.disp_prop]),
-                NodeList(Node, [self.window_placement] if self.window_placement else []),
+                NodeList(WindowPlacement, [self.window_placement] if self.window_placement else []),
                 ("FileTypeAppComment", self.file_type_app_comment),
             ),
         )
