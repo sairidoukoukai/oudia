@@ -162,7 +162,7 @@ class Eki(TypedNode):
             jikokuhyou_jikoku_display_kudari=node.entries.get("JikokuhyouJikokuDisplayKudari"),
             jikokuhyou_jikoku_display_nobori=node.entries.get("JikokuhyouJikokuDisplayNobori"),
             jikokuhyou_syubetsu_change_display_kudari=node.entries.get("JikokuhyouSyubetsuChangeDisplayKudari"),
-            jikokuhyou_syubetsu_change_display_nobori=(node.entries.get("JikokuhyouSyubetsuChangeDisplayNobori")),
+            jikokuhyou_syubetsu_change_display_nobori=node.entries.get("JikokuhyouSyubetsuChangeDisplayNobori"),
             jikokuhyou_outer_display_kudari=node.entries.get("JikokuhyouOuterDisplayKudari"),
             jikokuhyou_outer_display_nobori=node.entries.get("JikokuhyouOuterDisplayNobori"),
             crossing_check_rule_list=node.entries.get_list_by_type(CrossingCheckRule),
