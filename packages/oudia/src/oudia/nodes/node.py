@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from abc import ABC, abstractmethod
-from typing import Any, Type, TypeVar
+from typing import Type, TypeVar
 
 T = TypeVar("T", bound="Node | TypedNode")
 
@@ -109,6 +109,12 @@ class EntryList(list[Property | NodeList]):
 
     def get_repeatable(self, key: str) -> list[str]:
         return [v for k, v in self.properties if k == key]
+
+    def append(self, object: tuple[str, str] | NodeList | list) -> None:
+        if isinstance(object, tuple):
+            return super().append((object[0], EntryList.parse_value(object[1])))
+        if isinstance(object, NodeList):
+            return super().append(object)
 
 
 @dataclass
