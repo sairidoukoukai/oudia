@@ -1,4 +1,5 @@
 import oudia
+from oudia.nodes.dia import Dia
 from oudia.nodes.eki import Eki
 from oudia.nodes.node import EntryList, Node, NodeList
 from oudia.nodes.ressyasyubetsu import Ressyasyubetsu
@@ -6,18 +7,14 @@ from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 
 
 EMPTY_ROSEN = oudia.Rosen(
-    "メロンキング線",
-    None,
-    None,
-    None,
-    NodeList(Eki, []),
-    NodeList(Ressyasyubetsu, []),
-    NodeList(Node, []),
-    None,
-    None,
-    None,
-    None,
-    None,
+    rosenmei="メロンキング線",
+    kudari_dia_alias=None,
+    nobori_dia_alias=None,
+    kiten_jikoku=None,
+    enable_operation=None,
+    eki_list=NodeList(Eki, []),
+    ressyasyubetsu_list=NodeList(Ressyasyubetsu, []),
+    dia_list=NodeList(Dia, []),
 )
 
 # region pprint
