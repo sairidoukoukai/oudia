@@ -26,6 +26,9 @@ class Eki(TypedNode):
     ekikibo: str
     """駅規模"""
 
+    kyoukaisen: bool | None
+    """境界線か"""
+
     diagram_ressyajouhou_hyouji_kudari: str | None
     """ダイヤ列車情報表示形式（下り）"""
 
@@ -127,6 +130,7 @@ class Eki(TypedNode):
             ekimei_dia_ryaku=node.entries.get("EkimeiDiaRyaku"),
             ekijikokukeisiki=node.entries.get_required(key="Ekijikokukeisiki"),
             ekikibo=node.entries.get_required("Ekikibo"),
+            kyoukaisen=node.entries.get_bool("Kyoukaisen"),
             diagram_ressyajouhou_hyouji_kudari=node.entries.get("DiagramRessyajouhouHyoujiKudari"),
             diagram_ressyajouhou_hyouji_nobori=node.entries.get("DiagramRessyajouhouHyoujiNobori"),
             diagram_color_next_eki=node.entries.get_int("DiagramColorNextEki"),
@@ -181,6 +185,7 @@ class Eki(TypedNode):
                 ("EkimeiDiaRyaku", self.ekimei_dia_ryaku),
                 ("Ekijikokukeisiki", self.ekijikokukeisiki),
                 ("Ekikibo", self.ekikibo),
+                ("Kyoukaisen", self.kyoukaisen),
                 ("DiagramRessyajouhouHyoujiKudari", self.diagram_ressyajouhou_hyouji_kudari),
                 ("DiagramRessyajouhouHyoujiNobori", self.diagram_ressyajouhou_hyouji_nobori),
                 ("DownMain", self.down_main),
