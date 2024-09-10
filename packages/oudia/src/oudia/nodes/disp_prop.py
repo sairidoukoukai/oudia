@@ -11,10 +11,10 @@ class FontProperty:
     facename: str
     """書体名"""
 
-    bold: bool
+    bold: bool = False
     """太字の有無"""
 
-    itaric: bool
+    itaric: bool = False
     """斜体の有無（`italic`の誤字、原文ママ）"""
 
     def __str__(self) -> str:
