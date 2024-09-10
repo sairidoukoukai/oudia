@@ -1,33 +1,71 @@
 from dataclasses import dataclass, field
+from typing import Self
 from .node import EntryList, NodeList, Node, TypedNode
+
+
+@dataclass(kw_only=True)
+class FontProperty:
+    point_text_height: int
+    """文字のポイント高さ（文字サイズ）"""
+
+    facename: str
+    """書体名"""
+
+    bold: bool
+    """太字の有無"""
+
+    itaric: bool
+    """斜体の有無（`italic`の誤字、原文ママ）"""
+
+    def __str__(self) -> str:
+        result = ""
+        result += f"PointTextHeight={self.point_text_height}"
+        result += f";Facename={self.facename}"
+        if self.bold:
+            result += ";Bold=1"
+        if self.itaric:
+            result += ";Itaric=1"
+        return result
+
+    @classmethod
+    def from_str(cls, text: str) -> Self:
+        parts = text.split(";")
+        pairs = list(map(lambda x: x.split("=", 1), parts))
+        entries = {pair[0]: pair[1] for pair in pairs}
+        return cls(
+            point_text_height=int(entries["PointTextHeight"]),
+            facename=entries["Facename"],
+            bold=entries["Bold"] == "1" if "Bold" in entries else False,
+            itaric=entries["Itaric"] == "1" if "Itaric" in entries else False,
+        )
 
 
 @dataclass(kw_only=True)
 class DispProp(TypedNode):
     """表示プロパティ"""
 
-    jikokuhyou_font: list[str]
+    jikokuhyou_font: list[FontProperty]
     """時刻表フォント"""
 
-    jikokuhyou_v_font: str | None
+    jikokuhyou_v_font: FontProperty | None
     """時刻表縦書きフォント"""
 
-    dia_ekimei_font: str | None
+    dia_ekimei_font: FontProperty | None
     """ダイヤ駅名フォント"""
 
-    dia_jikoku_font: str | None
+    dia_jikoku_font: FontProperty | None
     """ダイヤ時刻フォント"""
 
-    dia_ressya_font: str | None
+    dia_ressya_font: FontProperty | None
     """ダイヤ列車フォント"""
 
-    operation_table_font: str | None
+    operation_table_font: FontProperty | None
     """運用表フォント"""
 
-    all_operation_table_jikoku_font: str | None
+    all_operation_table_jikoku_font: FontProperty | None
     """全運用表時刻フォント"""
 
-    comment_font: str | None
+    comment_font: FontProperty | None
     """コメントフォント"""
 
     dia_moji_color: str | None
@@ -111,14 +149,16 @@ class DispProp(TypedNode):
     @staticmethod
     def from_node(node: Node) -> "DispProp":
         return DispProp(
-            jikokuhyou_font=node.entries.get_repeatable("JikokuhyouFont"),
-            jikokuhyou_v_font=node.entries.get("JikokuhyouVFont"),
-            dia_ekimei_font=node.entries.get("DiaEkimeiFont"),
-            dia_jikoku_font=node.entries.get("DiaJikokuFont"),
-            dia_ressya_font=node.entries.get("DiaRessyaFont"),
-            operation_table_font=node.entries.get("OperationTableFont"),
-            all_operation_table_jikoku_font=node.entries.get("AllOperationTableJikokuFont"),
-            comment_font=node.entries.get("CommentFont"),
+            jikokuhyou_font=[FontProperty.from_str(f) for f in node.entries.get_repeatable("JikokuhyouFont")],
+            jikokuhyou_v_font=FontProperty.from_str(f) if (f := node.entries.get("JikokuhyouVFont")) else None,
+            dia_ekimei_font=FontProperty.from_str(f) if (f := node.entries.get("DiaEkimeiFont")) else None,
+            dia_jikoku_font=FontProperty.from_str(f) if (f := node.entries.get("DiaJikokuFont")) else None,
+            dia_ressya_font=FontProperty.from_str(f) if (f := node.entries.get("DiaRessyaFont")) else None,
+            operation_table_font=FontProperty.from_str(f) if (f := node.entries.get("OperationTableFont")) else None,
+            all_operation_table_jikoku_font=(
+                FontProperty.from_str(f) if (f := node.entries.get("AllOperationTableJikokuFont")) else None
+            ),
+            comment_font=FontProperty.from_str(f) if (f := node.entries.get("CommentFont")) else None,
             dia_moji_color=node.entries.get("DiaMojiColor"),
             dia_back_color=node.entries.get_repeatable("DiaBackColor"),
             dia_haikei_color=node.entries.get_repeatable("DiaHaikeiColor"),
@@ -151,14 +191,24 @@ class DispProp(TypedNode):
         return Node(
             type="DispProp",
             entries=EntryList(
-                *((f"JikokuhyouFont", v) for v in self.jikokuhyou_font),
-                ("JikokuhyouVFont", self.jikokuhyou_v_font),
-                ("DiaEkimeiFont", self.dia_ekimei_font),
-                ("DiaJikokuFont", self.dia_jikoku_font),
-                ("DiaRessyaFont", self.dia_ressya_font),
-                ("OperationTableFont", self.operation_table_font),
-                ("AllOperationTableJikokuFont", self.all_operation_table_jikoku_font),
-                ("CommentFont", self.comment_font),
+                *((f"JikokuhyouFont", str(v)) for v in filter(bool, self.jikokuhyou_font)),
+                ("JikokuhyouVFont", str(self.jikokuhyou_v_font) if self.jikokuhyou_v_font is not None else None),
+                ("DiaEkimeiFont", str(self.dia_ekimei_font) if self.dia_ekimei_font is not None else None),
+                ("DiaJikokuFont", str(self.dia_jikoku_font) if self.dia_jikoku_font is not None else None),
+                ("DiaRessyaFont", str(self.dia_ressya_font) if self.dia_ressya_font is not None else None),
+                (
+                    "OperationTableFont",
+                    str(self.operation_table_font) if self.operation_table_font is not None else None,
+                ),
+                (
+                    "AllOperationTableJikokuFont",
+                    (
+                        str(self.all_operation_table_jikoku_font)
+                        if self.all_operation_table_jikoku_font is not None
+                        else None
+                    ),
+                ),
+                ("CommentFont", str(self.comment_font) if self.comment_font is not None else None),
                 ("DiaMojiColor", self.dia_moji_color),
                 *((f"DiaBackColor", v) for v in self.dia_back_color),
                 *((f"DiaHaikeiColor", v) for v in self.dia_haikei_color),
