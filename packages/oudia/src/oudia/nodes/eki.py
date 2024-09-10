@@ -14,10 +14,10 @@ class Eki(TypedNode):
     ekimei: str
     """駅名"""
 
-    ekimei_jikoku_ryaku: str | None
+    ekimei_jikoku_ryaku: str | None = None
     """駅名の時刻表ビュー用略称"""
 
-    ekimei_dia_ryaku: str | None
+    ekimei_dia_ryaku: str | None = None
     """駅名の運用一覧図ビュー用略称"""
 
     ekijikokukeisiki: str
@@ -26,40 +26,40 @@ class Eki(TypedNode):
     ekikibo: str
     """駅規模"""
 
-    kyoukaisen: bool | None
+    kyoukaisen: bool | None = None
     """境界線か"""
 
-    diagram_ressyajouhou_hyouji_kudari: str | None
+    diagram_ressyajouhou_hyouji_kudari: str | None = None
     """ダイヤ列車情報表示形式（下り）"""
 
-    diagram_ressyajouhou_hyouji_nobori: str | None
+    diagram_ressyajouhou_hyouji_nobori: str | None = None
     """ダイヤ列車情報表示形式（上り）"""
 
-    down_main: int | None
+    down_main: int | None = None
     """下りメイン"""
 
-    up_main: int | None
+    up_main: int | None = None
     """上りメイン"""
 
-    brunch_core_eki_index: int | None
+    brunch_core_eki_index: int | None = None
     """分岐駅設定の基幹駅駅インデックス"""
 
-    brunch_opposite: bool | None
+    brunch_opposite: bool | None = None
     """分岐駅設定が反対方向の場合"""
 
-    loop_origin_eki_index: int | None
+    loop_origin_eki_index: int | None = None
     """環状線設定の起点駅インデックス"""
 
-    loop_opposite: bool | None
+    loop_opposite: bool | None = None
     """環状線が反対向きに設定の有無"""
 
-    jikokuhyou_track_display_kudari: bool | None
+    jikokuhyou_track_display_kudari: bool | None = None
     """時刻表で下り番線表示設定"""
 
-    jikokuhyou_track_display_nobori: bool | None
+    jikokuhyou_track_display_nobori: bool | None = None
     """時刻表で上り番線表示設定"""
 
-    diagram_track_display: bool | None
+    diagram_track_display: bool | None = None
     """ダイヤ列車で番線表示設定"""
 
     eki_tracks: NodeList[EkiTrack2]
@@ -68,58 +68,58 @@ class Eki(TypedNode):
     outer_terminals: NodeList[OuterTerminal]
     """時刻表外表示の端末名"""
 
-    next_eki_distance: int | None
+    next_eki_distance: int | None = None
     """次駅までの距離(秒)"""
 
-    jikokuhyou_track_omit: bool | None
+    jikokuhyou_track_omit: bool | None = None
     """時刻表トラックの省略"""
 
-    jikokuhyou_operation_origin: int | None
+    jikokuhyou_operation_origin: int | None = None
     """起点側作業表示欄の数"""
 
-    jikokuhyou_operation_terminal: int | None
+    jikokuhyou_operation_terminal: int | None = None
     """終点側作業表示欄の数"""
 
-    jikokuhyou_operation_origin_down_before_up_after: bool | None
+    jikokuhyou_operation_origin_down_before_up_after: bool | None = None
     """起点側作業表示欄（下り）（前後）"""
 
-    jikokuhyou_operation_origin_down_after_up_before: bool | None
+    jikokuhyou_operation_origin_down_after_up_before: bool | None = None
     """起点側作業表示欄（上り）（前後）"""
 
-    jikokuhyou_operation_terminal_down_before_up_after: bool | None
+    jikokuhyou_operation_terminal_down_before_up_after: bool | None = None
     """終点側作業表示欄（下り）（前後）"""
 
-    jikokuhyou_operation_terminal_down_after_up_before: bool | None
+    jikokuhyou_operation_terminal_down_after_up_before: bool | None = None
     """終点側作業表示欄（上り）（前後）"""
 
-    jikokuhyou_jikoku_display_kudari: str | None
+    jikokuhyou_jikoku_display_kudari: str | None = None
     """時刻表時刻表示（下り）"""
 
-    jikokuhyou_jikoku_display_nobori: str | None
+    jikokuhyou_jikoku_display_nobori: str | None = None
     """時刻表時刻表示（上り）"""
 
-    jikokuhyou_syubetsu_change_display_kudari: str | None
+    jikokuhyou_syubetsu_change_display_kudari: str | None = None
     """時刻表変更表示（下り）"""
 
-    jikokuhyou_syubetsu_change_display_nobori: str | None
+    jikokuhyou_syubetsu_change_display_nobori: str | None = None
     """時刻表変更表示（上り）"""
 
-    diagram_color_next_eki: int | None
+    diagram_color_next_eki: int | None = None
     """次駅の色"""
 
-    jikokuhyou_outer_display_kudari: str | None
+    jikokuhyou_outer_display_kudari: str | None = None
     """時刻表外表示（下り）"""
 
-    jikokuhyou_outer_display_nobori: str | None
+    jikokuhyou_outer_display_nobori: str | None = None
     """時刻表外表示（上り）"""
 
-    operation_table_display_jikoku: bool | None
+    operation_table_display_jikoku: bool | None = None
     """運用表で時刻を表示するかどうか"""
 
     crossing_check_rule_list: NodeList[CrossingCheckRule]
     """クローシング通過チェックルールリスト"""
 
-    diagram_track_display: bool | None
+    diagram_track_display: bool | None = None
     """運用表で番線を表示するかどうか"""
 
     @classmethod
