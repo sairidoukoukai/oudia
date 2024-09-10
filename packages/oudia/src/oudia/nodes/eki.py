@@ -1,10 +1,33 @@
 from dataclasses import dataclass
+from enum import Enum
 
 from oudia.nodes.outer_terminal import OuterTerminal
 
 from .node import EntryList, NodeList, Node, TypedNode
 from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 from oudia.nodes.crossing_check_rule import CrossingCheckRule
+
+
+class Ekijikokukeisiki(Enum):
+    """駅時刻形式"""
+
+    HATSU = "Jikokukeisiki_Hatsu"
+    """発時刻のみ"""
+
+    HATSUCHAKU = "Jikokukeisiki_Hatsuchaku"
+    """発着表示"""
+
+    KUDARI_CHAKU = "Jikokukeisiki_KudariChaku"
+    """下り着表示"""
+
+    NOBORI_CHAKU = "Jikokukeisiki_NoboriChaku"
+    """上り着表示"""
+
+    KUDARI_HATSUCHAKU = "Jikokukeisiki_KudariHatsuchaku"
+    """下り発着表示"""
+
+    NOBORI_HATSUCHAKU = "Jikokukeisiki_NoboriHatsuchaku"
+    """上り発着表示"""
 
 
 @dataclass(kw_only=True)
@@ -20,7 +43,7 @@ class Eki(TypedNode):
     ekimei_dia_ryaku: str | None = None
     """駅名の運用一覧図ビュー用略称"""
 
-    ekijikokukeisiki: str
+    ekijikokukeisiki: Ekijikokukeisiki
     """駅時刻形式"""
 
     ekikibo: str
@@ -128,7 +151,7 @@ class Eki(TypedNode):
             ekimei=node.entries.get_required("Ekimei"),
             ekimei_jikoku_ryaku=node.entries.get("EkimeiJikokuRyaku"),
             ekimei_dia_ryaku=node.entries.get("EkimeiDiaRyaku"),
-            ekijikokukeisiki=node.entries.get_required(key="Ekijikokukeisiki"),
+            ekijikokukeisiki=Ekijikokukeisiki(node.entries.get_required(key="Ekijikokukeisiki")),
             ekikibo=node.entries.get_required("Ekikibo"),
             kyoukaisen=node.entries.get_bool("Kyoukaisen"),
             diagram_ressyajouhou_hyouji_kudari=node.entries.get("DiagramRessyajouhouHyoujiKudari"),
@@ -183,7 +206,7 @@ class Eki(TypedNode):
                 ("Ekimei", self.ekimei),
                 ("EkimeiJikokuRyaku", self.ekimei_jikoku_ryaku),
                 ("EkimeiDiaRyaku", self.ekimei_dia_ryaku),
-                ("Ekijikokukeisiki", self.ekijikokukeisiki),
+                ("Ekijikokukeisiki", self.ekijikokukeisiki.value),
                 ("Ekikibo", self.ekikibo),
                 ("Kyoukaisen", self.kyoukaisen),
                 ("DiagramRessyajouhouHyoujiKudari", self.diagram_ressyajouhou_hyouji_kudari),
