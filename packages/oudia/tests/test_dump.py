@@ -13,7 +13,7 @@ def test_dump():
     with buffer:
         oudia.dump(
             oudia.OuDia(
-                file_type=oudia.FileType("OuDia", "1.02"),
+                file_type="OuDia.1.02",
                 rosen=EMPTY_ROSEN,
                 disp_prop=EMPTY_DISP_PROP,
                 window_placement=None,
@@ -27,7 +27,7 @@ def test_dumps_empty():
     assert (
         oudia.dumps(
             oudia.OuDia(
-                file_type=oudia.FileType("OuDia", "1.02"),
+                file_type="OuDia.1.02",
                 rosen=EMPTY_ROSEN,
                 disp_prop=EMPTY_DISP_PROP,
                 window_placement=None,
@@ -41,7 +41,7 @@ def test_exporter():
     assert (
         oudia.dumps(
             oudia.OuDia(
-                file_type=oudia.FileType("OuDia", "1.02"),
+                file_type="OuDia.1.02",
                 rosen=EMPTY_ROSEN,
                 disp_prop=EMPTY_DISP_PROP,
                 window_placement=None,

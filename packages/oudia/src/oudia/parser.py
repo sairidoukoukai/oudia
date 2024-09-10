@@ -6,7 +6,6 @@ from .nodes import (
     Node,
     TypedNode,
     OuDia,
-    FileType,
 )
 
 import logging
@@ -126,11 +125,14 @@ def loads(text: str) -> OuDia:
     if not text.startswith("FileType="):
         raise ValueError(f"Invalid file type, starting bytes are not 'FileType=': {text[:10]}")
 
-    file_type = FileType.from_str(text.split("\n")[0].split("=", 1)[1])
-    if file_type.software not in ["OuDia", "OuDiaSecond"]:
+    try:
+        file_type = text.split("\n")[0].split("=", 1)[1]
+        if not file_type.startswith("OuDia"):
+            raise ValueError()
+    except Exception:
         logger.warning(
-            'Unsupported software: "%s", some features may not work correctly.',
-            file_type.software,
+            'Unsupported file format: "%s", some features may not work correctly.',
+            file_type,
         )
 
     root = replace_node(parse(f"Root.\n{text.strip()}\n."))

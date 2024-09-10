@@ -14,7 +14,7 @@ def test_invalid(caplog):
 def test_unsupported_software(caplog):
     caplog.set_level(logging.WARNING)
     oudia.loads("FileType=NotOuDia\nRosen.\n.\nDispProp.\n.\n")
-    assert 'Unsupported software: "NotOuDia"' in caplog.text
+    assert 'Unsupported file format: "NotOuDia", some features may not work correctly.' in caplog.text
 
     # # Unsupported software
 

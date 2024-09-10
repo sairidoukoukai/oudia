@@ -7,47 +7,11 @@ from oudia.nodes.window_placement import WindowPlacement
 from .node import EntryList, NodeList, Node, TypedNode
 
 
-@dataclass
-class FileType:
-    """
-    Represents a file type.
-
-    Attributes:
-        software (str): The software that created the file.
-        version (str | None, optional): The version of the software. Defaults to None.
-    """
-
-    software: str
-    version: str | None = None
-
-    @staticmethod
-    def from_str(text: str) -> "FileType":
-        """
-        Creates a `FileType` object from a given string.
-
-        Args:
-            text (str): The string to parse.
-
-        Returns:
-            FileType: The parsed `FileType` object.
-        """
-        return FileType(*text.split(".", 1))
-
-    def __str__(self) -> str:
-        """
-        Returns a string representation of the `FileType` object.
-
-        Returns:
-            str: The string representation of the `FileType` object.
-        """
-        return f"{self.software}.{self.version}" if self.version else self.software
-
-
 @dataclass(kw_only=True)
 class OuDia(TypedNode):
     """OuDiaファイル"""
 
-    file_type: FileType
+    file_type: str
     """ファイル形式"""
 
     rosen: Rosen
@@ -83,7 +47,7 @@ class OuDia(TypedNode):
     def from_node(cls, node: Node) -> "OuDia":
         assert node.type == "Root"
         return cls(
-            file_type=FileType.from_str(node.entries.get_required("FileType")),
+            file_type=node.entries.get_required("FileType"),
             rosen=node.entries.get_list_by_type(Rosen)[0],
             disp_prop=node.entries.get_list_by_type(DispProp)[0],
             window_placement=v[0] if (v := node.entries.get_list_by_type(WindowPlacement)) else None,

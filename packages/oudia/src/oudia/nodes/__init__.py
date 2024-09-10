@@ -5,7 +5,7 @@ from .rosen import Rosen
 from .ressyasyubetsu import Ressyasyubetsu
 from .track import EkiTrack2, EkiTrack2Cont
 from .node import Node, TypedNode
-from .root import OuDia, FileType
+from .root import OuDia
 from .disp_prop import DispProp
 from .crossing_check_rule import CrossingCheckRule
 from .outer_terminal import OuterTerminal
@@ -44,7 +44,6 @@ __all__ = [
     "Node",
     "TypedNode",
     "OuDia",
-    "FileType",
     "Ressyasyubetsu",
     "EkiTrack2",
     "EkiTrack2Cont",
