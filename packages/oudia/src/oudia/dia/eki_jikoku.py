@@ -5,7 +5,7 @@ from typing import Self
 from oudia.dia.jikoku import Hour, Jikoku, JikokuConv, Second
 from oudia.dia.operation import OperationBase
 
-JIKOKU_CONV = JikokuConv(True, hour=Hour.ZERO_TO_NONE, second=Second.NOT_IF_ZERO)
+JIKOKU_CONV = JikokuConv(no_colon=True, hour=Hour.ZERO_TO_NONE, second=Second.NOT_IF_ZERO)
 
 
 class Ekiatsukai(Enum):
@@ -21,7 +21,7 @@ class Ekiatsukai(Enum):
     """通過"""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EkiJikoku:
     """駅時刻"""
 

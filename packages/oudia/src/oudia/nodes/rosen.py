@@ -6,7 +6,7 @@ from oudia.nodes.ressyasyubetsu import Ressyasyubetsu
 from .node import EntryList, NodeList, Node, TypedNode
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Rosen(TypedNode):
     """路線"""
 

@@ -5,7 +5,7 @@ from typing import Any, ClassVar, Self, Type
 
 from oudia.dia.jikoku import Hour, Jikoku, JikokuConv, Second
 
-JIKOKU_CONV = JikokuConv(True, hour=Hour.ZERO_TO_NONE, second=Second.NOT_IF_ZERO)
+JIKOKU_CONV = JikokuConv(no_colon=True, hour=Hour.ZERO_TO_NONE, second=Second.NOT_IF_ZERO)
 
 
 @dataclass(kw_only=True)
@@ -19,7 +19,7 @@ class OperationBase(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def __str__(self) -> str: 
+    def __str__(self) -> str:
         pass  # pragma: no cover
 
 

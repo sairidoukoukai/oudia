@@ -117,7 +117,7 @@ def test_export_ekitrack2cont():
     assert (
         str(
             EkiTrack2Cont(
-                [
+                tracks=[
                     EkiTrack2(
                         track_name="1番線",
                     ),

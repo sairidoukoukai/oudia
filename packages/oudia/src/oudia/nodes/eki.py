@@ -7,7 +7,7 @@ from oudia.nodes.track import EkiTrack2, EkiTrack2Cont
 from oudia.nodes.crossing_check_rule import CrossingCheckRule
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Eki(TypedNode):
     """駅"""
 
@@ -199,7 +199,7 @@ class Eki(TypedNode):
                 ("DiagramTrackDisplay", self.diagram_track_display),
                 ("NextEkiDistance", self.next_eki_distance),
                 (
-                    NodeList(EkiTrack2Cont, [EkiTrack2Cont(self.eki_tracks)])
+                    NodeList(EkiTrack2Cont, [EkiTrack2Cont(tracks=self.eki_tracks)])
                     if self.eki_tracks
                     else NodeList(EkiTrack2Cont, [])
                 ),

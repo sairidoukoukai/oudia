@@ -3,7 +3,7 @@ from typing import Sequence
 from .node import EntryList, NodeList, Node, TypedNode
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EkiTrack2(TypedNode):
     """駅トラック2"""
 
@@ -35,7 +35,7 @@ class EkiTrack2(TypedNode):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EkiTrack2Cont(TypedNode):
     """駅トラック2コンテナ"""
 

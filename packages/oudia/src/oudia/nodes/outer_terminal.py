@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from .node import EntryList, Node, TypedNode
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OuterTerminal(TypedNode):
     """路線外発着駅名"""
 

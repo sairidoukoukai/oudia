@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from .node import EntryList, Node, TypedNode
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CrossingCheckRule(TypedNode):
     """交差支障チェックルール"""
 

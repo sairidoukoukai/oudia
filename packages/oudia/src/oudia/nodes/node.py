@@ -185,7 +185,7 @@ class Node:
             print(" " * indent + ".")
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TypedNode(ABC):
     """
     An abstract class representing a typed node.

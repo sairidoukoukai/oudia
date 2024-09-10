@@ -9,7 +9,7 @@ HOURS_A_DAY = 24
 SECONDS_A_DAY = SECONDS_AN_MINUTE * MINUTES_AN_HOUR * HOURS_A_DAY
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Jikoku:
     """時刻"""
 
@@ -140,7 +140,7 @@ class SecondRound(Enum):
     """切り上げ"""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class JikokuConv:
     """時刻の変換"""
 

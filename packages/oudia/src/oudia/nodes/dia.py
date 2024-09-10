@@ -5,7 +5,7 @@ from .ressya import Ressya
 from .node import EntryList, Node, TypedNode, NodeList
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Kudari(TypedNode):
     """下り"""
 
@@ -26,7 +26,7 @@ class Kudari(TypedNode):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Nobori(TypedNode):
     """上り"""
 
@@ -47,7 +47,7 @@ class Nobori(TypedNode):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Dia(TypedNode):
     """ダイヤ"""
 

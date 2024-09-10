@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from .node import EntryList, NodeList, Node, TypedNode
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Ressyasyubetsu(TypedNode):
     """列車種別"""
 

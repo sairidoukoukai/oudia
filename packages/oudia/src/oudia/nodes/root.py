@@ -43,7 +43,7 @@ class FileType:
         return f"{self.software}.{self.version}" if self.version else self.software
 
 
-@dataclass
+@dataclass(kw_only=True)
 class OuDia(TypedNode):
     """OuDiaファイル"""
 

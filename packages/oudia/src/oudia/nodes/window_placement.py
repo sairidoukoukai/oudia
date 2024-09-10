@@ -3,7 +3,7 @@ from typing import Self
 from .node import EntryList, Node, NodeList, TypedNode
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChildWindow(TypedNode):
     """子ウィンドウ"""
 
@@ -50,7 +50,7 @@ class ChildWindow(TypedNode):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class WindowPlacement(TypedNode):
     """ウィンドウ配置"""
 

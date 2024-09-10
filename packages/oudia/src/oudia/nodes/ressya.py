@@ -12,7 +12,7 @@ class OperationType(Enum):
     BEFORE = "B"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Ressya(TypedNode):
     """列車"""
 
