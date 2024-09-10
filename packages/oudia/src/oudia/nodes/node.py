@@ -136,10 +136,10 @@ class Node:
         """
 
         return "\n".join(
-            str(x)
+            x
             for x in [
                 f"{self.type}." if self.type else None,
-                self.entries,
+                str(self.entries),
                 "." if self.type else None,
             ]
             if x
