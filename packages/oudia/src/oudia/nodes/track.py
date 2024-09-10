@@ -5,22 +5,22 @@ from .node import EntryList, NodeList, Node, TypedNode
 
 @dataclass(kw_only=True)
 class EkiTrack2(TypedNode):
-    """駅トラック2"""
+    """駅番線"""
 
     track_name: str
-    """トラック名"""
+    """番線名"""
 
-    track_ryakusyo: str | None = None
-    """トラック略称"""
+    track_ryakusyou: str | None = None
+    """番線略称"""
 
     track_nobori_ryakusyou: str | None = None
-    """通り略称"""
+    """番線略称（上り）"""
 
     @classmethod
     def from_node(cls, node: Node) -> "EkiTrack2":
         return cls(
             track_name=node.entries.get_required("TrackName"),
-            track_ryakusyo=node.entries.get("TrackRyakusyou"),
+            track_ryakusyou=node.entries.get("TrackRyakusyou"),
             track_nobori_ryakusyou=node.entries.get("TrackNoboriRyakusyou"),
         )
 
@@ -29,7 +29,7 @@ class EkiTrack2(TypedNode):
             type="EkiTrack2",
             entries=EntryList(
                 ("TrackName", self.track_name),
-                ("TrackRyakusyou", self.track_ryakusyo),
+                ("TrackRyakusyou", self.track_ryakusyou),
                 ("TrackNoboriRyakusyou", self.track_nobori_ryakusyou),
             ),
         )
