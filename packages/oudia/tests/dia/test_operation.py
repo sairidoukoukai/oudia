@@ -1,279 +1,338 @@
 from oudia.dia.jikoku import Jikoku
-from oudia.dia.operation import BeforeOperation, BOperation, AfterOperation, AOperation
+from oudia.dia.operation import (
+    AfterOperationConnect,
+    AfterOperationFactory,
+    AfterOperationIn,
+    AfterOperationJunction,
+    AfterOperationNumberChange,
+    AfterOperationOuter,
+    AfterOperationRelease,
+    AfterOperationShunt,
+    BeforeOperationConnect,
+    BeforeOperationFactory,
+    BeforeOperationJunction,
+    BeforeOperationNumberChange,
+    BeforeOperationOut,
+    BeforeOperationOuter,
+    BeforeOperationRelease,
+    BeforeOperationShunt,
+    ReleasePosition,
+)
 
 
-def test_before_operation_str():
-    operation = BeforeOperation(
-        operation=BOperation.SHUNT,
-        bool_data_1=False,
-        bool_data_2=False,
-        int_data_1=5,
-        int_data_2=0,
-        int_data_3=0,
-        jikoku_data_1=Jikoku(2973),
-        jikoku_data_2=Jikoku(None),
-        jikoku_data_3=Jikoku(None),
-        operation_number_1=[],
-        operation_number_2=[],
-        operation_number_3=[],
-        in_out_link_code="",
-        before_operation_list=[],
-        after_operation_list=[],
+import pytest
+
+
+# region BeforeOperation
+def test_before_operation_shunt():
+    with pytest.raises(ValueError):
+        BeforeOperationShunt.from_str("1/")
+
+    operation = BeforeOperationShunt.from_str("0/0$04933/$0")
+    assert operation.shunt_track_index == 0
+    assert operation.hatsu_jikoku == Jikoku(2973)
+    assert operation.chaku_jikoku == Jikoku(None)
+    assert operation.is_display_chaku_jikoku is False
+
+    operation = BeforeOperationShunt(
+        shunt_track_index=1,
+        hatsu_jikoku=Jikoku(2973),
+        chaku_jikoku=Jikoku(None),
+        is_display_chaku_jikoku=False,
     )
-    assert str(operation) == "0/5$04933/$0"
+    assert str(operation) == "0/1$04933/$0"
 
-    operation = BeforeOperation(
-        operation=BOperation.SHUNT,
-        bool_data_1=False,
-        bool_data_2=False,
-        int_data_1=5,
-        int_data_2=0,
-        int_data_3=0,
-        jikoku_data_1=Jikoku(2973),
-        jikoku_data_2=Jikoku(3600),
-        jikoku_data_3=Jikoku(None),
-        operation_number_1=[],
-        operation_number_2=[],
-        operation_number_3=[],
-        in_out_link_code="",
-        before_operation_list=[],
-        after_operation_list=[],
+    operation = BeforeOperationShunt(
+        shunt_track_index=1,
+        hatsu_jikoku=Jikoku(2973),
+        chaku_jikoku=Jikoku(2983),
+        is_display_chaku_jikoku=False,
     )
-    assert str(operation) == "0/5$04933/100$0"
+    assert str(operation) == "0/1$04933/04943$0"
 
 
-def test_before_operation_shunt_from_str():
-    operation = BeforeOperation.from_str("0/7$627/$0")
-    assert operation.operation == BOperation.SHUNT
+def test_before_operation_connect():
+    with pytest.raises(ValueError):
+        BeforeOperationConnect.from_str("0/")
+
+    operation = BeforeOperationConnect.from_str("1/1$04933")
+    assert operation.is_connect_to_front is True
+    assert operation.connect_jikoku == Jikoku(2973)
+
+    operation = BeforeOperationConnect(is_connect_to_front=False, connect_jikoku=Jikoku(2973))
+    assert str(operation) == "1/0$04933"
 
 
-def test_before_operation_shunt_str_from_str():
-    operation = BeforeOperation.from_str("0/7$627/$0")
-    assert str(operation) == "0/7$627/$0"
+def test_before_operation_release():
+    with pytest.raises(ValueError):
+        BeforeOperationRelease.from_str("0/")
 
+    operation = BeforeOperationRelease.from_str("2/0$1/04933")
+    assert operation.release_position == 0
+    assert operation.release_index_count == 1
+    assert operation.release_jikoku == Jikoku(2973)
 
-def test_after_operation_shunt_str():
-    operation = AfterOperation(
-        operation=AOperation.SHUNT,
-        bool_data_1=False,
-        bool_data_2=False,
-        int_data_1=5,
-        int_data_2=0,
-        jikoku_data_1=Jikoku(2973),
-        jikoku_data_2=Jikoku(None),
-        operation_number_1=[],
-        operation_number_2=[],
-        operation_number_3=[],
-        in_out_link_code="",
-        before_operation_list=[],
-        after_operation_list=[],
+    operation = BeforeOperationRelease(
+        release_position=0,
+        release_index_count=1,
+        release_jikoku=Jikoku(2973),
     )
+    assert str(operation) == "2/0$1/04933"
 
-    assert str(operation) == "0/5$04933/$0"
 
-    operation = AfterOperation(
-        operation=AOperation.SHUNT,
-        bool_data_1=False,
-        bool_data_2=False,
-        int_data_1=5,
-        int_data_2=0,
-        jikoku_data_1=Jikoku(2973),
-        jikoku_data_2=Jikoku(3600),
-        operation_number_1=[],
-        operation_number_2=[],
-        operation_number_3=[],
-        in_out_link_code="",
-        before_operation_list=[],
-        after_operation_list=[],
+def test_before_operation_out():
+    with pytest.raises(ValueError):
+        BeforeOperationOut.from_str("0/")
+
+    operation = BeforeOperationOut.from_str("3/04933$InOutLink/OpNumber1;OpNumber2")
+    assert operation.out_jikoku == Jikoku(2973)
+    assert operation.in_out_link_code == "InOutLink"
+    assert operation.operation_number_original == ["OpNumber1", "OpNumber2"]
+
+    operation = BeforeOperationOut(
+        out_jikoku=Jikoku(2973),
+        in_out_link_code="InOutLink",
+        operation_number_original=["OpNumber1", "OpNumber2"],
     )
-
-    assert str(operation) == "0/5$04933/100$0"
-
-
-def test_after_operation_shunt_from_str():
-    operation = AfterOperation.from_str("0/7$627/$0")
-    assert operation.operation == AOperation.SHUNT
+    assert str(operation) == "3/04933$InOutLink/OpNumber1;OpNumber2"
 
 
-def test_after_operation_shunt_str_from_str():
-    operation = AfterOperation.from_str("0/7$627/$0")
-    assert str(operation) == "0/7$627/$0"
+def test_before_operation_outer():
+    with pytest.raises(ValueError):
+        BeforeOperationOuter.from_str("0/")
 
+    with pytest.raises(ValueError):
+        BeforeOperationOuter.from_str("4/")
 
-#     operation = BeforeOperation.from_str("0")
-#     assert operation.ekiatsukai == Ekiatsukai.NONE
+    operation = BeforeOperationOuter.from_str("4/5$04933/04848$LinkCode/OpNumber1;OpNumber2")
+    assert operation.outer_shihatsueki_index == 5
+    assert operation.outer_shihatsu_jikoku == Jikoku(2973)
+    assert operation.chaku_jikoku == Jikoku(2928)
+    assert operation.in_out_link_code == "LinkCode"
+    assert operation.operation_number_original == ["OpNumber1", "OpNumber2"]
 
-
-# def test_operation_str():
-#     operation = BeforeOperation(
-#         ekiatsukai=Ekiatsukai.TEISYA,
-#         chaku_jikoku=Jikoku(3600),
-#         hatsu_jikoku=Jikoku(3660),
-#         ressya_track_index=None,
-#         before_operation_list=[],
-#         after_operation_list=[],
-#     )
-#     assert str(operation) == "1;100/101"
-
-#     operation = BeforeOperation(
-#         ekiatsukai=Ekiatsukai.TEISYA,
-#         chaku_jikoku=Jikoku(None),
-#         hatsu_jikoku=Jikoku(3600),
-#         ressya_track_index=None,
-#         before_operation_list=[],
-#         after_operation_list=[],
-#     )
-#     assert str(operation) == "1;100"
-
-#     operation = BeforeOperation(
-#         ekiatsukai=Ekiatsukai.TSUUKA,
-#         chaku_jikoku=Jikoku(3600),
-#         hatsu_jikoku=Jikoku(None),
-#         ressya_track_index=None,
-#         before_operation_list=[],
-#         after_operation_list=[],
-#     )
-#     assert str(operation) == "2;100/"
-
-#     operation = BeforeOperation(
-#         ekiatsukai=Ekiatsukai.TEISYA,
-#         chaku_jikoku=Jikoku(None),
-#         hatsu_jikoku=Jikoku(3660),
-#         ressya_track_index=None,
-#         before_operation_list=[],
-#         after_operation_list=[],
-#     )
-#     assert str(operation) == "1;101"
-
-#     operation = BeforeOperation(
-#         ekiatsukai=Ekiatsukai.TEISYA,
-#         chaku_jikoku=Jikoku(3600),
-#         hatsu_jikoku=Jikoku(3660),
-#         ressya_track_index=3,
-#         before_operation_list=[],
-#         after_operation_list=[],
-#     )
-
-#     assert str(operation) == "1;100/101$3"
-#     operation = BeforeOperation(
-#         ekiatsukai=Ekiatsukai.TEISYA,
-#         chaku_jikoku=Jikoku(2928),
-#         hatsu_jikoku=Jikoku(3669),
-#         ressya_track_index=3,
-#         before_operation_list=[],
-#         after_operation_list=[],
-#     )
-#     assert str(operation) == "1;04848/10109$3"
-
-#     operation = BeforeOperation(
-#         ekiatsukai=Ekiatsukai.TEISYA,
-#         chaku_jikoku=Jikoku(None),
-#         hatsu_jikoku=Jikoku(None),
-#         ressya_track_index=5,
-#         before_operation_list=[],
-#         after_operation_list=[],
-#     )
-#     assert str(operation) == "1$5"
-
-
-# def test_operation_from_str():
-#     eki_track_count = 5
-
-#     operation = BeforeOperation.from_str("1;100/101$3")
-#     assert operation.ekiatsukai == Ekiatsukai.TEISYA
-#     assert operation.chaku_jikoku.total_seconds == 3600
-#     assert operation.hatsu_jikoku.total_seconds == 3660
-#     assert operation.ressya_track_index == 3
-
-#     operation = BeforeOperation.from_str("1;100/")
-#     assert operation.ekiatsukai == Ekiatsukai.TEISYA
-#     assert operation.chaku_jikoku.total_seconds == 3600
-#     assert bool(operation.hatsu_jikoku) is False
-#     assert operation.ressya_track_index == None
-
-#     operation = BeforeOperation.from_str("1;101")
-#     assert operation.ekiatsukai == Ekiatsukai.TEISYA
-#     assert bool(operation.chaku_jikoku) == False
-#     assert operation.hatsu_jikoku.total_seconds == 3660
-#     assert operation.ressya_track_index == None
-
-#     operation = BeforeOperation.from_str("1$3")
-#     assert operation.ekiatsukai == Ekiatsukai.TEISYA
-#     assert bool(operation.chaku_jikoku) == False
-#     assert bool(operation.hatsu_jikoku) == False
-#     assert operation.ressya_track_index == 3
-
-#     operation = BeforeOperation.from_str("1$6")
-#     assert operation.ressya_track_index == 6
-
-#     operation = BeforeOperation.from_str("0")
-#     assert operation.ekiatsukai == Ekiatsukai.NONE
-#     assert bool(operation.chaku_jikoku) == False
-#     assert bool(operation.hatsu_jikoku) == False
-#     assert operation.ressya_track_index == None
-
-#     with pytest.raises(IndexError):
-#         BeforeOperation.from_str("")
-
-#     with pytest.raises(ValueError):
-#         operation = BeforeOperation.from_str("1;invalid/invalid$3")
-
-
-def test_operation_str_number_change():
-    operation = BeforeOperation(
-        operation=BOperation.NUMBER_CHANGE,
-        bool_data_1=False,
-        bool_data_2=False,
-        int_data_1=5,
-        int_data_2=0,
-        int_data_3=0,
-        jikoku_data_1=Jikoku(2973),
-        jikoku_data_2=Jikoku(None),
-        jikoku_data_3=Jikoku(None),
-        operation_number_1=[],
-        operation_number_2=[],
-        operation_number_3=[],
-        in_out_link_code="",
-        before_operation_list=[],
-        after_operation_list=[],
+    operation = BeforeOperationOuter(
+        outer_shihatsueki_index=5,
+        outer_shihatsu_jikoku=Jikoku(2973),
+        chaku_jikoku=Jikoku(2928),
+        in_out_link_code="LinkCode",
+        operation_number_original=["OpNumber1", "OpNumber2"],
     )
+    assert str(operation) == "4/5$04933/04848$LinkCode/OpNumber1;OpNumber2"
 
+
+def test_before_operation_junction():
+    with pytest.raises(ValueError):
+        BeforeOperationJunction.from_str("0/")
+
+    operation = BeforeOperationJunction.from_str("5/04933$OpNumber1;OpNumber2")
+    assert operation.origin_jikoku == Jikoku(2973)
+    assert operation.operation_number_temp == ["OpNumber1", "OpNumber2"]
+    assert str(operation) == "5/04933$OpNumber1;OpNumber2"
+
+    operation = BeforeOperationJunction(origin_jikoku=Jikoku(2973), operation_number_temp=["OpNumber1", "OpNumber2"])
+    assert str(operation) == "5/04933$OpNumber1;OpNumber2"
+
+
+def test_before_operation_number_change():
+    with pytest.raises(ValueError):
+        BeforeOperationNumberChange.from_str("0/")
+
+    operation = BeforeOperationNumberChange.from_str("6/")
+    assert operation.operation_number == []
     assert str(operation) == "6/"
 
+    operation = BeforeOperationNumberChange.from_str("6/A;B;C")
+    assert operation.operation_number == ["A", "B", "C"]
+    assert str(operation) == "6/A;B;C"
 
-def test_before_operation_number_change_from_str():
-    operation = BeforeOperation.from_str("6/")
-    assert operation.operation == BOperation.NUMBER_CHANGE
+    operation = BeforeOperationNumberChange.from_str("6/A;B;C;;;D;E;F")
+    assert operation.operation_number == ["A", "B", "C", "D", "E", "F"]
+    assert str(operation) == "6/A;B;C;D;E;F"
 
-    operation = BeforeOperation.from_str("6/0$")
-    assert operation.operation == BOperation.NUMBER_CHANGE
-    assert operation.int_data_1 == 0
-
-
-def test_after_operation_number_change_from_str():
-    operation = AfterOperation.from_str("6/")
-    assert operation.operation == AOperation.NUMBER_CHANGE
-
-    operation = AfterOperation.from_str("6/0$")
-    assert operation.operation == AOperation.NUMBER_CHANGE
-    assert operation.int_data_1 == 0
+    operation = BeforeOperationNumberChange(operation_number=["A", "B", "C", "D", "E", "F"])
+    assert str(operation) == "6/A;B;C;D;E;F"
 
 
-def test_after_operation_number_change_to_str():
-    operation = AfterOperation(
-        operation=AOperation.NUMBER_CHANGE,
-        bool_data_1=False,
-        bool_data_2=False,
-        int_data_1=5,
-        int_data_2=0,
-        jikoku_data_1=Jikoku(2973),
-        jikoku_data_2=Jikoku(None),
-        operation_number_1=[],
-        operation_number_2=[],
-        operation_number_3=[],
-        in_out_link_code="",
-        before_operation_list=[],
-        after_operation_list=[],
+def test_before_operation_factory():
+    assert isinstance(BeforeOperationFactory.from_str("0/0$04933/$0"), BeforeOperationShunt)
+    assert isinstance(BeforeOperationFactory.from_str("1/0$04933"), BeforeOperationConnect)
+    assert isinstance(BeforeOperationFactory.from_str("2/0$1/04933"), BeforeOperationRelease)
+    assert isinstance(BeforeOperationFactory.from_str("3/04933$InOutLink/OpNumber1"), BeforeOperationOut)
+    assert isinstance(BeforeOperationFactory.from_str("4/5$04933/04848$LinkCode/OpNumber1"), BeforeOperationOuter)
+    assert isinstance(BeforeOperationFactory.from_str("5/04933$OpNumber1"), BeforeOperationJunction)
+    assert isinstance(BeforeOperationFactory.from_str("6/A;B;C"), BeforeOperationNumberChange)
+
+    with pytest.raises(ValueError):
+        BeforeOperationFactory.from_str("7/")
+    with pytest.raises(ValueError):
+        BeforeOperationFactory.from_str("-1/")
+    with pytest.raises(ValueError):
+        BeforeOperationFactory.from_str("ABC")
+
+
+# endregion
+
+# region AfterOperation
+
+
+def test_after_operation_shunt():
+    with pytest.raises(ValueError):
+        AfterOperationShunt.from_str("1/")
+
+    operation = AfterOperationShunt.from_str("0/0$04933/$0")
+    assert operation.shunt_track_index == 0
+    assert operation.hatsu_jikoku == Jikoku(2973)
+    assert operation.chaku_jikoku == Jikoku(None)
+    assert operation.is_display_hatsu_jikoku is False
+
+    operation = AfterOperationShunt(
+        shunt_track_index=0,
+        hatsu_jikoku=Jikoku(2973),
+        chaku_jikoku=Jikoku(None),
+        is_display_hatsu_jikoku=False,
     )
+    assert str(operation) == "0/0$04933/$0"
 
+
+def test_after_operation_connect():
+    with pytest.raises(ValueError):
+        AfterOperationConnect.from_str("0/")
+
+    operation = AfterOperationConnect.from_str("1/1$04933")
+    assert operation.is_connect_to_front is True
+    assert operation.connect_jikoku == Jikoku(2973)
+
+    operation = AfterOperationConnect(is_connect_to_front=False, connect_jikoku=Jikoku(2973))
+    assert str(operation) == "1/0$04933"
+
+
+def test_after_operation_release():
+    with pytest.raises(ValueError):
+        AfterOperationRelease.from_str("0/")
+
+    operation = AfterOperationRelease.from_str("2/0$1/04933")
+    assert operation.release_position == ReleasePosition.AFTER
+    assert operation.release_index_count == 1
+    assert operation.release_jikoku == Jikoku(2973)
+
+    operation = AfterOperationRelease(
+        release_position=ReleasePosition.AFTER,
+        release_index_count=1,
+        release_jikoku=Jikoku(2973),
+    )
+    assert str(operation) == "2/0$1/04933"
+
+
+def test_after_operation_in():
+    with pytest.raises(ValueError):
+        AfterOperationIn.from_str("0/")
+
+    operation = AfterOperationIn.from_str("3/04933$")
+    assert operation.in_out_link_code == ""
+    assert operation.in_jikoku == Jikoku(2973)
+
+    operation = AfterOperationIn(
+        in_jikoku=Jikoku(2973),
+        in_out_link_code="",
+    )
+    assert str(operation) == "3/04933$"
+
+
+def test_after_operation_outer():
+    with pytest.raises(ValueError):
+        AfterOperationOuter.from_str("0/")
+
+    with pytest.raises(ValueError):
+        AfterOperationOuter.from_str("4/")
+
+    operation = AfterOperationOuter.from_str("4/5$04933/04848$Outer1")
+    assert operation.outer_terminal_index == 5
+    assert operation.hatsu_jikoku == Jikoku(2973)
+    assert operation.outer_terminal_jikoku == Jikoku(2928)
+    assert operation.in_out_link_code == "Outer1"
+
+    operation = AfterOperationOuter(
+        outer_terminal_index=5,
+        hatsu_jikoku=Jikoku(2973),
+        outer_terminal_jikoku=Jikoku(2928),
+        in_out_link_code="Outer1",
+    )
+    assert str(operation) == "4/5$04933/04848$Outer1"
+
+
+def test_after_operation_junction():
+    with pytest.raises(ValueError):
+        AfterOperationJunction.from_str("0/")
+
+    with pytest.raises(ValueError):
+        operation = AfterOperationJunction.from_str("5/")
+
+    with pytest.raises(ValueError):
+        operation = AfterOperationJunction.from_str("5/$$")
+
+    with pytest.raises(ValueError):
+        operation = AfterOperationJunction.from_str("5/$invalid")
+
+    with pytest.raises(ValueError):
+        operation = AfterOperationJunction.from_str("5/invalid$0")
+
+    with pytest.raises(ValueError):
+        operation = AfterOperationJunction.from_str("5/04933$-1")
+
+    with pytest.raises(ValueError):
+        operation = AfterOperationJunction.from_str("5/04933$4")
+
+    operation = AfterOperationJunction.from_str("5/04933$1")
+    assert operation.terminal_jikoku == Jikoku(2973)
+    assert operation.next_junction_type == 1
+    assert str(operation) == "5/04933$1"
+
+    operation = AfterOperationJunction(terminal_jikoku=Jikoku(2973), next_junction_type=1)
+    assert str(operation) == "5/04933$1"
+
+
+def test_after_operation_number_change():
+    with pytest.raises(ValueError):
+        AfterOperationNumberChange.from_str("0/")
+
+    operation = AfterOperationNumberChange.from_str("6/")
+    assert operation.operation_numbers == []
+    assert operation.is_operation_number_reverse == True
     assert str(operation) == "6/"
+
+    operation = AfterOperationNumberChange.from_str("6/A;B;C")
+    assert operation.operation_numbers == ["A", "B", "C"]
+    assert operation.is_operation_number_reverse == False
+    assert str(operation) == "6/A;B;C"
+
+    operation = AfterOperationNumberChange.from_str("6/A;B;C;;;D;E;F")
+    assert operation.operation_numbers == ["A", "B", "C", "D", "E", "F"]
+    assert operation.is_operation_number_reverse == False
+    assert str(operation) == "6/A;B;C;D;E;F"
+
+    operation = AfterOperationNumberChange(
+        operation_numbers=["A", "B", "C", "D", "E", "F"],
+    )
+    assert operation.is_operation_number_reverse == False
+    assert str(operation) == "6/A;B;C;D;E;F"
+
+
+def test_after_operation_factory():
+    assert isinstance(AfterOperationFactory.from_str("0/0$04933/$0"), AfterOperationShunt)
+    assert isinstance(AfterOperationFactory.from_str("1/0$04933"), AfterOperationConnect)
+    assert isinstance(AfterOperationFactory.from_str("2/0$1/04933"), AfterOperationRelease)
+    assert isinstance(AfterOperationFactory.from_str("3/04933$0"), AfterOperationIn)
+    assert isinstance(AfterOperationFactory.from_str("4/5$04933/04848$"), AfterOperationOuter)
+    assert isinstance(AfterOperationFactory.from_str("5/04933$0"), AfterOperationJunction)
+    assert isinstance(AfterOperationFactory.from_str("6/A;B;C"), AfterOperationNumberChange)
+
+    with pytest.raises(ValueError):
+        AfterOperationFactory.from_str("7/")
+    with pytest.raises(ValueError):
+        AfterOperationFactory.from_str("-1/")
+    with pytest.raises(ValueError):
+        AfterOperationFactory.from_str("ABC")
+
+
+# endregion

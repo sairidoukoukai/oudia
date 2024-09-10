@@ -2,7 +2,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
 from oudia.dia.eki_jikoku import EkiJikoku
-from oudia.dia.operation import AfterOperation, BeforeOperation
+from oudia.dia.operation import AfterOperationFactory, BeforeOperationFactory, OperationBase
 
 from .node import EntryList, Node, TypedNode
 
@@ -47,8 +47,8 @@ class Ressya(TypedNode):
         ]
 
         # [ekijikoku_index, list[Operation]]
-        parent_before_operations: defaultdict[int, list[BeforeOperation]] = defaultdict(list)
-        parent_after_operations: defaultdict[int, list[AfterOperation]] = defaultdict(list)
+        parent_before_operation_list: defaultdict[int, list[OperationBase]] = defaultdict(list)
+        parent_after_operation_list: defaultdict[int, list[OperationBase]] = defaultdict(list)
 
         for key, value in node.entries.properties:
             if key.startswith("Operation"):
@@ -65,9 +65,9 @@ class Ressya(TypedNode):
                     for operation_str in value.split(","):
                         match operation_type:
                             case OperationType.BEFORE:
-                                parent_before_operations[id].append(BeforeOperation.from_str(operation_str))
+                                parent_before_operation_list[id].append(BeforeOperationFactory.from_str(operation_str))
                             case OperationType.AFTER:
-                                parent_after_operations[id].append(AfterOperation.from_str(operation_str))
+                                parent_after_operation_list[id].append(AfterOperationFactory.from_str(operation_str))
                 else:
                     # Operation73B.0A
                     parent_indicator, child_indicator = indicator.split(".")  # '73B', '0A'
@@ -75,39 +75,39 @@ class Ressya(TypedNode):
                     child_id = int(child_indicator[:-1])  # 0
                     parent_operation_type = OperationType(parent_indicator[-1])
 
-                    if parent_id not in parent_before_operations and parent_id not in parent_after_operations:
+                    if parent_id not in parent_before_operation_list and parent_id not in parent_after_operation_list:
                         raise ValueError(f"Invalid operation: Operation {parent_id} {operation_type}")
 
                     for v in value.split(","):
                         match parent_operation_type, operation_type:
                             case OperationType.BEFORE, OperationType.BEFORE:
-                                parent_before_operations[parent_id][child_id].before_operation_list.append(
-                                    BeforeOperation.from_str(text=v)
+                                parent_before_operation_list[parent_id][child_id].before_operation_list.append(
+                                    BeforeOperationFactory.from_str(text=v)
                                 )
                             case OperationType.BEFORE, OperationType.AFTER:
-                                parent_before_operations[parent_id][child_id].after_operation_list.append(
-                                    AfterOperation.from_str(v)
+                                parent_before_operation_list[parent_id][child_id].after_operation_list.append(
+                                    AfterOperationFactory.from_str(v)
                                 )
 
                             case OperationType.AFTER, OperationType.BEFORE:
-                                parent_after_operations[parent_id][child_id].before_operation_list.append(
-                                    BeforeOperation.from_str(v)
+                                parent_after_operation_list[parent_id][child_id].before_operation_list.append(
+                                    BeforeOperationFactory.from_str(v)
                                 )
                             case OperationType.AFTER, OperationType.AFTER:
-                                parent_after_operations[parent_id][child_id].after_operation_list.append(
-                                    AfterOperation.from_str(v)
+                                parent_after_operation_list[parent_id][child_id].after_operation_list.append(
+                                    AfterOperationFactory.from_str(v)
                                 )
 
-        for i, before_operations in parent_before_operations.items():
+        for i, before_operation_list in parent_before_operation_list.items():
             if (current_eki_jikoku := eki_jikoku_plain[i]) is None:
                 raise ValueError(f"Invalid before operation: Ekijikoku[{i}] does not exist")
-            for before_operation in before_operations:
+            for before_operation in before_operation_list:
                 current_eki_jikoku.before_operation_list.append(before_operation)
 
-        for i, after_operations in parent_after_operations.items():
+        for i, after_operation_list in parent_after_operation_list.items():
             if (current_eki_jikoku := eki_jikoku_plain[i]) is None:
                 raise ValueError(f"Invalid after operation: Ekijikoku[{i}] does not exist")
-            for after_operation in after_operations:
+            for after_operation in after_operation_list:
                 current_eki_jikoku.after_operation_list.append(after_operation)
 
         return cls(

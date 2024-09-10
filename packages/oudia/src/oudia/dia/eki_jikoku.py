@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Self
 
 from oudia.dia.jikoku import Hour, Jikoku, JikokuConv, Second
-from oudia.dia.operation import AfterOperation, BeforeOperation
+from oudia.dia.operation import OperationBase
 
 JIKOKU_CONV = JikokuConv(True, hour=Hour.ZERO_TO_NONE, second=Second.NOT_IF_ZERO)
 
@@ -37,10 +37,10 @@ class EkiJikoku:
     ressya_track_index: int | None
     """列車の番線"""
 
-    before_operation_list: list[BeforeOperation]
+    before_operation_list: list[OperationBase]
     """前作業"""
 
-    after_operation_list: list[AfterOperation]
+    after_operation_list: list[OperationBase]
     """後作業"""
 
     def __str__(self) -> str:
