@@ -1,5 +1,12 @@
 {
-  "python.testing.pytestArgs": [".", "--cov=packages/oudia/src", "--cov-report", "xml"],
+  "python.testing.pytestArgs": [
+    ".",
+    "--cov=packages/oudia/src",
+    "--cov=packages/gtfs2oudia/src",
+    "--cov-report",
+    "xml",
+    "-s"
+  ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "coverage-gutters.showGutterCoverage": true,
