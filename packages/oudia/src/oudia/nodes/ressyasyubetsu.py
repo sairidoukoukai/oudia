@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from .node import EntryList, NodeList, Node, TypedNode
+from .node import EntryList, Node, TypedNode
 
 
 @dataclass(kw_only=True)
@@ -10,31 +10,31 @@ class Ressyasyubetsu(TypedNode):
     syubetsumei: str
     """種別名"""
 
-    ryakusyou: str | None
+    ryakusyou: str | None = None
     """略称"""
 
-    jikokuhyou_moji_color: str | None
+    jikokuhyou_moji_color: str | None = None
     """時刻表文字色"""
 
-    jikokuhyou_font_index: str | None
+    jikokuhyou_font_index: str | None = None
     """時刻表文字フォントインデックス"""
 
-    jikokuhyou_back_color: str | None
+    jikokuhyou_back_color: str | None = None
     """時刻表文字背景色"""
 
-    diagram_sen_color: str | None
+    diagram_sen_color: str | None = None
     """ダイヤグラム線色"""
 
-    diagram_sen_style: str | None
+    diagram_sen_style: str | None = None
     """ダイヤグラム線スタイル"""
 
-    diagram_sen_is_bold: bool | None
+    diagram_sen_is_bold: bool | None = None
     """ダイヤグラム太線"""
 
-    stop_mark_draw_type: str | None
+    stop_mark_draw_type: str | None = None
     """停止マーク描画タイプ"""
 
-    parent_syubetsu_index: int | None
+    parent_syubetsu_index: int | None = None
     """親種別インデックス"""
 
     @classmethod
