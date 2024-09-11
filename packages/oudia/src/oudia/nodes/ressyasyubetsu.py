@@ -16,7 +16,7 @@ class Ressyasyubetsu(TypedNode):
     jikokuhyou_moji_color: str | None = None
     """時刻表文字色"""
 
-    jikokuhyou_font_index: str | None = None
+    jikokuhyou_font_index: int | None = None
     """時刻表文字フォントインデックス"""
 
     jikokuhyou_back_color: str | None = None
@@ -43,7 +43,7 @@ class Ressyasyubetsu(TypedNode):
             syubetsumei=node.entries.get_required("Syubetsumei"),
             ryakusyou=node.entries.get("Ryakusyou"),
             jikokuhyou_moji_color=node.entries.get("JikokuhyouMojiColor"),
-            jikokuhyou_font_index=node.entries.get("JikokuhyouFontIndex"),
+            jikokuhyou_font_index=node.entries.get_int("JikokuhyouFontIndex"),
             jikokuhyou_back_color=node.entries.get("JikokuhyouBackColor"),
             diagram_sen_color=node.entries.get("DiagramSenColor"),
             diagram_sen_style=node.entries.get("DiagramSenStyle"),
