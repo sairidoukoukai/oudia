@@ -1,3 +1,5 @@
+"""列車を扱うためのモジュールです。"""
+
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
@@ -8,6 +10,10 @@ from .node import EntryList, Node, TypedNode
 
 
 class OperationType(Enum):
+    """作業の種別"""
+
+    # TODO: This should be in oudia.dia.operation
+
     AFTER = "A"
     BEFORE = "B"
 
@@ -42,6 +48,7 @@ class Ressya(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "Ressya":
+        """ノードから列車を生成します。"""
         eki_jikoku_plain = [
             EkiJikoku.from_str(x) if x else None for x in node.entries.get_required("EkiJikoku").split(",")
         ]
@@ -122,6 +129,7 @@ class Ressya(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """列車をノードに変換します。"""
         operation_entries: list[tuple[str, str]] = []
 
         for i, eki_jikoku in enumerate(self.eki_jikoku_list):

@@ -1,3 +1,5 @@
+"""OuDiaファイルを読み込むためのモジュールです。"""
+
 from typing import TextIO
 
 from oudia.nodes.node import EntryList, NodeList
@@ -14,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 def parse(text: str) -> Node | None:
+    """OuDiaファイルをノードに変換します。"""
     stack: list[Node] = []
     current = None
 
@@ -65,6 +68,7 @@ def parse(text: str) -> Node | None:
 
 
 def replace_node_list(node_list: NodeList) -> NodeList:
+    """再帰的にノードリストのすべてのノードを型付きノードに置き換えます。"""
     nodes = [replace_node(child) for child in node_list]
     first_node_type = type(nodes[0]) if nodes else Node
 
@@ -72,6 +76,7 @@ def replace_node_list(node_list: NodeList) -> NodeList:
 
 
 def replace_nodes_in_entry_list(entry_list: EntryList) -> EntryList:
+    """再帰的にエントリリストのすべてのノードを型付きノードに置き換えます。"""
     result = EntryList()
     for entry in entry_list:
         if isinstance(entry, NodeList):
@@ -82,7 +87,7 @@ def replace_nodes_in_entry_list(entry_list: EntryList) -> EntryList:
 
 
 def replace_node(node) -> Node | TypedNode:
-    """Recursively replace `Node` with `TypedNode` by `type`."""
+    """再帰的にノードを型付きノードに置き換えます。"""
 
     assert isinstance(node, Node)
     # if not isinstance(node, Node):
@@ -106,18 +111,7 @@ def replace_node(node) -> Node | TypedNode:
 
 
 def loads(text: str) -> OuDia:
-    """
-    Loads OuDia data from a given text.
-
-    Args:
-        text (str): The text to load OuDia data from.
-
-    Returns:
-        OuDia: The loaded OuDia data.
-
-    Raises:
-        ValueError: If the text is invalid.
-    """
+    """文字列からOuDiaファイルを読み込みます。"""
     # ignore bom
     if text.startswith("\ufeff"):
         text = text[1:]
@@ -144,16 +138,5 @@ def loads(text: str) -> OuDia:
 
 
 def load(fp: TextIO) -> OuDia:
-    """
-    Loads OuDia data from a given file.
-
-    Args:
-        fp (TextIO): The file to load OuDia data from.
-
-    Returns:
-        OuDia: The loaded OuDia data.
-
-    Raises:
-        ValueError: If the file is invalid.
-    """
+    """ファイルからOuDiaファイルを読み込みます。"""
     return loads(fp.read())

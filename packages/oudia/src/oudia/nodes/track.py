@@ -1,5 +1,7 @@
+"""駅番線を扱うためのモジュールです。"""
+
 from dataclasses import dataclass, field
-from typing import Sequence
+from typing import Sequence  # TODO: Remove unused variables
 from .node import EntryList, NodeList, Node, TypedNode
 
 
@@ -18,6 +20,7 @@ class EkiTrack2(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "EkiTrack2":
+        """ノードから駅番線を生成します。"""
         return cls(
             track_name=node.entries.get_required("TrackName"),
             track_ryakusyou=node.entries.get("TrackRyakusyou"),
@@ -25,6 +28,7 @@ class EkiTrack2(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """駅番線をノードに変換します。"""
         return Node(
             type="EkiTrack2",
             entries=EntryList(
@@ -37,18 +41,20 @@ class EkiTrack2(TypedNode):
 
 @dataclass(kw_only=True)
 class EkiTrack2Cont(TypedNode):
-    """駅トラック2コンテナ"""
+    """駅番線コンテナ"""
 
     tracks: list[EkiTrack2]
-    """トラックリスト"""
+    """番線リスト"""
 
     @classmethod
     def from_node(cls, node: Node) -> "EkiTrack2Cont":
+        """ノードから駅番線コンテナを生成します。"""
         return EkiTrack2Cont(
             tracks=node.entries.get_list_by_type(EkiTrack2),
         )
 
     def to_node(self) -> Node:
+        """駅番線コンテナをノードに変換します。"""
         return Node(
             type="EkiTrack2Cont",
             entries=EntryList(NodeList(EkiTrack2, self.tracks)),

@@ -1,3 +1,5 @@
+"""駅を扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 from enum import Enum
 
@@ -147,6 +149,7 @@ class Eki(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "Eki":
+        """ノードから駅を生成します。"""
         return cls(
             ekimei=node.entries.get_required("Ekimei"),
             ekimei_jikoku_ryaku=node.entries.get("EkimeiJikokuRyaku"),
@@ -200,6 +203,7 @@ class Eki(TypedNode):
     # Codeium: Explain Problem
 
     def to_node(self) -> Node:
+        """エキスをノードに変換します。"""
         return Node(
             type="Eki",
             entries=EntryList(

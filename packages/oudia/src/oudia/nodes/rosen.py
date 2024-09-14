@@ -1,3 +1,5 @@
+"""路線を扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 
 from oudia.nodes.dia import Dia
@@ -48,6 +50,7 @@ class Rosen(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "Rosen":
+        """ノードから路線を生成します。"""
         return cls(
             rosenmei=node.entries.get("Rosenmei"),
             kudari_dia_alias=node.entries.get("KudariDiaAlias"),
@@ -64,6 +67,7 @@ class Rosen(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """路線をノードに変換します。"""
         return Node(
             type="Rosen",
             entries=EntryList(

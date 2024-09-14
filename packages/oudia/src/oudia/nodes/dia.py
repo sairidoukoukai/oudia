@@ -1,3 +1,5 @@
+"""Diaを扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 
 from .ressya import Ressya
@@ -13,11 +15,13 @@ class Kudari(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "Kudari":
+        """ノードから下りを生成します。"""
         return cls(
             ressya_list=node.entries.get_list_by_type(Ressya),
         )
 
     def to_node(self) -> Node:
+        """下りをノードに変換します。"""
         return Node(
             type="Kudari",
             entries=EntryList(
@@ -34,11 +38,13 @@ class Nobori(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "Nobori":
+        """ノードから上りを生成します。"""
         return cls(
             ressya_list=node.entries.get_list_by_type(Ressya),
         )
 
     def to_node(self) -> Node:
+        """上りをノードに変換します。"""
         return Node(
             type="Nobori",
             entries=EntryList(
@@ -71,6 +77,7 @@ class Dia(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "Dia":
+        """ノードからダイヤを生成します。"""
         return cls(
             dia_name=node.entries.get_required("DiaName"),
             main_back_color_index=node.entries.get_int("MainBackColorIndex"),
@@ -81,6 +88,7 @@ class Dia(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """ダイヤをノードに変換します。"""
         return Node(
             type="Dia",
             entries=EntryList(

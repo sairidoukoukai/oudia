@@ -1,3 +1,5 @@
+"""ウィンドウ配置情報を扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 from typing import Self
 from .node import EntryList, Node, NodeList, TypedNode
@@ -27,6 +29,7 @@ class ChildWindow(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> Self:
+        """ノードから子ウィンドウを生成します。"""
         return cls(
             window_type=node.entries.get_int("WindowType"),
             dia_index=node.entries.get_int("DiaIndex"),
@@ -37,6 +40,7 @@ class ChildWindow(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """子ウィンドウをノードに変換します。"""
         return Node(
             type=self.__class__.__name__,
             entries=EntryList(
@@ -61,12 +65,14 @@ class WindowPlacement(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> Self:
+        """ノードからウィンドウ配置を生成します。"""
         return cls(
             rosen_view_width=node.entries.get_int("RosenViewWidth"),
             child_windows=node.entries.get_list_by_type(ChildWindow),
         )
 
     def to_node(self) -> Node:
+        """ウィンドウ配置をノードに変換します。"""
         return Node(
             type=self.__class__.__name__,
             entries=EntryList(

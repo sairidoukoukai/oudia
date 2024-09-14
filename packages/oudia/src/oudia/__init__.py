@@ -1,3 +1,5 @@
+"""OuDiaを取り扱うためのモジュールです。"""
+
 from .parser import load, loads
 from .exporter import dump, dumps
 from .nodes import Eki, Rosen, OuDia, Node, TypedNode, DispProp

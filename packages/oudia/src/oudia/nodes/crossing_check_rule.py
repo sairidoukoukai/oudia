@@ -1,3 +1,5 @@
+"""交差支障チェックルールを扱うためのモジュールです。"""
+
 from dataclasses import dataclass, field
 from .node import EntryList, Node, TypedNode
 
@@ -44,6 +46,7 @@ class CrossingCheckRule(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "CrossingCheckRule":
+        """ノードから交差支障チェックルールを生成します。"""
         return cls(
             caption=node.entries.get("Caption"),
             enable=node.entries.get_bool("Enable"),
@@ -60,6 +63,7 @@ class CrossingCheckRule(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """交差支障チェックルールをノードに変換します。"""
         return Node(
             type="CrossingCheckRule",
             entries=EntryList(

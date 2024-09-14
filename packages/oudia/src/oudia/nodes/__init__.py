@@ -1,3 +1,5 @@
+"""OuDiaのノードを扱うためのモジュールです。"""
+
 from typing import Type
 
 from .eki import Eki
@@ -34,6 +36,7 @@ TYPE_TO_NODE: dict[str, Type[TypedNode]] = {
 
 
 def type_to_typed_node_type(type: str | None) -> Type[TypedNode] | None:
+    """タイプ名をタイプクラスに変換する"""
     return TYPE_TO_NODE.get(type) if type else None
 
 

@@ -1,3 +1,5 @@
+"""このモジュールは駅時刻を扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Self
@@ -66,6 +68,7 @@ class EkiJikoku:
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から駅時刻を生成します。"""
         ekiatsukai = Ekiatsukai(int(text[0]))
 
         chaku_time = None

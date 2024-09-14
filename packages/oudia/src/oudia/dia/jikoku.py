@@ -1,3 +1,5 @@
+"""時刻を扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Self
@@ -130,6 +132,8 @@ class Second(Enum):
 
 
 class SecondRound(Enum):
+    """秒の丸め方"""
+
     ROUND_DOWN = 0
     """切り捨て"""
 
@@ -168,6 +172,8 @@ class JikokuConv:
         is_chaku_jikoku: bool = False,
         compare_jikoku: Jikoku | None = None,
     ) -> str:
+        """時刻を文字列に変換"""
+
         if not jikoku:
             return ""
 
@@ -252,6 +258,8 @@ class JikokuConv:
         time_str: str,
         is_chaku_jikoku: bool = False,
     ) -> Jikoku:
+        """文字列を時刻に変換"""
+
         if not time_str:
             return Jikoku(None)
 

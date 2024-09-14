@@ -1,3 +1,5 @@
+"""ノードを扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from typing import Type, TypeVar
@@ -6,9 +8,12 @@ T = TypeVar("T", bound="Node | TypedNode")
 
 
 class NodeList[T](list[T]):
+    """ノードリストを表すクラス"""
+
     type: Type[T]
 
     def __init__(self, type: Type[T], l: list[T] | None = None) -> None:
+        """ノードリストを生成します。"""
         super().__init__(l if l is not None else [])
         self.type = type
 
@@ -26,11 +31,15 @@ Entry = Property | NodeList
 
 
 class EntryList(list[Property | NodeList]):
+    """エントリリストを表すクラス"""
+
     def __init__(self, *args: tuple[str, str | int | bool | None] | NodeList) -> None:
+        """エントリリストを生成します。"""
         super().__init__([entry for arg in args if (entry := self.parse_item(arg)) is not None])
 
     @staticmethod
     def parse_value(value: str | int | bool | None) -> str:
+        """エントリの値を文字列に変換します。"""
         if value is None:
             return ""
         if isinstance(value, bool):
@@ -39,6 +48,7 @@ class EntryList(list[Property | NodeList]):
 
     @staticmethod
     def parse_item(entry: tuple[str, str | int | bool | None] | NodeList) -> Entry | None:
+        """エントリを生成します。"""
         assert isinstance(entry, NodeList) or isinstance(entry, tuple)
         if isinstance(entry, NodeList):
             return entry
@@ -52,6 +62,7 @@ class EntryList(list[Property | NodeList]):
         result = ""
 
         def format_entry(entry: Property | NodeList) -> str:
+            """エントリを文字列に変換します。"""
             assert isinstance(entry, NodeList) or isinstance(entry, tuple)
             if isinstance(entry, tuple):
                 return f"{entry[0]}={entry[1]}"
@@ -65,48 +76,57 @@ class EntryList(list[Property | NodeList]):
 
     @property
     def properties(self) -> list[Property]:
+        """エントリリストから属性のみを取り出します。"""
         return [p for p in self if isinstance(p, tuple)]
 
     @property
     def node_lists(self) -> list[NodeList]:
+        """エントリリストからノードリストのみを取り出します。"""
         return [p for p in self if isinstance(p, NodeList)]
 
     T = TypeVar("T", bound="TypedNode | Node")
 
     def get_list_by_type(self, t: Type[T]) -> NodeList[T]:
+        """エントリリストから指定した型のノードリストを取り出します。"""
         for node_list in self.node_lists:
             if node_list.type == t:
                 return node_list
         return NodeList(t)
 
     def get(self, key: str) -> str | None:
+        """エントリリストから指定したキーの文字列値を取り出します。"""
         for k, v in self.properties:
             if k == key:
                 return v
         return None
 
     def get_bool(self, key: str) -> bool | None:
+        """エントリリストから指定したキーの真偽値を取り出します。"""
         value = self.get(key)
         if value is None:
             return None
         return value == "1"
 
     def get_int(self, key: str) -> int | None:
+        """エントリリストから指定したキーの整数値を取り出します。"""
         value = self.get(key)
         if value is None:
             return None
         return int(value)
 
     def get_required(self, key: str) -> str:
+        """エントリリストから指定したキーの必須文字列値を取り出します。"""
         value = self.get(key)
         if value is None:
             raise ValueError(f"Required attribute '{key}' not found.")
         return value
 
     def get_repeatable(self, key: str) -> list[str]:
+        """エントリリストから指定したキーの重複可能の文字列値を取り出します。"""
         return [v for k, v in self.properties if k == key]
 
     def append(self, object: tuple[str, str] | NodeList | list) -> None:
+        """エントリリストにエントリを追加します。"""
         if isinstance(object, tuple):
             return super().append((object[0], EntryList.parse_value(object[1])))
         if isinstance(object, NodeList):

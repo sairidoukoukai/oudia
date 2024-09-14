@@ -1,3 +1,5 @@
+"""OuDiaファイル全体を扱うためのモジュールです。"""
+
 from dataclasses import dataclass, field
 
 from oudia.nodes.disp_prop import DispProp
@@ -45,6 +47,7 @@ class OuDia(TypedNode):
 
     @classmethod
     def from_node(cls, node: Node) -> "OuDia":
+        """ノードからOuDiaファイルの根ノードを生成します。"""
         assert node.type == "Root"
         return cls(
             file_type=node.entries.get_required("FileType"),
@@ -55,6 +58,7 @@ class OuDia(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """OuDiaファイルの根ノードをノードに変換します。"""
         return Node(
             type=None,
             entries=EntryList(

@@ -1,3 +1,5 @@
+"""表示プロパティを扱うためのモジュールです。"""
+
 from dataclasses import dataclass, field
 from typing import Self
 from .node import EntryList, NodeList, Node, TypedNode
@@ -5,6 +7,8 @@ from .node import EntryList, NodeList, Node, TypedNode
 
 @dataclass(kw_only=True)
 class FontProperty:
+    """フォントプロパティ"""
+
     point_text_height: int
     """文字のポイント高さ（文字サイズ）"""
 
@@ -29,6 +33,7 @@ class FontProperty:
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列からフォントプロパティを生成します。"""
         parts = text.split(";")
         pairs = list(map(lambda x: x.split("=", 1), parts))
         entries = {pair[0]: pair[1] for pair in pairs}
@@ -148,6 +153,7 @@ class DispProp(TypedNode):
 
     @staticmethod
     def from_node(node: Node) -> "DispProp":
+        """ノードから表示プロパティを生成します。"""
         return DispProp(
             jikokuhyou_font=[FontProperty.from_str(f) for f in node.entries.get_repeatable("JikokuhyouFont")],
             jikokuhyou_v_font=FontProperty.from_str(f) if (f := node.entries.get("JikokuhyouVFont")) else None,
@@ -188,6 +194,7 @@ class DispProp(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """表示プロパティをノードに変換します。"""
         return Node(
             type="DispProp",
             entries=EntryList(

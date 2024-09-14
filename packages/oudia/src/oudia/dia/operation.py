@@ -1,3 +1,5 @@
+"""作業を扱うためのモジュールです。"""
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
@@ -10,12 +12,15 @@ JIKOKU_CONV = JikokuConv(no_colon=True, hour=Hour.ZERO_TO_NONE, second=Second.NO
 
 @dataclass(kw_only=True)
 class OperationBase(ABC):
+    """作業を表す抽象クラス"""
+
     before_operation_list: list[Self] = field(default_factory=list)
     after_operation_list: list[Self] = field(default_factory=list)
 
     @classmethod
     @abstractmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         pass  # pragma: no cover
 
     @abstractmethod
@@ -71,6 +76,7 @@ class BeforeOperationShunt(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -115,6 +121,7 @@ class BeforeOperationConnect(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -150,6 +157,7 @@ class BeforeOperationRelease(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -188,6 +196,7 @@ class BeforeOperationOut(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -234,6 +243,7 @@ class BeforeOperationOuter(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -277,6 +287,7 @@ class BeforeOperationJunction(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -305,6 +316,7 @@ class BeforeOperationNumberChange(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -320,8 +332,11 @@ class BeforeOperationNumberChange(OperationBase):
 
 
 class BeforeOperationFactory:
+    """前作業生成クラス"""
+
     @staticmethod
     def from_str(text: str) -> OperationBase:
+        """文字列から作業を生成します。"""
         (operation_type, _) = text.split("/", 1)
         try:
             operation = BOperation(int(operation_type))
@@ -393,6 +408,7 @@ class AfterOperationShunt(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -437,6 +453,7 @@ class AfterOperationConnect(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -485,6 +502,7 @@ class AfterOperationRelease(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -520,6 +538,7 @@ class AfterOperationIn(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -557,6 +576,7 @@ class AfterOperationOuter(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -606,6 +626,7 @@ class AfterOperationJunction(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
         if operation_type != str(cls.OPERATION_TYPE.value):
             raise ValueError(f"{cls.__name__} operation type must be {cls.OPERATION_TYPE.value}")
@@ -642,6 +663,7 @@ class AfterOperationNumberChange(OperationBase):
 
     @classmethod
     def from_str(cls, text: str) -> Self:
+        """文字列から作業を生成します。"""
         operation_type, rest = text.split("/", 1)
 
         if operation_type != str(cls.OPERATION_TYPE.value):
@@ -658,9 +680,12 @@ class AfterOperationNumberChange(OperationBase):
 
 
 class AfterOperationFactory:
+    """後作業生成クラス"""
 
     @classmethod
     def from_str(cls, text: str) -> OperationBase:
+        """文字列から作業を生成します。"""
+
         operation_type, rest = text.split("/", 1)
         try:
             operation = AOperation(int(operation_type))

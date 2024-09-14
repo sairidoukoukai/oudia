@@ -1,3 +1,5 @@
+"""列車種別を扱うためのモジュールです。"""
+
 from dataclasses import dataclass
 
 from .node import EntryList, Node, TypedNode
@@ -38,7 +40,8 @@ class Ressyasyubetsu(TypedNode):
     """親種別インデックス"""
 
     @classmethod
-    def from_node(cls, node: Node) -> "Ressyasyubetsu":
+    def from_node(cls, node: Node) -> "Ressyasyubetsu":  # TODO: Use Self for all those quoted types
+        """ノードから列車種別を生成します。"""
         return cls(
             syubetsumei=node.entries.get_required("Syubetsumei"),
             ryakusyou=node.entries.get("Ryakusyou"),
@@ -53,6 +56,7 @@ class Ressyasyubetsu(TypedNode):
         )
 
     def to_node(self) -> Node:
+        """列車種別をノードに変換します。"""
         return Node(
             type="Ressyasyubetsu",
             entries=EntryList(
