@@ -11,10 +11,15 @@ dev-dependencies = [
     "ipykernel>=6.29.5",
     "pytest-cov>=5.0.0",
     "pytest>=8.3.2",
+    "docstr-coverage>=2.3.2",
 ]
 
 [tool.rye.workspace]
 members = ["packages/*"]
+
+[tool.rye.scripts]
+doc-cov-oudia = "docstr-coverage packages/oudia/src/"
+doc-cov-gtfs2oudia = "docstr-coverage packages/gtfs2oudia/src/"
 
 [tool.black]
 target-version = ["py312"]

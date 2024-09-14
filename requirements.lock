@@ -9,14 +9,9 @@
 #   generate-hashes: false
 #   universal: false
 
--e file:packages/gtfs-jp
-    # via gtfs2oudia
-    # via oudia2gtfs
 -e file:packages/gtfs2oudia
 -e file:packages/oudia
     # via gtfs2oudia
-    # via oudia2gtfs
--e file:packages/oudia2gtfs
 branca==0.7.2
     # via folium
 certifi==2024.8.30
@@ -25,7 +20,6 @@ charset-normalizer==3.3.2
     # via requests
 eggtfs==2.1.2
     # via gtfs2oudia
-    # via oudia2gtfs
 folium==0.17.0
     # via eggtfs
 geographiclib==2.0

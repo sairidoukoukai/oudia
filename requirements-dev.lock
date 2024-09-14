@@ -9,14 +9,9 @@
 #   generate-hashes: false
 #   universal: false
 
--e file:packages/gtfs-jp
-    # via gtfs2oudia
-    # via oudia2gtfs
 -e file:packages/gtfs2oudia
 -e file:packages/oudia
     # via gtfs2oudia
-    # via oudia2gtfs
--e file:packages/oudia2gtfs
 asttokens==2.4.1
     # via stack-data
 branca==0.7.2
@@ -25,6 +20,8 @@ certifi==2024.8.30
     # via requests
 charset-normalizer==3.3.2
     # via requests
+click==8.1.7
+    # via docstr-coverage
 comm==0.2.2
     # via ipykernel
 coverage==7.6.1
@@ -33,9 +30,9 @@ debugpy==1.8.5
     # via ipykernel
 decorator==5.1.1
     # via ipython
+docstr-coverage==2.3.2
 eggtfs==2.1.2
     # via gtfs2oudia
-    # via oudia2gtfs
 executing==2.1.0
     # via stack-data
 folium==0.17.0
@@ -103,6 +100,8 @@ python-dateutil==2.9.0.post0
     # via pandas
 pytz==2024.1
     # via pandas
+pyyaml==6.0.2
+    # via docstr-coverage
 pyzmq==26.2.0
     # via ipykernel
     # via jupyter-client
@@ -116,6 +115,8 @@ stack-data==0.6.3
 tornado==6.4.1
     # via ipykernel
     # via jupyter-client
+tqdm==4.66.5
+    # via docstr-coverage
 traitlets==5.14.3
     # via comm
     # via ipykernel
