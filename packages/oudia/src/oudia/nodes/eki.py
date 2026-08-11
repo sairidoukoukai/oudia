@@ -234,6 +234,8 @@ class Eki(TypedNode):
                 ("JikokuhyouTrackOmit", self.jikokuhyou_track_omit),
                 ("JikokuhyouOperationOrigin", self.jikokuhyou_operation_origin),
                 ("JikokuhyouOperationTerminal", self.jikokuhyou_operation_terminal),
+                ("JikokuhyouOperationOriginDownBeforeUpAfter", self.jikokuhyou_operation_origin_down_before_up_after),
+                ("JikokuhyouOperationOriginDownAfterUpBefore", self.jikokuhyou_operation_origin_down_after_up_before),
                 (
                     "JikokuhyouOperationTerminalDownBeforeUpAfter",
                     self.jikokuhyou_operation_terminal_down_before_up_after,
@@ -242,8 +244,6 @@ class Eki(TypedNode):
                     "JikokuhyouOperationTerminalDownAfterUpBefore",
                     self.jikokuhyou_operation_terminal_down_after_up_before,
                 ),
-                ("JikokuhyouOperationOriginDownBeforeUpAfter", self.jikokuhyou_operation_origin_down_before_up_after),
-                ("JikokuhyouOperationOriginDownAfterUpBefore", self.jikokuhyou_operation_origin_down_after_up_before),
                 ("JikokuhyouJikokuDisplayKudari", self.jikokuhyou_jikoku_display_kudari),
                 ("JikokuhyouJikokuDisplayNobori", self.jikokuhyou_jikoku_display_nobori),
                 ("JikokuhyouSyubetsuChangeDisplayKudari", self.jikokuhyou_syubetsu_change_display_kudari),
