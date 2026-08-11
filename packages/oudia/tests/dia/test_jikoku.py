@@ -1,11 +1,13 @@
 import pytest
 
-from oudia.dia.jikoku import Hour, Second, SecondRound, Jikoku, JikokuConv
+from oudia.dia.jikoku import Hour, Second, SecondRound, Jikoku, JikokuConv, SECONDS_A_DAY
 
 
 def test_jikoku_init():
     assert Jikoku(0).total_seconds == 0
+    assert Jikoku(3600).total_seconds == 3600
     assert Jikoku(24 * 60 * 60 - 1).total_seconds == 24 * 60 * 60 - 1
+    assert Jikoku(2**31 - 1).total_seconds == (2**31 - 1) % SECONDS_A_DAY
     assert Jikoku(None).total_seconds is None
 
 
