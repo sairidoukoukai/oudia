@@ -75,6 +75,12 @@ class Dia(TypedNode):
     back_pattern_index: int | None = None
     """背景パターンのインデックス"""
 
+    pattern_diagram_preview_enable: bool | None = None
+    """パターンダイヤプレビューの有無"""
+
+    pattern_diagram_preview_cycle_second: int | None = None
+    """パターンダイヤプレビューの周期（秒）"""
+
     @classmethod
     def from_node(cls, node: Node) -> "Dia":
         """ノードからダイヤを生成します。"""
@@ -83,6 +89,8 @@ class Dia(TypedNode):
             main_back_color_index=node.entries.get_int("MainBackColorIndex"),
             sub_back_color_index=node.entries.get_int("SubBackColorIndex"),
             back_pattern_index=node.entries.get_int("BackPatternIndex"),
+            pattern_diagram_preview_enable=node.entries.get_bool("PatternDiagramPreviewEnable"),
+            pattern_diagram_preview_cycle_second=node.entries.get_int("PatternDiagramPreviewCycleSecond"),
             kudari=node.entries.get_list_by_type(Kudari),
             nobori=node.entries.get_list_by_type(Nobori),
         )
@@ -96,6 +104,8 @@ class Dia(TypedNode):
                 ("MainBackColorIndex", self.main_back_color_index),
                 ("SubBackColorIndex", self.sub_back_color_index),
                 ("BackPatternIndex", self.back_pattern_index),
+                ("PatternDiagramPreviewEnable", self.pattern_diagram_preview_enable),
+                ("PatternDiagramPreviewCycleSecond", self.pattern_diagram_preview_cycle_second),
                 NodeList(Kudari, self.kudari),
                 NodeList(Nobori, self.nobori),
             ),
