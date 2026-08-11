@@ -87,6 +87,9 @@ class Eki(TypedNode):
     diagram_track_display: bool | None = None
     """ダイヤ列車で番線表示設定"""
 
+    diagram_track_omit: str | None = None
+    """ダイヤ列車で番線を省略するかどうかを番線ごとに並べたもの"""
+
     eki_tracks: NodeList[EkiTrack2]
     """駅の番線"""
 
@@ -138,6 +141,18 @@ class Eki(TypedNode):
     jikokuhyou_outer_display_nobori: str | None = None
     """時刻表外表示（上り）"""
 
+    jikokuhyou_prev_syubetsu_change_display_kudari: str | None = None
+    """時刻表前種別変更表示（下り）"""
+
+    jikokuhyou_prev_syubetsu_change_display_nobori: str | None = None
+    """時刻表前種別変更表示（上り）"""
+
+    jikokuhyou_nyuusen_jikoku_display_kudari: bool | None = None
+    """時刻表入線時刻表示（下り）"""
+
+    jikokuhyou_nyuusen_jikoku_display_nobori: bool | None = None
+    """時刻表入線時刻表示（上り）"""
+
     operation_table_display_jikoku: bool | None = None
     """運用表で時刻を表示するかどうか"""
 
@@ -176,6 +191,7 @@ class Eki(TypedNode):
             jikokuhyou_track_display_kudari=node.entries.get_bool("JikokuhyouTrackDisplayKudari"),
             jikokuhyou_track_display_nobori=node.entries.get_bool("JikokuhyouTrackDisplayNobori"),
             diagram_track_display=node.entries.get_bool("DiagramTrackDisplay"),
+            diagram_track_omit=node.entries.get("DiagramTrackOmit"),
             next_eki_distance=node.entries.get_int("NextEkiDistance"),
             eki_tracks=NodeList(
                 EkiTrack2, track_list[0].tracks if (track_list := node.entries.get_list_by_type(EkiTrack2Cont)) else []
@@ -195,6 +211,14 @@ class Eki(TypedNode):
             jikokuhyou_syubetsu_change_display_nobori=node.entries.get("JikokuhyouSyubetsuChangeDisplayNobori"),
             jikokuhyou_outer_display_kudari=node.entries.get("JikokuhyouOuterDisplayKudari"),
             jikokuhyou_outer_display_nobori=node.entries.get("JikokuhyouOuterDisplayNobori"),
+            jikokuhyou_prev_syubetsu_change_display_kudari=node.entries.get(
+                "JikokuhyouPrevSyubetsuChangeDisplayKudari"
+            ),
+            jikokuhyou_prev_syubetsu_change_display_nobori=node.entries.get(
+                "JikokuhyouPrevSyubetsuChangeDisplayNobori"
+            ),
+            jikokuhyou_nyuusen_jikoku_display_kudari=node.entries.get_bool("JikokuhyouNyuusenJikokuDisplayKudari"),
+            jikokuhyou_nyuusen_jikoku_display_nobori=node.entries.get_bool("JikokuhyouNyuusenJikokuDisplayNobori"),
             crossing_check_rule_list=node.entries.get_list_by_type(CrossingCheckRule),
             operation_table_display_jikoku=node.entries.get_bool("OperationTableDisplayJikoku"),
         )
@@ -224,6 +248,7 @@ class Eki(TypedNode):
                 ("JikokuhyouTrackDisplayKudari", self.jikokuhyou_track_display_kudari),
                 ("JikokuhyouTrackDisplayNobori", self.jikokuhyou_track_display_nobori),
                 ("DiagramTrackDisplay", self.diagram_track_display),
+                ("DiagramTrackOmit", self.diagram_track_omit),
                 ("NextEkiDistance", self.next_eki_distance),
                 (
                     NodeList(EkiTrack2Cont, [EkiTrack2Cont(tracks=self.eki_tracks)])
@@ -252,6 +277,16 @@ class Eki(TypedNode):
                 ("OperationTableDisplayJikoku", self.operation_table_display_jikoku),
                 ("JikokuhyouOuterDisplayKudari", self.jikokuhyou_outer_display_kudari),
                 ("JikokuhyouOuterDisplayNobori", self.jikokuhyou_outer_display_nobori),
+                (
+                    "JikokuhyouPrevSyubetsuChangeDisplayKudari",
+                    self.jikokuhyou_prev_syubetsu_change_display_kudari,
+                ),
+                (
+                    "JikokuhyouPrevSyubetsuChangeDisplayNobori",
+                    self.jikokuhyou_prev_syubetsu_change_display_nobori,
+                ),
+                ("JikokuhyouNyuusenJikokuDisplayKudari", self.jikokuhyou_nyuusen_jikoku_display_kudari),
+                ("JikokuhyouNyuusenJikokuDisplayNobori", self.jikokuhyou_nyuusen_jikoku_display_nobori),
                 self.crossing_check_rule_list if self.crossing_check_rule_list else NodeList(Node, []),
             ),
         )
