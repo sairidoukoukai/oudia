@@ -37,6 +37,12 @@ def test_ekijikoku_ekiatsukai_none_from_str():
     assert eki_jikoku.ekiatsukai == Ekiatsukai.NONE
 
 
+def test_ekijikoku_ekiatsukai_keiyunasi():
+    eki_jikoku = EkiJikoku.from_str("3;1010/1012")
+    assert eki_jikoku.ekiatsukai == Ekiatsukai.KEIYUNASI
+    assert str(eki_jikoku) == "3;1010/1012"
+
+
 def test_ekijikoku_str():
     eki_jikoku = EkiJikoku(
         ekiatsukai=Ekiatsukai.TEISYA,
