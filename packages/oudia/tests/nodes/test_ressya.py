@@ -178,3 +178,40 @@ def test_ressya_empty():
     assert ressya.houkou is None
     assert ressya.eki_jikoku_list == []
     assert str(ressya) == ressya_str
+
+
+def test_ressya_canceled():
+    ressya_str = inspect.cleandoc(
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Ressyabangou=303
+            EkiJikoku=1;750$0,2$0,1;815/815$0
+            Bikou=運休
+            Canceled=1
+            .
+        """
+    )
+    ressya = parse_ressya(ressya_str)
+
+    assert ressya.canceled is True
+    assert str(ressya) == ressya_str
+
+
+def test_ressya_legacy_syubetsu_change():
+    ressya_str = inspect.cleandoc(
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=1
+            Gousuu=3
+            SyubetsuChange=1
+            EkiJikoku=1;750$0,1;815/815$0
+            .
+        """
+    )
+    ressya = parse_ressya(ressya_str)
+
+    assert ressya.syubetsu_change is True
+    assert str(ressya) == ressya_str
