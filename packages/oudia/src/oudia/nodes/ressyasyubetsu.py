@@ -33,11 +33,17 @@ class Ressyasyubetsu(TypedNode):
     diagram_sen_is_bold: bool | None = None
     """ダイヤグラム太線"""
 
+    diagram_ressya_font: str | None = None
+    """ダイヤグラム列車フォント（OuDiaSecond.1.09以前）"""
+
     stop_mark_draw_type: str | None = None
     """停止マーク描画タイプ"""
 
     parent_syubetsu_index: int | None = None
     """親種別インデックス"""
+
+    hidden: bool | None = None
+    """種別を隠すかどうか"""
 
     @classmethod
     def from_node(cls, node: Node) -> "Ressyasyubetsu":  # TODO: Use Self for all those quoted types
@@ -51,8 +57,10 @@ class Ressyasyubetsu(TypedNode):
             diagram_sen_color=node.entries.get("DiagramSenColor"),
             diagram_sen_style=node.entries.get("DiagramSenStyle"),
             diagram_sen_is_bold=node.entries.get_bool("DiagramSenIsBold"),
+            diagram_ressya_font=node.entries.get("DiagramRessyaFont"),
             stop_mark_draw_type=node.entries.get("StopMarkDrawType"),
             parent_syubetsu_index=node.entries.get_int("ParentSyubetsuIndex"),
+            hidden=node.entries.get_bool("Hidden"),
         )
 
     def to_node(self) -> Node:
@@ -68,7 +76,9 @@ class Ressyasyubetsu(TypedNode):
                 ("DiagramSenColor", self.diagram_sen_color),
                 ("DiagramSenStyle", self.diagram_sen_style),
                 ("DiagramSenIsBold", self.diagram_sen_is_bold),
+                ("DiagramRessyaFont", self.diagram_ressya_font),
                 ("StopMarkDrawType", self.stop_mark_draw_type),
                 ("ParentSyubetsuIndex", self.parent_syubetsu_index),
+                ("Hidden", self.hidden),
             ),
         )
