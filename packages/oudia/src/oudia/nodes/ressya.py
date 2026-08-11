@@ -1,5 +1,6 @@
 """列車を扱うためのモジュールです。"""
 
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
@@ -16,6 +17,10 @@ class OperationType(Enum):
 
     AFTER = "A"
     BEFORE = "B"
+
+
+OPERATION_KEY = re.compile(r"Operation\d+[AB](\.\d+[AB])?")
+"""作業の属性名。`Operation3B`・`Operation3B.0A`の形を取る。"""
 
 
 @dataclass(kw_only=True)
@@ -46,6 +51,12 @@ class Ressya(TypedNode):
     bikou: str | None = None
     """備考"""
 
+    ressya_track: str | None = None
+    """駅ごとの番線（OuDiaSecond.1.05以前。以降は駅時刻に含まれる）"""
+
+    operation_number: str | None = None
+    """運用番号（OuDiaSecond.1.09以前）"""
+
     @classmethod
     def from_node(cls, node: Node) -> "Ressya":
         """ノードから列車を生成します。"""
@@ -61,7 +72,7 @@ class Ressya(TypedNode):
         parent_after_operation_list: defaultdict[int, list[OperationBase]] = defaultdict(list)
 
         for key, value in node.entries.properties:
-            if key.startswith("Operation"):
+            if OPERATION_KEY.fullmatch(key):
                 indicator = key[9:]  # '73B' / '73B.0A'
                 operation_type = OperationType(indicator[-1])  # 'A' / 'B' -> OperationType.AFTER / OperationType.BEFORE
 
@@ -129,6 +140,8 @@ class Ressya(TypedNode):
             gousuu=node.entries.get("Gousuu"),
             eki_jikoku_list=eki_jikoku_plain,
             bikou=node.entries.get("Bikou"),
+            ressya_track=node.entries.get("RessyaTrack"),
+            operation_number=node.entries.get("OperationNumber"),
         )
 
     def to_node(self) -> Node:
@@ -193,7 +206,9 @@ class Ressya(TypedNode):
                     if self.eki_jikoku_list
                     else ("EkiJikoku", None)
                 ),
+                ("RessyaTrack", self.ressya_track),
                 *operation_entries,
                 ("Bikou", self.bikou),
+                ("OperationNumber", self.operation_number),
             ),
         )

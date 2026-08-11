@@ -145,6 +145,26 @@ def test_ressya_invalid():
         with pytest.raises((ValueError, IndexError)):
             ressya = parse_ressya(ressya_str)
 
+def test_ressya_legacy_operation_number():
+    ressya_str = inspect.cleandoc(
+        """
+            Ressya.
+            Houkou=Kudari
+            Syubetsu=0
+            Ressyabangou=924
+            EkiJikoku=,,1;1010,1;1012/1013,1;1021/1021
+            RessyaTrack=,,0,0,1
+            Bikou=所定1024
+            OperationNumber=A
+            .
+        """
+    )
+    ressya = parse_ressya(ressya_str)
+
+    assert ressya.ressya_track == ",,0,0,1"
+    assert ressya.operation_number == "A"
+    assert str(ressya) == ressya_str
+
 
 def test_ressya_empty():
     ressya_str = inspect.cleandoc(
