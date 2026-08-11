@@ -49,9 +49,12 @@ class Ressya(TypedNode):
     @classmethod
     def from_node(cls, node: Node) -> "Ressya":
         """ノードから列車を生成します。"""
-        eki_jikoku_plain = [
-            EkiJikoku.from_str(x) if x else None for x in node.entries.get_required("EkiJikoku").split(",")
-        ]
+        eki_jikoku_str = node.entries.get("EkiJikoku")
+        eki_jikoku_plain = (
+            [EkiJikoku.from_str(x) if x else None for x in eki_jikoku_str.split(",")]
+            if eki_jikoku_str is not None
+            else []
+        )
 
         # [ekijikoku_index, list[Operation]]
         parent_before_operation_list: defaultdict[int, list[OperationBase]] = defaultdict(list)
@@ -185,7 +188,11 @@ class Ressya(TypedNode):
                 ("Ressyamei", self.ressyamei),
                 ("Unyoubangou", self.unyoubangou),
                 ("Gousuu", self.gousuu),
-                ("EkiJikoku", ",".join(str(x) if x else "" for x in self.eki_jikoku_list)),
+                (
+                    ("EkiJikoku", ",".join(str(x) if x else "" for x in self.eki_jikoku_list))
+                    if self.eki_jikoku_list
+                    else ("EkiJikoku", None)
+                ),
                 *operation_entries,
                 ("Bikou", self.bikou),
             ),

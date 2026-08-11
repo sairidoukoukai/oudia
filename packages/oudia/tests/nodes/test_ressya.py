@@ -144,3 +144,17 @@ def test_ressya_invalid():
         ressya_str = inspect.cleandoc(ressya_str)
         with pytest.raises((ValueError, IndexError)):
             ressya = parse_ressya(ressya_str)
+
+
+def test_ressya_empty():
+    ressya_str = inspect.cleandoc(
+        """
+            Ressya.
+            .
+        """
+    )
+    ressya = parse_ressya(ressya_str)
+
+    assert ressya.houkou is None
+    assert ressya.eki_jikoku_list == []
+    assert str(ressya) == ressya_str
