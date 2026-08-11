@@ -39,8 +39,14 @@ class Rosen(TypedNode):
     enable_operation: int | None = None
     """運用機能の有効無効（OuDiaSecond.1.03+）"""
 
+    operation_number_reverse: bool | None = None
+    """運用番号順を反転するかどうか"""
+
     operation_cross_kiten_jikoku: bool | None = None
     """ダイヤグラム起点時刻を挟んで運用を接続する（OuDiaSecond.1.10+）"""
+
+    disable_hidden_syubetsu: bool | None = None
+    """隠した種別を使わないかどうか"""
 
     kijun_dia_index: int | None = None
     """基準ダイヤインデックス"""
@@ -61,8 +67,10 @@ class Rosen(TypedNode):
             dia_list=node.entries.get_list_by_type(Dia),
             diagram_dgr_y_zahyou_kyori_default=node.entries.get_int("DiagramDgrYZahyouKyoriDefault"),
             enable_operation=node.entries.get_int("EnableOperation"),
+            operation_number_reverse=node.entries.get_bool("OperationNumberReverse"),
             operation_cross_kiten_jikoku=node.entries.get_bool("OperationCrossKitenJikoku"),
             kijun_dia_index=node.entries.get_int("KijunDiaIndex"),
+            disable_hidden_syubetsu=node.entries.get_bool("DisableHiddenSyubetsu"),
             comment=node.entries.get("Comment"),
         )
 
@@ -80,8 +88,10 @@ class Rosen(TypedNode):
                 ("KitenJikoku", self.kiten_jikoku),
                 ("DiagramDgrYZahyouKyoriDefault", self.diagram_dgr_y_zahyou_kyori_default),
                 ("EnableOperation", self.enable_operation),
+                ("OperationNumberReverse", self.operation_number_reverse),
                 ("OperationCrossKitenJikoku", self.operation_cross_kiten_jikoku),
                 ("KijunDiaIndex", self.kijun_dia_index),
+                ("DisableHiddenSyubetsu", self.disable_hidden_syubetsu),
                 ("Comment", self.comment),
             ),
         )
