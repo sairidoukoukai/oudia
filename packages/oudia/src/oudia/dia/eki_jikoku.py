@@ -22,6 +22,9 @@ class Ekiatsukai(Enum):
     TSUUKA = 2
     """通過"""
 
+    KEIYUNASI = 3
+    """経由なし（OuDiaのみ。OuDiaSecondでは読み込み時に「なし」へ変わる）"""
+
 
 @dataclass(kw_only=True)
 class EkiJikoku:
