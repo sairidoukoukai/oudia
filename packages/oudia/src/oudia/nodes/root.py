@@ -28,6 +28,13 @@ class OuDia(TypedNode):
     file_type_app_comment: str | None = None
     """ファイル形式のアプリコメント"""
 
+    file_type_app_comment_after_file_type: bool = False
+    """アプリコメントをファイル形式の直後に置くかどうか
+
+    OuDia.2・OuDia.3ではファイル形式の直後、それ以外では末尾に置かれる。
+    書き出しで元の位置を保つために、読み込んだ位置をそのまま覚えておく。
+    """
+
     # def pprint(self, indent: int = 0, with_lines: bool = False):
     #     """
     #     Prints the OuDia file in a pretty format.
@@ -49,12 +56,22 @@ class OuDia(TypedNode):
     def from_node(cls, node: Node) -> "OuDia":
         """ノードからOuDiaファイルの根ノードを生成します。"""
         assert node.type == "Root"
+
+        app_comment_index = next(
+            (i for i, entry in enumerate(node.entries) if isinstance(entry, tuple) and entry[0] == "FileTypeAppComment"),
+            None,
+        )
+        first_node_index = next((i for i, entry in enumerate(node.entries) if isinstance(entry, NodeList)), None)
+
         return cls(
             file_type=node.entries.get_required("FileType"),
             rosen=node.entries.get_list_by_type(Rosen)[0],
             disp_prop=node.entries.get_list_by_type(DispProp)[0],
             window_placement=v[0] if (v := node.entries.get_list_by_type(WindowPlacement)) else None,
             file_type_app_comment=node.entries.get("FileTypeAppComment"),
+            file_type_app_comment_after_file_type=(
+                app_comment_index is not None and first_node_index is not None and app_comment_index < first_node_index
+            ),
         )
 
     def to_node(self) -> Node:
@@ -63,9 +80,16 @@ class OuDia(TypedNode):
             type=None,
             entries=EntryList(
                 ("FileType", str(self.file_type)),
+                (
+                    "FileTypeAppComment",
+                    self.file_type_app_comment if self.file_type_app_comment_after_file_type else None,
+                ),
                 NodeList(Rosen, [self.rosen]),
                 NodeList(DispProp, [self.disp_prop]),
                 NodeList(WindowPlacement, [self.window_placement] if self.window_placement else []),
-                ("FileTypeAppComment", self.file_type_app_comment),
+                (
+                    "FileTypeAppComment",
+                    None if self.file_type_app_comment_after_file_type else self.file_type_app_comment,
+                ),
             ),
         )
