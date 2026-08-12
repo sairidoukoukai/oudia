@@ -49,3 +49,24 @@ def test_ressyasyubetsu_diagram_ressya_font():
 
     assert syubetsu.diagram_ressya_font == "PointTextHeight=9;Facename=ＭＳ ゴシック"
     assert str(syubetsu) == syubetsu_str
+
+
+def test_ressyasyubetsu_jikokuhyou_font():
+    """OuDia.6以前は種別がフォントそのものを持つ。"""
+    syubetsu_str = inspect.cleandoc(
+        """
+            Ressyasyubetsu.
+            Syubetsumei=臨時快速
+            Ryakusyou=快速
+            JikokuhyouMojiColor=0000C000
+            JikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Itaric=1
+            DiagramSenColor=0000C000
+            DiagramSenStyle=SenStyle_Hasen
+            StopMarkDrawType=EStopMarkDrawType_DrawOnStop
+            .
+        """
+    )
+    syubetsu = parse_ressyasyubetsu(syubetsu_str)
+
+    assert syubetsu.jikokuhyou_font == "PointTextHeight=9;Facename=ＭＳ ゴシック;Itaric=1"
+    assert str(syubetsu) == syubetsu_str
