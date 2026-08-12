@@ -29,7 +29,7 @@ def parse(text: str) -> Node | None:
         else:
             line = line.lstrip()  # to allow indented for debug
 
-        if line.endswith("."):
+        if line.endswith(".") and ("=" not in line or line == "."):
             if line != ".":
                 # `Node.`` (start of node)
                 node_type = line[:-1]

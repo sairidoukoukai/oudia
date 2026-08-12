@@ -1,5 +1,7 @@
 """Test parsing and node replacing"""
 
+import inspect
+
 import oudia
 
 
@@ -498,3 +500,21 @@ def test_replace_unknown_node_type() -> None:
 
 
 # endregion
+
+
+def test_parse_value_ending_in_period():
+    """値が「.」で終わる属性をノードの始まりと取り違えない。"""
+    node = parse(
+        inspect.cleandoc(
+            """
+                Ressya.
+                Houkou=Kudari
+                Bikou=Only Fridays and July 3.
+                .
+            """
+        )
+    )
+
+    assert node is not None
+    assert node.type == "Ressya"
+    assert node.entries.get("Bikou") == "Only Fridays and July 3."
