@@ -159,9 +159,6 @@ class Eki(TypedNode):
     crossing_check_rule_list: NodeList[CrossingCheckRule]
     """クローシング通過チェックルールリスト"""
 
-    diagram_track_display: bool | None = None
-    """運用表で番線を表示するかどうか"""
-
     @classmethod
     def from_node(cls, node: Node) -> "Eki":
         """ノードから駅を生成します。"""
