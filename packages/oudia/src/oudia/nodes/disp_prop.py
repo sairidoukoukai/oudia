@@ -115,6 +115,12 @@ class DispProp(TypedNode):
     jikokuhyou_ressya_width: int | None
     """時刻表列車欄の幅"""
 
+    dia_ressyajouhou_hyouji_eki_order_kudari: int | None = None
+    """ダイヤ列車情報の駅順（下り）（OuDia.6以前）"""
+
+    dia_ressyajouhou_hyouji_eki_order_nobori: int | None = None
+    """ダイヤ列車情報の駅順（上り）（OuDia.6以前）"""
+
     any_second_inc_dec1: int | None
     """任意秒移動1"""
 
@@ -180,6 +186,8 @@ class DispProp(TypedNode):
             # TODO: Continue here
             ekimei_length=node.entries.get_int("EkimeiLength"),
             jikokuhyou_ressya_width=node.entries.get_int("JikokuhyouRessyaWidth"),
+            dia_ressyajouhou_hyouji_eki_order_kudari=node.entries.get_int("DiaRessyajouhouHyoujiEkiOrderKudari"),
+            dia_ressyajouhou_hyouji_eki_order_nobori=node.entries.get_int("DiaRessyajouhouHyoujiEkiOrderNobori"),
             any_second_inc_dec1=node.entries.get_int("AnySecondIncDec1"),
             any_second_inc_dec2=node.entries.get_int("AnySecondIncDec2"),
             display_ressyamei=node.entries.get_bool("DisplayRessyamei"),
@@ -230,6 +238,8 @@ class DispProp(TypedNode):
                 ("OperationGridColor", self.operation_grid_color),
                 ("EkimeiLength", self.ekimei_length),
                 ("JikokuhyouRessyaWidth", self.jikokuhyou_ressya_width),
+                ("DiaRessyajouhouHyoujiEkiOrderKudari", self.dia_ressyajouhou_hyouji_eki_order_kudari),
+                ("DiaRessyajouhouHyoujiEkiOrderNobori", self.dia_ressyajouhou_hyouji_eki_order_nobori),
                 ("AnySecondIncDec1", self.any_second_inc_dec1),
                 ("AnySecondIncDec2", self.any_second_inc_dec2),
                 ("DisplayRessyamei", self.display_ressyamei),
