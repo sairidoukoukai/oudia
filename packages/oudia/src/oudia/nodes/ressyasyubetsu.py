@@ -18,6 +18,9 @@ class Ressyasyubetsu(TypedNode):
     jikokuhyou_moji_color: str | None = None
     """時刻表文字色"""
 
+    jikokuhyou_font: str | None = None
+    """時刻表フォント（OuDia.6以前は種別ごとにフォントを持つ）"""
+
     jikokuhyou_font_index: int | None = None
     """時刻表文字フォントインデックス"""
 
@@ -52,6 +55,7 @@ class Ressyasyubetsu(TypedNode):
             syubetsumei=node.entries.get_required("Syubetsumei"),
             ryakusyou=node.entries.get("Ryakusyou"),
             jikokuhyou_moji_color=node.entries.get("JikokuhyouMojiColor"),
+            jikokuhyou_font=node.entries.get("JikokuhyouFont"),
             jikokuhyou_font_index=node.entries.get_int("JikokuhyouFontIndex"),
             jikokuhyou_back_color=node.entries.get("JikokuhyouBackColor"),
             diagram_sen_color=node.entries.get("DiagramSenColor"),
@@ -71,6 +75,7 @@ class Ressyasyubetsu(TypedNode):
                 ("Syubetsumei", self.syubetsumei),
                 ("Ryakusyou", self.ryakusyou),
                 ("JikokuhyouMojiColor", self.jikokuhyou_moji_color),
+                ("JikokuhyouFont", self.jikokuhyou_font),
                 ("JikokuhyouFontIndex", self.jikokuhyou_font_index),
                 ("JikokuhyouBackColor", self.jikokuhyou_back_color),
                 ("DiagramSenColor", self.diagram_sen_color),
