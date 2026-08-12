@@ -51,11 +51,17 @@ class Ressya(TypedNode):
     bikou: str | None = None
     """備考"""
 
+    syubetsu_change: bool | None = None
+    """種別変更の有無（OuDiaSecond.1.09以前）"""
+
     ressya_track: str | None = None
     """駅ごとの番線（OuDiaSecond.1.05以前。以降は駅時刻に含まれる）"""
 
     operation_number: str | None = None
     """運用番号（OuDiaSecond.1.09以前）"""
+
+    canceled: bool | None = None
+    """運休かどうか"""
 
     @classmethod
     def from_node(cls, node: Node) -> "Ressya":
@@ -140,8 +146,10 @@ class Ressya(TypedNode):
             gousuu=node.entries.get("Gousuu"),
             eki_jikoku_list=eki_jikoku_plain,
             bikou=node.entries.get("Bikou"),
+            syubetsu_change=node.entries.get_bool("SyubetsuChange"),
             ressya_track=node.entries.get("RessyaTrack"),
             operation_number=node.entries.get("OperationNumber"),
+            canceled=node.entries.get_bool("Canceled"),
         )
 
     def to_node(self) -> Node:
@@ -201,6 +209,7 @@ class Ressya(TypedNode):
                 ("Ressyamei", self.ressyamei),
                 ("Unyoubangou", self.unyoubangou),
                 ("Gousuu", self.gousuu),
+                ("SyubetsuChange", self.syubetsu_change),
                 (
                     ("EkiJikoku", ",".join(str(x) if x else "" for x in self.eki_jikoku_list))
                     if self.eki_jikoku_list
@@ -209,6 +218,7 @@ class Ressya(TypedNode):
                 ("RessyaTrack", self.ressya_track),
                 *operation_entries,
                 ("Bikou", self.bikou),
+                ("Canceled", self.canceled),
                 ("OperationNumber", self.operation_number),
             ),
         )
