@@ -29,3 +29,26 @@ def test_rosen_entry_order():
     assert rosen.enable_operation == 1
     assert rosen.operation_cross_kiten_jikoku is True
     assert str(rosen) == rosen_str
+
+
+def test_rosen_operation_flags():
+    rosen_str = inspect.cleandoc(
+        """
+            Rosen.
+            Rosenmei=再履バス
+            KitenJikoku=000
+            DiagramDgrYZahyouKyoriDefault=60
+            EnableOperation=1
+            OperationNumberReverse=1
+            OperationCrossKitenJikoku=1
+            KijunDiaIndex=0
+            DisableHiddenSyubetsu=1
+            Comment=
+            .
+        """
+    )
+    rosen = parse_rosen(rosen_str)
+
+    assert rosen.operation_number_reverse is True
+    assert rosen.disable_hidden_syubetsu is True
+    assert str(rosen) == rosen_str
